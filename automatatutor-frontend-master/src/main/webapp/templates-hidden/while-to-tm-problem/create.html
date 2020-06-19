@@ -1,0 +1,41 @@
+<div><!--Tahiti-->
+
+	<link rel="stylesheet" href="/stylesheets/problemstyle.css" type="text/css"/>
+	<script type="text/javascript" src="/javascript/alphabetUtil.js"> </script>
+	<script type="text/javascript" src="/javascript/whileUtil.js"> </script>
+
+	<h2> Create a new While-Program to Machine-construction problem </h2>
+
+	<!--<lift:embed what="/while-to-tm-problem/applet-solve"></lift:embed>-->
+	<lift:Whileprogram.renderhints>
+	</lift:Whileprogram.renderhints>
+
+	<lift:Identity form="POST">
+	<table>
+		<tr> 
+			<td> Program Text: </td>
+			<td> <createform:programtextfield> </createform:programtextfield> </td>
+		</tr>
+		<tr> 
+			<td> Short Description: </td>
+			<td> <createform:shortdescription> </createform:shortdescription> </td>
+		</tr>
+		<tr> 
+			<td> Long Description: </td>
+			<td> <createform:longdescription> </createform:longdescription> </td>
+		</tr>
+		<tr> 
+			<td> </td>
+			<td> <createform:submit> </createform:submit> </td>
+		</tr>
+	</table>
+	</lift:Identity>
+
+	<div id="feedbackdisplay" style="display:none" class="gradefeed">
+		<h3> Parsing Error: </h3>
+		<ul>
+			<div id="parsingerror"/>
+		</ul>
+	</div>
+
+</div> 

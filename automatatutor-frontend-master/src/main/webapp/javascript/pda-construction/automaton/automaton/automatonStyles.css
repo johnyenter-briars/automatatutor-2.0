@@ -1,0 +1,253 @@
+svg * {
+    font-size: 12px;
+}
+
+div#svg-container {
+    display: flex;
+    flex-direction: row;
+}
+
+div#automaton-container {
+    overflow-x: auto;
+    position: relative;
+    border: 3px solid #808080;
+}
+
+rect#clickReceiver {
+    fill: #FFF;
+    pointer-events: visiblePainted;
+    border: 3px solid #808080;
+}
+
+.hide {
+    display: none;
+}
+
+textArea#transition-input {
+    position: absolute;
+    overflow-y: scroll;
+    min-height: 70px;
+    max-height: 150px;
+    max-width: 150px;
+}
+
+g.nonedit g.display {
+    visibility: visible;
+}
+
+g.edit g.display {
+    visibility: hidden;
+}
+
+g.state text {
+    font-size: 12px;
+}
+
+g.state circle.hoverArea {
+    fill: #dddddd;
+    fill-opacity: 0.5;
+    visibility: hidden;
+}
+
+text.state-id {
+    pointer-events: none;
+}
+
+svg.editable g.state:hover circle.hoverArea {
+    visibility: visible;
+}
+
+/*g.state circle.finalMarker, g.state circle.state {*/
+    /*stroke-width: 1px;*/
+    /*stroke: black;*/
+/*}*/
+
+g.state circle.finalMarker {
+    fill: none;
+}
+
+/*g.state.nonFinal circle.finalMarker {*/
+    /*visibility: hidden;*/
+/*}*/
+
+/*g.state.final circle.finalMarker {*/
+    /*visibility: visible;*/
+/*}*/
+
+g.state.final circle.state{
+    fill: rgb(110, 207, 81) !important;
+    stroke-width: 3.5px;
+}
+
+g.state.nonFinal circle.state{
+    fill: rgb(82, 177, 255) !important;
+    stroke-width: 1.5px;
+}
+
+g.state circle.state {
+    fill: rgb(82, 177, 255);
+    pointer-events: all;
+    stroke-width: 1.5px;
+    stroke: black;
+}
+
+g.marked circle.state {
+    fill: rgb(82, 177, 255);
+}
+
+path.arrow {
+    stroke-width: 2px;
+}
+
+g.valid path.arrow {
+    stroke: #b5b5b5;
+}
+
+g.invalid path.arrow {
+    stroke: red;
+}
+
+g.marked path.arrow {
+    stroke: yellow;
+}
+
+path.hoverArea {
+    stroke-width: 10px;
+    stroke: none;
+    pointer-events: all;
+}
+
+svg.editable path.hoverArea {
+    cursor: pointer;
+}
+
+path.hoverArea, path.arrow {
+    fill: none;
+}
+
+path.arrow {
+    marker-end: url(#arrow);
+}
+
+tspan.marked { /*FIXME: check if .valid.valid-symbols is necessary*/
+    fill: yellow;
+}
+
+button.collapsible {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 15px;
+}
+
+button.collapsible:after {
+    content: '\002B';
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    float: right;
+    margin-left: 5px;
+}
+
+button.active:after {
+    content: "\2212";
+}
+
+div.collapsible-content {
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+    overflow: hidden;
+}
+
+div#notes-content {
+    flex-direction: row;
+    align-items: stretch;
+    border: #6699cc groove;
+    padding: 5px;
+}
+
+div.notes {
+    margin-top: 10px;
+}
+
+li.note {
+    flex-direction: row;
+    align-items: stretch;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+ul.explanations {
+    list-style-type: circle;
+}
+
+li.explanation {
+    margin-left: 10px;
+}
+
+.bordered {
+    padding: 5px;
+    border: groove #6699cc;
+}
+
+ul.circle {
+    list-style-type: circle;
+}
+
+.property-display {
+    display: flex;
+    margin-left: 5px;
+    margin-top: 5px;
+    vertical-align: middle;
+}
+
+.property-display label {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.property-display label.title {
+    line-height: normal;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.property-display input[type=button] {
+    margin-left: 5px;
+    min-width: 70px;
+    padding: 0;
+}
+
+.property-display label.property-hint {
+    margin-left: 10px;
+    text-align: center;
+}
+
+rect {
+    fill: #89c4f4;
+}
+
+rect.title {
+    fill: #336e7b;
+}
+
+g.marked rect {
+    fill: yellow;
+}
+
+tspan.marked {
+    fill: yellow !important;
+}
+
+text.word {
+    font-size: 14px;
+}
+
+.pointer {
+    cursor: pointer;
+}

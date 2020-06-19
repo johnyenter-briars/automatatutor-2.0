@@ -1,0 +1,216 @@
+svg {
+    background-color: #FFF;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+svg:not(.active):not(.ctrl) {
+    cursor: crosshair;
+}
+
+path.link {
+    fill: none;
+    stroke: #000;
+    stroke-width: 2.5px;
+    cursor: pointer;
+}
+
+path.entry{
+    fill: none;
+    stroke: #000;
+    stroke-width: 2.5px;
+}
+
+path.wide {
+    fill: none;
+    stroke: rgb(255, 238, 0);
+    stroke-opacity: 0;
+    stroke-width: 10px;
+    cursor: pointer;
+}
+
+svg:not(.active):not(.ctrl) path.link {
+    cursor: pointer;
+}
+
+path.link.selected {
+    stroke-dasharray: 10,2;
+}
+
+path.link.dragline {
+    pointer-events: none;
+    stroke-dasharray: 10,2;
+}
+
+path.link.hidden {
+    stroke-width: 0;
+}
+
+circle.node {
+    stroke-width: 1.5px;
+    cursor: pointer;
+    fill: rgb(82, 177, 255);
+    stroke: rgb(34, 77, 112);
+}
+
+circle.mouseTarget {
+    fill-opacity: 0;
+    fill: yellow;
+    cursor: pointer;
+}
+
+circle.node.reflexive {
+    stroke: #000 !important;
+    stroke-width: 3.5px;
+    fill: rgb(110, 207, 81) !important;
+}
+
+circle.node.selected {
+    fill: lightblue !important;
+}
+
+circle.node.selected.reflexive {
+    fill: lightgreen !important;
+}
+
+rect.block {
+    stroke-width: 1.5px;
+    cursor: pointer;
+    fill:  rgb(82, 177, 255);
+    stroke: rgb(34, 77, 112);
+}
+
+rect.block.reflexive {
+    stroke: #000 !important;
+    stroke-width: 3.5px;
+    fill: rgb(110, 207, 81) !important;
+}
+
+rect.block.selected {
+    fill: lightblue !important;
+}
+
+rect.block.selected.reflexive {
+    fill: lightgreen !important;
+}
+
+rect.form-rect {
+    stroke-width: 1.5px;
+    fill:  rgb(82, 177, 255);
+    stroke: rgb(34, 77, 112);
+}
+
+rect.form-rect.wrong {
+    stroke-width: 1.5px;
+    fill:  rgb(201, 12, 12);
+    stroke: rgb(133, 14, 14);
+}
+
+rect.banner {
+    stroke: #2f3033;
+    fill: rgb(110, 207, 81);
+}
+
+text {
+    font-family: sans-serif;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+text.id {
+    text-anchor: middle;
+    font-weight: bold;
+}
+
+text.target {
+    text-anchor: middle;
+    font-size: 14px;
+}
+
+text.target.emphasized {
+    font-size: 18px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+text.stacktrace{
+    font-size: 18px;
+    text-anchor: start;
+}
+
+text.dots {
+    font-size: 30px;
+    text-anchor: start;
+    font-weight: bold;
+}
+
+circle.halo{
+    fill-opacity: 0.5;
+    fill: #dddddd
+}
+
+.boxbutton > rect {
+    fill: #e3e3e5;
+    cursor: pointer;
+    stroke: #2f3033;
+}
+
+.boxbutton > text {
+    font-size: 14px;
+    text-anchor: middle;
+}
+
+.bannerGroup > text.desc {
+    font-size: 22px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.clearGroup > rect {
+    fill: #c96464;
+    cursor: pointer;
+    stroke: #2f3033;
+}
+
+.clearGroup > text {
+    text-anchor: middle;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+rect.toolbarFrame {
+    fill: #f2f2f2;
+    stroke: #262626;
+    stroke-width: 2.5px;
+}
+
+.reuseBox > text {
+    font-size: 16px;
+    text-anchor: middle;
+}
+
+.reuseBox > rect {
+    stroke: #2f3033;
+    fill: rgb(247, 228, 17);
+    cursor: context-menu;
+}
+
+.locked * {
+    pointer-events: none;
+}
+
+.closeFormGroup {
+    cursor: pointer;
+    stroke: #000;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.closeFormGroup > circle {
+    fill: white;
+}

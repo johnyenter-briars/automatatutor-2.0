@@ -1,0 +1,33 @@
+<div>
+	<link rel="stylesheet" href="/stylesheets/problemstyle.css" type="text/css"/>
+	<script type="text/javascript" src="/javascript/grammarUtil.js"> </script>
+	
+	<h2> Solve Grammar Words problem </h2>
+	
+	<h3> Problem </h3>
+	
+	For the grammar: <br />
+	<br /><strong style="font-size: 150%; font-family: 'Lucida Console', Monaco, monospace"><solveform:grammartext> </solveform:grammartext></strong><br />
+	
+	Give <strong><solveform:inneededtext> </solveform:inneededtext></strong> that are in the language of the grammar and <strong><solveform:outneededtext> </solveform:outneededtext></strong> that are not!<br />
+	(Only use terminals that are part of the grammar's productions.)
+	
+	</br></br>
+
+	<form class="lift:form">
+		words in the grammar: <solveform:wordsin> </solveform:wordsin>
+		words NOT in the grammar: <solveform:wordsout> </solveform:wordsout>
+		
+		<solveform:submitbutton> </solveform:submitbutton>
+		<solveform:returnlink> </solveform:returnlink> <br />
+	</form>
+
+	<div id="feedbackdisplay" style="display:none" class="gradefeed">
+		<h3> Grade: <span id="grade" /> </h3>
+		<h3> Feedback: </h3>
+		<ul>
+			<div id="feedback"/>
+		</ul>
+	</div>
+
+</div> 

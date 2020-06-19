@@ -1,0 +1,53 @@
+<div>
+	<link rel="stylesheet" href="/stylesheets/problemstyle.css" type="text/css"/>
+	<script type="text/javascript">
+		function buildCYKTableXML() {
+			var res = '<cyk>'; 
+			var inputs = document.getElementsByClassName('cyk');
+			var changedSomething = false;
+			for (var i = 0; i < inputs.length; ++i) {
+				var before = inputs[i].value;
+				inputs[i].value = inputs[i].value.replace(/[^A-Z0-9\s]/g, "");
+				if (inputs[i].value !== before) changedSomething = true;
+				res += '<cell start="' + inputs[i].getAttribute("start") + '" end="' + inputs[i].getAttribute("end") + '">' + inputs[i].value + '</cell>';
+			}
+			res += '</cyk>';
+			
+			if (changedSomething) alert("Please make sure to only use nonterminals (devided by whitespaces) in the table!");
+			
+			return res;
+		}
+	</script>
+	<h2> Solve a CYK problem </h2>
+	
+	<h3> Problem </h3>
+	
+	For the grammar with the productions: <br />
+	<br /><strong style="font-size: 150%; font-family: 'Lucida Console', Monaco, monospace"><solveform:grammartext> </solveform:grammartext></strong><br />
+	
+	Perform the <a href="https://en.wikipedia.org/wiki/CYK_algorithm">CYK algorithm</a>! <br>
+	(For each cell: List the corresponding nonterminals separated by a whitespace.)
+
+	<lift:Grammar.rendergrammarsyntax>
+	</lift:Grammar.rendergrammarsyntax >
+
+	</br></br>
+
+	<form class="lift:form">
+		<div style="overflow: scroll;">
+		<solveform:cyktable> </solveform:cyktable>
+		</div><br />
+		
+		<solveform:submitbutton> </solveform:submitbutton>
+		<solveform:returnlink> </solveform:returnlink> <br />
+	</form>
+
+	<div id="feedbackdisplay" style="display:none" class="gradefeed">
+		<h3> Grade: <span id="grade" /> </h3>
+		<h3> Feedback: </h3>
+		<ul>
+			<div id="feedback"/>
+		</ul>
+	</div>
+
+</div> 

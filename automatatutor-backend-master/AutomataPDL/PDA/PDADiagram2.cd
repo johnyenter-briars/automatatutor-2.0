@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AutomataPDL.PDA.Graders.ConstructionProblemGrader">
+    <Position X="10" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAIAAAAAAAAAEAAAEAAAABECAAAAAZAAIAABAg=</HashCode>
+      <FileName>PDA\Graders\ConstructionProblemGrader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Graders.Grader" Collapsed="true">
+    <Position X="7.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>PDA\Graders\Grader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Graders.WordProblemGrader">
+    <Position X="8" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAABAAIACAAAAAAAAAAAAAAAAgAAAgQABAAAAAAEAA=</HashCode>
+      <FileName>PDA\Graders\WordProblemGrader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.AcceptanceCondition" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAACAAAAggAAAIAABAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\PDA\AcceptanceCondition.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.AcceptanceResult&lt;S&gt;" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAQAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\PDA\AcceptanceResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.InconsistentPDAException" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\PDA\InconsistentPDAException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDA&lt;A, S&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="AutomataPDL.PDA.PDA.PDA&lt;A, S&gt;.getStateErrorMessage" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PDA\PDA\PDA.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQIAKAAAAAEAiAAkgCAEAABEAAICAjAAhEAADEA=</HashCode>
+      <FileName>PDA\PDA\PDA.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDAEqualityResult&lt;S, T&gt;" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAICAAAAAAAAgAAABAAAIAEAAAAAgAAAgMAAA=</HashCode>
+      <FileName>PDA\PDA\PDAEqualityResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDATransformer&lt;A, S&gt;" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kQAhAEAAAEAAAAAIAABAAgEAgAEQAAAACgAAAAAAAAA=</HashCode>
+      <FileName>PDA\PDA\PDATransformer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDAXmlParser" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAABAAAAIAAAAAAAAAAAAQBAAAAAIAACAAQAA=</HashCode>
+      <FileName>PDA\PDA\PDAXmlParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.State&lt;A, S&gt;" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAEAAAAAAgAAAAAAAAAAAAAIAAAAACAQAAAA=</HashCode>
+      <FileName>PDA\PDA\State.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.Symbol&lt;A&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJAAAAAAIAAAAAAgAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>PDA\PDA\Symbol.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.Transition&lt;A, S&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAEAAAAAAAggAAACAAAAAEAAAEAAAAAAhAAAA=</HashCode>
+      <FileName>PDA\PDA\Transition.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.TransitionBuilder&lt;A, S&gt;" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAQAAAAAAACAQAAAAAAAgAAAAAAAEAAAAAAAAAAAAQ=</HashCode>
+      <FileName>PDA\PDA\TransitionBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

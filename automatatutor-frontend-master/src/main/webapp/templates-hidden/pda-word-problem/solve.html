@@ -1,0 +1,43 @@
+<div>
+	<script>
+        function cleanInputOf(id) {
+            const input = document.getElementById(id);
+            if (input === null) return '';
+            input.value = input.value.replace(/[<>&]/g, '');
+            return input.value;
+        }
+	</script>
+	<h3> Solve PDA words problem</h3>
+	<div style="font-size: 14px">Description: <solveform:shortdescription></solveform:shortdescription></div>
+	<div style="font-size: 14px">
+	Fill the fields below with words that are/are not in the language the following PDA accepts:
+	</div>
+
+	</br></br>
+
+	<lift:embed what="/templates-hidden/generic-pda-problems/applet"> </lift:embed>
+
+	<form class="lift:form">
+		<div>
+			<div>Run a simulation:</div>
+			<solveform:word></solveform:word>
+			<solveform:start></solveform:start>
+		</div>
+		<solveform:setupscript> </solveform:setupscript>
+
+		words in the language: <solveform:wordsinlanguage></solveform:wordsinlanguage>
+		words NOT in the language: <solveform:wordsnotinlanguage></solveform:wordsnotinlanguage>
+
+		<solveform:submitbutton> </solveform:submitbutton>
+		<solveform:returnlink> </solveform:returnlink>
+	</form>
+
+	<div id="feedbackdisplay" style="display:none" class="gradefeed">
+		<h3> Grade: <span id="grade" /> </h3>
+		<h3> Feedback: </h3>
+		<ul>
+			<div id="feedback"/>
+		</ul>
+	</div>
+
+</div> 

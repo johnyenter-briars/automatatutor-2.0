@@ -1,0 +1,2 @@
+When changing any of the js-files in this directory, run "npm run build" to re-create the bundle-file in out.
+When changing the css-file, run "grunt" to copy the file to the stylesheets-directory (maybe you have to reload your browser's page with Strg+F5).

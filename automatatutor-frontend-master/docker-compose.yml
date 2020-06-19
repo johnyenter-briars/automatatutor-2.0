@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  sbt-environment:
+    image: sbt-environment
+    build:
+      context: .
+      dockerfile: sbt-environment.Dockerfile
+
+  frontend:
+    image: automatatutor-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+      - 9009:9009 # debugging port
+    links:
+      - backend
+    depends_on:
+      - sbt-environment
+
+  backend:
+    image: automatatutor-backend
+    build:
+      context: ../automatatutor-backend
+      dockerfile: Dockerfile
+    expose:
+      - 5000
+      - 55555
+    ports:
+      - 5000:5000
+      - 55555:55555 # debugging port

@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C9EF5066-6D6E-46F7-8D88-9C50F933042E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AutomataPDL</RootNamespace>
+    <AssemblyName>AutomataPDL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\AutomataPDL.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis
+            Tools\\Rule Sets
+        </CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis
+            Tools\FxCop\\Rules
+        </CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\AutomataPDL.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis
+            Tools\\Rule Sets
+        </CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis
+            Tools\FxCop\\Rules
+        </CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\external\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Automata, Version=2.0.5868.24511, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\external\Automata.dll</HintPath>
+    </Reference>
+    <Reference Include="Automata.Z3, Version=2.0.5868.24512, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\external\Automata.Z3.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Z3, Version=4.6.0.0, Culture=neutral, PublicKeyToken=9c8d792caae602a2, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\external\Microsoft.Z3.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Automata\AbstractAutomaton.cs" />
+    <Compile Include="Automata\AutomataFeedback.cs" />
+    <Compile Include="Automata\AutomataUtilities.cs" />
+    <Compile Include="Automata\ThreeTuple.cs" />
+    <Compile Include="Automata\TM.cs" />
+    <Compile Include="Automata\TMCB.cs" />
+    <Compile Include="Automata\DFA.cs" />
+    <Compile Include="Automata\NFA.cs" />
+    <Compile Include="Automata\NTuple.cs" />
+    <Compile Include="Automata\Set.cs" />
+    <Compile Include="Automata\State.cs" />
+    <Compile Include="Automata\TwoTuple.cs" />
+    <Compile Include="CFG\ContextFreeGrammar.cs" />
+    <Compile Include="CFG\Derivation.cs" />
+    <Compile Include="CFG\GrammarGrading.cs" />
+    <Compile Include="CFG\GrammarSymbol.cs" />
+    <Compile Include="CFG\GrammarUtilities.cs" />
+    <Compile Include="CFG\GrammarParser.cs" />
+    <Compile Include="CFG\Nonterminal.cs" />
+    <Compile Include="CFG\Production.cs" />
+    <Compile Include="CFG\Terminal.cs" />
+    <Compile Include="NFA\NFAUtilities.cs" />
+    <Compile Include="NFA\NFAFeedback.cs" />
+    <Compile Include="Regex\RegexpUtilities.cs" />
+    <Compile Include="Regex\EquivalencyClasses.cs" />
+    <Compile Include="Regex\RegexpToNfaGrading.cs" />
+    <Compile Include="Utilities\LevenshteinDistance.cs" />
+    <Compile Include="PDA\CFGUtils\CFGCleaner.cs" />
+    <Compile Include="PDA\CFGUtils\CFGTo2NFConverter.cs" />
+    <Compile Include="PDA\CFGUtils\CYKTable\CFGChainExtender.cs" />
+    <Compile Include="PDA\CFGUtils\CYKTable\CYKTable.cs" />
+    <Compile Include="PDA\CFGUtils\CYKTable\DerivationNode.cs" />
+    <Compile Include="PDA\CFGUtils\CYKTable\TableField.cs" />
+    <Compile Include="PDA\CFGUtils\PerformanceCFG.cs" />
+    <Compile Include="PDA\DPDA\DPDAEquivalence\BALSetting.cs" />
+    <Compile Include="PDA\DPDA\DPDAEquivalence\HeadTailForm.cs" />
+    <Compile Include="PDA\DPDA\DPDAEquivalence\Node.cs" />
+    <Compile Include="PDA\DPDA\DPDAEquivalence\Operation.cs" />
+    <Compile Include="PDA\DPDA\DPDAEquivalence\StackSymbolSequenceSet.cs" />
+    <Compile Include="PDA\DPDA\DPDAEquivalence\Tableau.cs" />
+    <Compile Include="PDA\PDARunner\DPDARunner.cs" />
+    <Compile Include="PDA\PDARunner\IPDARunner.cs" />
+    <Compile Include="PDA\PDA\AcceptanceCondition.cs" />
+    <Compile Include="PDA\PDA\AcceptanceResult.cs" />
+    <Compile Include="PDA\PDA\Configuration.cs" />
+    <Compile Include="PDA\PDA\CurrentStack.cs" />
+    <Compile Include="PDA\PDA\Word.cs" />
+    <Compile Include="PDA\SDA\DeterminisedSDA.cs" />
+    <Compile Include="PDA\SDA\DeterminisedSDATransition.cs" />
+    <Compile Include="PDA\Simulation\DirectSimulation\DirectSimulationRunner.cs" />
+    <Compile Include="PDA\Simulation\DirectSimulation\SimulationNode.cs" />
+    <Compile Include="PDA\Simulation\DPDASimulationRunner.cs" />
+    <Compile Include="PDA\Simulation\NoAcceptanceException.cs" />
+    <Compile Include="PDA\Simulation\Node.cs" />
+    <Compile Include="PDA\Simulation\SimulationAdapter.cs" />
+    <Compile Include="PDA\Simulation\SimulationPath.cs" />
+    <Compile Include="PDA\Simulation\CFGSimulationRunner.cs" />
+    <Compile Include="PDA\Utils\Assertion.cs" />
+    <Compile Include="PDA\PDARunnerDirect\Configuration.cs" />
+    <Compile Include="PDA\DPDA\DPDAEquivalenceChecker.cs" />
+    <Compile Include="PDA\DPDA\DPDAInNormalFormToSDAConverter.cs" />
+    <Compile Include="PDA\DPDA\DPDAToNormalFormConverter.cs" />
+    <Compile Include="PDA\Graders\ConstructionProblemGrader.cs" />
+    <Compile Include="PDA\Graders\Grader.cs" />
+    <Compile Include="PDA\Graders\WordProblemGrader.cs" />
+    <Compile Include="PDA\PDA\InconsistentPDAException.cs" />
+    <Compile Include="PDA\PDA\PDA.cs" />
+    <Compile Include="PDA\PDARunner\PDAToCFGConverter.cs" />
+    <Compile Include="PDA\PDA\PDATransformer.cs" />
+    <Compile Include="PDA\PDA\PDAEqualityResult.cs" />
+    <Compile Include="PDA\PDARunner\PDARunnerWithCFG.cs" />
+    <Compile Include="PDA\PDARunnerDirect\Node.cs" />
+    <Compile Include="PDA\PDARunnerDirect\PDARunner.cs" />
+    <Compile Include="PDA\PDA\PDAXmlParser.cs" />
+    <Compile Include="PDA\SDA\SDA.cs" />
+    <Compile Include="PDA\SDA\SDATransition.cs" />
+    <Compile Include="PDA\SDA\TripleStackSymbol.cs" />
+    <Compile Include="PDA\PDARunnerDirect\Stack.cs" />
+    <Compile Include="PDA\DPDA\StackSymbolSequence.cs" />
+    <Compile Include="PDA\PDA\State.cs" />
+    <Compile Include="PDA\PDA\Symbol.cs" />
+    <Compile Include="PDA\PDA\Transition.cs" />
+    <Compile Include="PDA\PDA\TransitionBuilder.cs" />
+    <Compile Include="PDA\PDARunnerDirect\Word.cs" />
+    <Compile Include="PDA\Utils\MultiDictionary.cs" />
+    <Compile Include="PDA\Utils\TimeGuard.cs" />
+    <Compile Include="PDA\Utils\WordGenerator.cs" />
+    <Compile Include="PDL\ProblemGeneration.cs" />
+    <Compile Include="TM\TMXmlParser.cs" />
+    <Compile Include="Utilities\BitVecUtil.cs" />
+    <Compile Include="Utilities\Log.cs" />
+    <Compile Include="DFA\DFADensity.cs" />
+    <Compile Include="DFA\DFAEditDistance.cs" />
+    <Compile Include="DFA\DFAFeedback.cs" />
+    <Compile Include="NFA\NFAEditDistance.cs" />
+    <Compile Include="NFA\NFAGrading.cs" />
+    <Compile Include="Utilities\PatternMatching.cs" />
+    <Compile Include="PDL\PDLException.cs" />
+    <Compile Include="DFA\DFAGrading.cs" />
+    <Compile Include="DFA\DFAUtilities.cs" />
+    <Compile Include="PDL\PDL.cs" />
+    <Compile Include="PDL\PDLEditDistance.cs" />
+    <Compile Include="PDL\PDLpos.cs" />
+    <Compile Include="PDL\PDLpred.cs" />
+    <Compile Include="PDL\PDLset.cs" />
+    <Compile Include="PDL\PDLEnumeration.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Regex\Regexp.cs" />
+    <Compile Include="Regex\RegexpSynthesis.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
+    <Compile Include="Utilities\BooleanOperation.cs" />
+    <Compile Include="WhileProgram\CWExpr.cs" />
+    <Compile Include="WhileProgram\ProgramGenerator.cs" />
+    <Compile Include="WhileProgram\WhileUtilities.cs" />
+    <Compile Include="WhileProgram\WExpr.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MSOZ3\MSOZ3.csproj">
+      <Project>{8745F590-2663-4968-BFEA-500DDCE6C9E3}</Project>
+      <Name>MSOZ3</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\external\msvcp100.dll">
+      <Link>msvcp100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\external\msvcr100.dll">
+      <Link>msvcr100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\external\vcomp100.dll">
+      <Link>vcomp100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PDA\CFGUtils\CFGDiagram.cd" />
+    <None Include="PDA\PDADiagram.cd" />
+    <None Include="PDA\PDADiagram2.cd" />
+    <None Include="PDA\PDADiagramAll.cd" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.        Other similar extension points exist, see Microsoft.Common.targets.  <Target Name="BeforeBuild">  </Target>  <Target Name="AfterBuild">  </Target>  -->
+</Project>

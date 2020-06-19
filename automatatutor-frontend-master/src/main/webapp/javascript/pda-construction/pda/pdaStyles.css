@@ -1,0 +1,45 @@
+div#stackcontainer {
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-left: 2px;
+}
+
+svg#stacksvg {
+    background: #3498db;
+}
+
+div#control-area {
+    border: #6699cc groove;
+    padding: 5px;
+}
+
+div#control-area form {
+    display: flex;
+    flex-direction: row;
+}
+
+div#control-area form * {
+    font-size: 14px;
+}
+
+div#control-area form > * {
+    margin: 5px;
+}
+
+div#control-buttons input {
+    min-width: 40px;
+    font-weight: bold;
+}
+
+tspan.valid.valid-symbols {
+    fill: black;
+}
+
+tspan.invalid {
+    fill: orange;
+}
+
+tspan.invalid-symbols {
+    fill: red;
+}

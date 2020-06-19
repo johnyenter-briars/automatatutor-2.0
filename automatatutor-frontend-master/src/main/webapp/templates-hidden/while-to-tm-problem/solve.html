@@ -1,0 +1,45 @@
+<div><!--Tahiti-->
+    <h3> Solve While-program to Turing machine problem </h3>
+    <div class="probdesc">
+        Convert the following While-program to a Turing machine over the alphabet
+        <dfaeditform:alphabettext></dfaeditform:alphabettext>
+        :
+        <pre><code>
+<dfaeditform:programtext> </dfaeditform:programtext>
+	</code>	</pre>
+        <h4>Notes:</h4>
+        <ul>
+            <li>The variables x_0, x_1, ... correspond to the tapes 0, 1, ... .</li>
+            <li>Use binary encoding (most significant bit first).</li>
+            <li>Tapes start with non-negative integer values.
+                <dfaeditform:uselessvars/>
+            </li>
+            <li>A tape may only be modified if the corresponding variable is modified.</li>
+            <li>Your outputs may have leading zeroes (e.g. 0010 will be interpreted as 10).</li>
+            <li>For subtraction, use modified difference, which returns 0 if the result is negative.</li>
+        </ul>
+        <dfaeditform:problemdescription></dfaeditform:problemdescription>
+    </div>
+    </br>
+
+    <div style="visibility: hidden;" id="sampleinput"></div>
+
+    <lift:embed what="/while-to-tm-problem/applet-solve"></lift:embed>
+
+    <form class="lift:form">
+        <dfaeditform:alphabetscript></dfaeditform:alphabetscript>
+        <dfaeditform:inittmscript></dfaeditform:inittmscript>
+        <dfaeditform:lastattemptscript></dfaeditform:lastattemptscript>
+        <dfaeditform:automatondescriptionfield></dfaeditform:automatondescriptionfield>
+        <dfaeditform:submitbutton></dfaeditform:submitbutton>
+        <dfaeditform:returnlink></dfaeditform:returnlink>
+    </form>
+
+    <div id="feedbackdisplay" style="display:none" class="gradefeed">
+        <h3> Grade: <span id="grade"/></h3>
+        <h3> Feedback: </h3>
+        <ul>
+            <div id="feedback"/>
+        </ul>
+    </div>
+</div>

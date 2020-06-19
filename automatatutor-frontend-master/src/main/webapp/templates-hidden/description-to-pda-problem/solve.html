@@ -1,0 +1,34 @@
+<div>
+    <h3> Solve PDA construction problem </h3>
+    <div style="font-size: 14px; padding-bottom: 8px;">
+		<div style="font-weight: bold;">
+			Construct a PDA that recognizes the following language:
+		</div>
+		<div style="margin: 8px 20px;">
+			<solveform:problemdescription></solveform:problemdescription>
+		</div>
+		<span style="font-weight: bold;">Hint:</span> To get the maximum number of points, use as few states and nonterminals as possible!
+    </div>
+
+    <lift:embed what="/templates-hidden/generic-pda-problems/applet"></lift:embed>
+
+    <form class="lift:form">
+        <div>
+            <div>Run a simulation:</div>
+            <solveform:word></solveform:word>
+            <solveform:start></solveform:start>
+        </div>
+        <solveform:submitbutton></solveform:submitbutton>
+        <solveform:returnlink></solveform:returnlink>
+        <solveform:initpadscript></solveform:initpadscript>
+    </form>
+
+    <div id="feedbackdisplay" style="display:none" class="gradefeed">
+        <h3> Grade: <span id="grade"/></h3>
+        <h3> Feedback: </h3>
+        <ul>
+            <div id="feedback"/>
+        </ul>
+    </div>
+
+</div> 

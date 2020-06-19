@@ -1,0 +1,49 @@
+.tape-field {
+    fill: azure;
+    stroke: blue;
+    stroke-width: 1px;
+}
+
+.tape-field.marked {
+    stroke: yellow;
+    stroke-width: 2px;
+}
+
+.tape-content {
+    text-anchor: middle;
+    font-size: 14px;
+}
+
+.tape-numbers {
+    font-size: 11px;
+}
+
+div#control-area {
+    border: #6699cc groove;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+div#control-area button {
+    min-width: 40px;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 5px;
+}
+
+tspan.valid.valid-symbols.valid-number-tapes {
+    fill: black;
+}
+
+tspan.invalid {
+    fill: orange;
+}
+
+tspan.invalid-number-tapes {
+    fill: red;
+}
+
+tspan.invalid-symbols {
+    fill: darkred;
+}

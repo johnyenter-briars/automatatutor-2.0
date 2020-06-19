@@ -1,0 +1,120 @@
+<div xmlns:pumpinggame="" xmlns:lift="">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/stylesheets/proto2.css" type="text/css"/>
+        <link rel="stylesheet" href="/stylesheets/interface.css" type="text/css"/>
+        <link rel="stylesheet" href="/stylesheets/pumpinggame.css" type="text/css"/>
+
+        <script type="text/javascript" src="/javascript/lib/d3.min.js"></script>
+        <script type="text/javascript" src="/javascript/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="/javascript/lib/jquery.contextmenu.js"></script>
+        <script type="text/javascript" src="/javascript/lib/browser.js"></script>
+        <script type="text/javascript" src="/javascript/lib/contextmenu.js"></script>
+
+        <script type="text/javascript" src="/javascript/plgUtil.js"></script>
+    </head>
+
+    <h2> Create a new Pumping Lemma Game</h2>
+
+    <h4>Syntax - Unpumpable Languages</h4>
+    A language is considered <i>unpumpable</i>, if it is not regular and does not satisfy the pumping lemma. Check your language for these criteria before specifying them.<br>
+    An <b>arithmetic language</b> consists of an <b>alphabet</b>, a <b><i>flat</i> symbolic string</b> and <b>constraints</b>.<br>
+    <br>
+    The <b>alphabet</b> is a set of letters ([a-zA-Z]) separated by spaces.<br>
+    <br>
+    Let &Sigma; be the alphabet and E be any set of linear combinations. A <b><i>flat</i> symbolic string</b> is defined by the following BNF: <br>
+    &lt;P&gt; ::= &lt;P&gt;&lt;P&gt; | &lt;I&gt;<sup>e</sup> | &sigma; | &epsilon; <br>
+    &lt;I&gt; ::= &lt;I&gt;&lt;I&gt; | &sigma; | &epsilon; <br>
+    where &sigma; &isin; &Sigma; and e &isin; E.<br>
+    <br>
+    Let E be any set of linear combinations. The variables in the linear combinations must appear in the given symbolic string.
+    The <b>constraints</b> of an arithmetic language defined by the following BNF: <br>
+    &lt;C&gt; ::= &lt;C&gt; && &lt;C&gt; | e == e | e &lt; e | e &gt; e | e &le; e | e &ge; e<br>
+    <br>
+    Additionally, in case of an unpumpable language, you have to give an unpumpable word in that language depending on the pumping number <i>n</i>.
+    The syntax ist the same as in a symbolic string, except that the only integer variable usable in linear combinations is <i>n</i>.<br>
+    <br>
+    <h4>Syntax - Regular Languages</h4>
+    When defining a regular language with an arithmetic langauge, the symbolic string does not have to be flat. In this case, it is defined by the following BNF: <br>
+    &lt;P&gt; ::= &lt;P&gt;&lt;P&gt; | &lt;P&gt;<sup>e</sup> | &sigma; | &epsilon; <br>
+    where &sigma; &isin; &Sigma; and e &isin; E.<br>
+    <br>
+    The constraints have to fulfil additional criteria: each variable may only appear once and each of the constraints must be unary
+    (i.e. only contain exactly one variable).<br>
+    <br>
+    <br>
+    <h4> Problem Definition </h4>
+
+    <lift:Identity form="POST">
+        <table id="inputTable">
+            <tr>
+                <td> Short Description: </td>
+                <td> <pumpinggame:shortdescription> </pumpinggame:shortdescription> </td>
+            </tr>
+            <tr>
+                <td> Long Description: </td>
+                <td> <pumpinggame:longdescription> </pumpinggame:longdescription> </td>
+            </tr>
+            <tr>
+                <td>  <span id="regularText">regular</span> </td>
+                <td> <label class="switch" id="regularSwitch">
+                        <input type="checkbox" onchange="onSwitch()" checked>
+                        <span class="slider"></span>
+                    </label>
+                </td>
+            </tr>
+            <tr class="regularField">
+                <td> <span id="nfaInputText">Input: Arithmetic Language</span> </td>
+                <td> <label class="switch" id="inputSwitch">
+                    <input type="checkbox" onchange="onSwitch()" checked>
+                    <span class="slider"></span>
+                </label>
+                </td>
+            </tr>
+            <tr>
+                <td> Alphabet (separated by spaces): </td>
+                <td> <pumpinggame:alphabetfield> </pumpinggame:alphabetfield> </td>
+            </tr>
+            <tr class="regularField NfaField" style="display:none">
+                <td> <input type="button" value="Set Alphabet" onclick="setAlphabet()"></td>
+                <td> (resets the whole automaton) </td>
+            </tr>
+            <tr class="regularField NfaField" style="display:none">
+                <td> <pumpinggame:nfatodfabutton> </pumpinggame:nfatodfabutton> </td>
+                <td> </td>
+            </tr>
+            <tr class="bothField nonNfaField">
+                <td> Symbolic String: </td>
+                <td> <pumpinggame:symbolicstringfield> </pumpinggame:symbolicstringfield> </td>
+            </tr>
+            <tr class="bothField nonNfaField">
+                <td> Constraints: </td>
+                <td> <pumpinggame:constraintsfield> </pumpinggame:constraintsfield> </td>
+            </tr>
+            <tr class="nonRegularField" style="display:none">
+                <td> Unpumpable Word: (with Pumping Number n) </td>
+                <td> <pumpinggame:unpumpablefield> </pumpinggame:unpumpablefield> </td>
+            </tr>
+            <tr class="regularField nonNfaField">
+                <td> <pumpinggame:checkdfabutton> </pumpinggame:checkdfabutton> </td>
+                <td> </td>
+            </tr>
+            <tr class="nonRegularField" style="display:none">
+                <td> <pumpinggame:checkvaliditybutton> </pumpinggame:checkvaliditybutton> </td>
+                <td> </td>
+            </tr>
+        </table>
+        <pumpinggame:automaton> </pumpinggame:automaton>
+        <pumpinggame:regularField> </pumpinggame:regularField>
+
+    <lift:embed what="/pumping-lemma-game-problem/applet"> </lift:embed>
+
+    <br><br><pumpinggame:submit> </pumpinggame:submit>
+    </lift:Identity>
+
+    <div id="feedbackdisplay" style="display:none" class="gradefeed">
+        <h3> Response: </h3>
+        <span id="errordisplay"></span>
+    </div>
+
+</div>

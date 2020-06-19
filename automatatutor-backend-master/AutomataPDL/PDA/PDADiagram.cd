@@ -1,0 +1,320 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AutomataPDL.PDA.PDA.AcceptanceCondition" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="0.5" Width="2" />
+    <Members>
+      <Method Name="AcceptanceCondition" Hidden="true" />
+      <Field Name="emptyStack" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Field Name="finalState" Hidden="true" />
+      <Field Name="finalStateAndEmptyStack" Hidden="true" />
+      <Method Name="GetAcceptanceConditionById" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="AutomataPDL.PDA.PDA.AcceptanceCondition.EmptyStack" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PDA\PDA\AcceptanceCondition.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="AutomataPDL.PDA.PDA.AcceptanceCondition.FinalState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PDA\PDA\AcceptanceCondition.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="AutomataPDL.PDA.PDA.AcceptanceCondition.FinalStateAndEmptyStack" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PDA\PDA\AcceptanceCondition.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAACAAAAggAAAIAABAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\PDA\AcceptanceCondition.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.721" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.InconsistentPDAException" Collapsed="true">
+    <Position X="4.75" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\PDA\InconsistentPDAException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDA&lt;A, S&gt;" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="0.5" Width="2.25" />
+    <Members>
+      <Method Name="AddStackSymbol" Hidden="true" />
+      <Method Name="CheckIfHasNormalForm" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Property Name="FurtherStackSymbol" Hidden="true" />
+      <Field Name="getAlreadyExistsError" Hidden="true" />
+      <Field Name="getNotExistsError" Hidden="true" />
+      <Method Name="HasNormalForm" Hidden="true" />
+      <Field Name="initialStateId" Hidden="true" />
+      <Field Name="InvalidStackSymbolError" Hidden="true" />
+      <Method Name="IsStillDeterministic" Hidden="true" />
+      <Property Name="NormalForm" Hidden="true" />
+      <Method Name="RemoveTransition" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Delegate Name="AutomataPDL.PDA.PDA.PDA&lt;A, S&gt;.getStateErrorMessage" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PDA\PDA\PDA.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQIAKAAAAAEAiAAkgCAEAABEAAICAjAAhEAADEA=</HashCode>
+      <FileName>PDA\PDA\PDA.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="pdaRunner" />
+      <Property Name="AcceptanceCondition" />
+      <Property Name="InitialState" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="States" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDAEqualityResult&lt;S, T&gt;">
+    <Position X="5.5" Y="5" Width="2.75" />
+    <Members>
+      <Field Name="alphabet" Hidden="true" />
+      <Method Name="CheckWordsUntilLength" Hidden="true" />
+      <Field Name="pdaAttempt" Hidden="true" />
+      <Field Name="pdaCorrect" Hidden="true" />
+      <Field Name="pdaCorrectIsinconsistent" Hidden="true" />
+      <Method Name="PDAEqualityResult" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAICAAAAAAAAgAAABAAAIAEAAAAAgAAAgMAAA=</HashCode>
+      <FileName>PDA\PDA\PDAEqualityResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDATransformer&lt;A, S&gt;">
+    <Position X="2.5" Y="2.25" Width="2" />
+    <Members>
+      <Method Name="AddEmptyingTransitions" Hidden="true" />
+      <Method Name="AddInitialTransition" Hidden="true" />
+      <Method Name="AddNewState" Hidden="true" />
+      <Method Name="AddStatesOfOriginalPDA" Hidden="true" />
+      <Method Name="AddTransitionsForAddedSymbol" Hidden="true" />
+      <Method Name="AddTransitionsOfOriginalPDA" Hidden="true" />
+      <Method Name="AddTransitionsToEmptyingState" Hidden="true" />
+      <Field Name="AlreadyEmptyStackError" Hidden="true" />
+      <Field Name="InvalidSymbolError" Hidden="true" />
+      <Method Name="MergeDPDAsWithEmptyStack" Hidden="true" />
+      <Field Name="NotDeterministicError" Hidden="true" />
+      <Field Name="NotEmptyStackError" Hidden="true" />
+      <Method Name="ToDPDAWithAddedAlphabetSymbol" Hidden="true" />
+      <Method Name="ToDPDAWithEmptyStack" Hidden="true" />
+      <Method Name="ToRawPDA" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>kQAhAEAAAEAAAAAIAABAAgEAgAEQAAAACgAAAAAAAAA=</HashCode>
+      <FileName>PDA\PDA\PDATransformer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.PDAXmlParser">
+    <Position X="8.75" Y="5.5" Width="2.5" />
+    <Members>
+      <Method Name="AddStatesToPda" Hidden="true" />
+      <Method Name="AddTransitionsToPda" Hidden="true" />
+      <Field Name="allStackAlphabetSymbols" Hidden="true" />
+      <Field Name="Epsilon" Hidden="true" />
+      <Method Name="ParseAnAlphabetFromXmlPDA" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="AutomataPDL.PDA.PDA.PDAXmlParser.XmlNames" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PDA\PDA\PDAXmlParser.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="AutomataPDL.PDA.PDA.PDAXmlParser.XmlAttr" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PDA\PDA\PDAXmlParser.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAABAAAAIAAAAAAAAAAAAQBAAAAAIAACAAQAA=</HashCode>
+      <FileName>PDA\PDA\PDAXmlParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.State&lt;A, S&gt;" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="ContainsTransitions" Hidden="true" />
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="State" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Transitions" Type="AutomataPDL.PDA.PDA.Transition&lt;A, S&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="10.938" Y="2.247" />
+        <Point X="10.938" Y="3.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.432" Y="0.195" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAEAAAAAAgAAAAAAAAAAAAAIAAAAACAQAAAA=</HashCode>
+      <FileName>PDA\PDA\State.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Transitions" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.Symbol&lt;A&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJAAAAAAIAAAAAAgAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>PDA\PDA\Symbol.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDA.Transition&lt;A, S&gt;" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="3.25" Width="1.75" />
+    <Members>
+      <Method Name="Equals" Hidden="true" />
+      <Method Name="HasNormalForm" Hidden="true" />
+      <Property Name="Id" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Origin" Type="AutomataPDL.PDA.PDA.State&lt;A, S&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="10.25" Y="3.25" />
+        <Point X="10.25" Y="2.247" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.505" Y="0.206" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Target" Type="AutomataPDL.PDA.PDA.State&lt;A, S&gt;" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="10" Y="3.25" />
+        <Point X="10" Y="2.247" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.078" Y="0.227" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAEAAAAAAAggAAACAAAAAEAAAEAAAAAAhAAAA=</HashCode>
+      <FileName>PDA\PDA\Transition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SymbolIn" />
+      <Property Name="Origin" />
+      <Property Name="Target" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDARunnerCFG.PDARunner&lt;A, S&gt;">
+    <Position X="2.5" Y="3.5" Width="1.75" />
+    <Members>
+      <Method Name="AddCFGOfPDA" Hidden="true" />
+      <Field Name="contextFreeGrammarsInCNF" Hidden="true" />
+      <Method Name="PDARunner" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAABAAAAAAAAAAAIA=</HashCode>
+      <FileName>PDA\PDARunnerCFG\PDARunner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.PDARunnerCFG.PDAToCFGConverter&lt;A, S&gt;">
+    <Position X="2.5" Y="4.75" Width="2.25" />
+    <Members>
+      <Method Name="GetAllPossibleStateListsWithLength" Hidden="true" />
+      <Method Name="GetInitialProductions" Hidden="true" />
+      <Method Name="GetNonTerminal" Hidden="true" />
+      <Method Name="GetNonTerminalId" Hidden="true" />
+      <Method Name="GetProductionsFromTransitions" Hidden="true" />
+      <Method Name="GetProductionsOfTransition" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAACAAAQAAIAAAAAAAAAAACACAAAAACAAAAAA=</HashCode>
+      <FileName>PDA\PDARunnerCFG\PDAToCFGConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Graders.ConstructionProblemGrader">
+    <Position X="6.75" Y="7.5" Width="2.25" />
+    <Members>
+      <Field Name="ErrorInconsistentAcceptanceCondition" Hidden="true" />
+      <Field Name="ErrorToManyStackSymbols" Hidden="true" />
+      <Field Name="ErrorToManyStates" Hidden="true" />
+      <Field Name="ErrorWordFalselyExcluded" Hidden="true" />
+      <Field Name="ErrorWordFalselyIncluded" Hidden="true" />
+      <Method Name="FindElementWithMinimumProperty" Hidden="true" />
+      <Method Name="FindWordWithMinimumLength" Hidden="true" />
+      <Field Name="HintSubset" Hidden="true" />
+      <Field Name="HintSuperset" Hidden="true" />
+      <Field Name="maximumMilliSeconds" Hidden="true" />
+      <Field Name="maximumNumberOfWords" Hidden="true" />
+      <Field Name="maximumWordLengthTested" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAgAAAIAAAAAAAAAEAAAEAAAABECAAAAAZAAIAABAg=</HashCode>
+      <FileName>PDA\Graders\ConstructionProblemGrader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Graders.WordProblemGrader">
+    <Position X="9.25" Y="7.5" Width="2" />
+    <Members>
+      <Method Name="CheckWords" Hidden="true" />
+      <Method Name="CheckWordsInLanguage" Hidden="true" />
+      <Method Name="CheckWordsNotInLanguage" Hidden="true" />
+      <Field Name="ErrorWordInLanguage" Hidden="true" />
+      <Field Name="ErrorWordMoreThanOnce" Hidden="true" />
+      <Field Name="ErrorWordNotInLanguage" Hidden="true" />
+      <Field Name="ErrorWordWithInvalidKeys" Hidden="true" />
+      <Field Name="maximumWordLength" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAABAAIACAAAAAAAAAAAAAAAAgAAAgQABAAAAAAEAA=</HashCode>
+      <FileName>PDA\Graders\WordProblemGrader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Simulation.SimulationAdapter">
+    <Position X="4.75" Y="7.5" Width="1.75" />
+    <Members>
+      <Method Name="Error" Hidden="true" />
+      <Field Name="ns" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAgAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>PDA\Simulation\SimulationAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Simulation.SimulationPath&lt;A, S&gt;">
+    <Position X="4.75" Y="8.75" Width="1.75" />
+    <Members>
+      <Property Name="Path" Hidden="true" />
+      <Method Name="SimulationPath" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAIAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\Simulation\SimulationPath.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Simulation.SimulationRunner&lt;A, S&gt;">
+    <Position X="6.75" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\Simulation\SimulationRunner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.Simulation.Node&lt;A, S&gt;">
+    <Position X="2.5" Y="6.25" Width="1.75" />
+    <Members>
+      <Field Name="acceptanceCondition" Hidden="true" />
+      <Method Name="CheckIfWordIsAccepted" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgADAAAAAAAEQAABAAAAAAAEAAAQAgAAAAA=</HashCode>
+      <FileName>PDA\Simulation\Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

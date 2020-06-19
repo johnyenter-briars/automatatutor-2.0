@@ -1,0 +1,60 @@
+<div>
+    <head>
+        <link rel="stylesheet" href="/stylesheets/proto2.css" type="text/css"/>
+        <link rel="stylesheet" href="/stylesheets/interface.css" type="text/css"/>
+
+        <script type="text/javascript" src="/javascript/lib/d3.min.js"></script>
+        <script type="text/javascript" src="/javascript/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="/javascript/lib/jquery.contextmenu.js"></script>
+        <script type="text/javascript" src="/javascript/lib/browser.js"></script>
+        <script type="text/javascript" src="/javascript/lib/contextmenu.js"></script>
+
+        <script type="text/javascript" src="/javascript/includeDFANFAPLG.js"></script>
+        <script type="text/javascript" src="/javascript/graphLayouting.js"></script>
+        <script type="text/javascript" src="/javascript/interface.js"></script>
+        <script type="text/javascript" src="/javascript/alphabetUtil.js"> </script>
+    </head>
+
+    <div id="automata_applet_nfa" class="regularField NfaField" style="display:none">
+        <div id="workarea2">
+            <div id="svgcanvasnfa"></div>
+        </div>
+        <div>
+            Note: only the DFA below will be saved in the database. Make sure to convert it before submitting.
+        </div>
+
+        <!--<button onclick="Editor.canvasNfa.layoutNodes()">Apply Forces</button>-->
+    </div>
+
+    <div id="automata_applet_dfa" class="regularField">
+        <div id="workarea">
+            <div id="svgcanvasdfa"></div>
+        </div>
+
+        <!--<button onclick="Editor.canvasDfa.layoutNodes()">Apply Forces</button>-->
+    </div>
+
+
+
+    <ul id="cmenu_canvas" class="contextMenu">
+        <li class="contextMenuLi"><a href="#add">Add State</a></li>
+        <li class="contextMenuLi"><a href="#remove">Remove State</a></li>
+        <li class="contextMenuLi"><a href="#final">Make Final</a></li>
+        <li class="contextMenuLi"><a href="#non-final">Make Non-final</a></li>
+        <li class="contextMenuLi"><a href="#init">Make Initial</a></li>
+        <li class="contextMenuLi"><a href="#flip">Flip Loop</a></li>
+    </ul>
+
+    <script type='text/javascript'>
+        initCanvas();
+        Editor.canvasDfa.setAlphabet([]);
+        Editor.canvasDfa.layoutNodes();
+        Editor.canvasDfa.lockCanvas();
+
+        Editor.canvasNfa.setAlphabet([]);
+        Editor.canvasNfa.layoutNodes();
+    </script>
+
+</div>
+
+

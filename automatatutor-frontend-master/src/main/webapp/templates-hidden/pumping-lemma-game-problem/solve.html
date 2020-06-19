@@ -1,0 +1,126 @@
+<div id="gamecontent">
+    <link rel="stylesheet" href="/stylesheets/pumpinggame.css" type="text/css"/>
+    <script type="text/javascript" src="/javascript/plgUtil.js"></script>
+    <script src="/ajax_request/liftAjax.js" type="text/javascript"></script>
+    <script>async function pause() {await new Promise(resolve => setTimeout(resolve, 20))}</script>
+
+    <h3> The Pumping Lemma Game </h3>
+
+    Given the following language: <br/>
+    <strong>
+    <pumpinggame:languagedescription></pumpinggame:languagedescription>
+    <br/>
+    </strong>
+
+    over the alphabet
+    <strong>
+    <pumpinggame:alphabet></pumpinggame:alphabet>
+    <br/><br/>
+    </strong>
+    Do you believe that the language is regular?
+
+    <div>
+        <pumpinggame:regularbutton></pumpinggame:regularbutton>
+        <pumpinggame:nonregularbutton></pumpinggame:nonregularbutton>
+    </div>
+    <div>
+        <span id="regularchoicetext"></span>
+    </div>
+
+    <div id="plchoicen" class="playerchoicebox" style="display:none">
+        Choose a  pumping lemma number > 0.
+        <!--
+        <div class="tooltip">Hint
+            <span class="tooltiptext">
+                The AI will choose a word from the given language that is at least as long as your chosen pumping lemma number. <br/>
+            </span>
+        </div>
+        -->
+        <div class="tooltip" title="The AI will choose a word from the given language that is at least as long as your chosen pumping lemma number.">
+            Hint
+        </div>
+        <br/>
+        <input id="nchoicefield" type="text" value=""/> <br/>
+        <pumpinggame:nsubmitbutton></pumpinggame:nsubmitbutton> <br/>
+        <span id="nchoicefeedback"></span>
+    </div>
+
+    <div id="aichoicen" class="aichoicebox" style="display:none">
+        AI chooses pumping number: <span class="pln"></span>
+    </div>
+
+    <div id="plchoicew" class="playerchoicebox" style="display:none">
+        Choose a word <i>w</i> in the given language that has at least <span class="pln"></span> letters. <br>
+        Your choice:
+        <div>
+            <input id="wordchoicefield" type="text" value=""/> <br>
+        </div>
+        <pumpinggame:wordsubmitbutton></pumpinggame:wordsubmitbutton> <br>
+        <span id="wordchoicefeedback"></span>
+    </div>
+
+    <!--
+    <div>
+        <div id="aichoiceword" class="aichoicebox" style="display:none">
+            <div class="placeholder"></div>
+        </div>
+    </div>
+    -->
+    <div id="aichoiceword" class="aichoicebox" style="display:none">
+    </div>
+
+    <div id="plchoicesplit" class="playerchoicebox" style="display:none">
+        <div>
+            Choose start split: <br>
+            <input id="splitsliderstart" type="range" class="splitslider" value="0" min="0" max="" oninput="splitSliderStartUpdate()"/> <br>
+            <p class="lettersstart" style="text-align:center"></p>
+            Choose mid split: <br>
+            <input id="splitslidermid" type="range" class="splitslider" value="0" min="0" max="" oninput="splitSliderMidUpdate()"/> <br>
+            <p class="lettersmid" style="text-align:center"></p>
+        </div>
+        <div class="slidecontainer">
+            Start word: <span id="splitdisplaystart"></span> <br/>
+            (<span class="lettersstart"></span> letter(s))
+        </div>
+        <div class="slidecontainer">
+            Mid word: <span id="splitdisplaymid"></span> <br/>
+            (<span class="lettersmid"></span> letter(s))
+        </div>
+        <div class="slidecontainer">
+            End word:  <span id="splitdisplayend"></span> <br/>
+            (<span class="lettersend"></span> letter(s))
+        </div>
+        <pumpinggame:splitsubmit></pumpinggame:splitsubmit> <br/>
+        <span id="splitchoicefeedback"></span>
+    </div>
+
+    <div id="aichoicesplit" class="aichoicebox" style="display:none">
+        AI chooses split: (<span class="split_start"></span>, <span class="split_mid"></span>, <span class="split_end"></span>)
+    </div>
+
+    <div id="plchoicei" class="playerchoicebox" style="display:none">
+        Choose an i such that <span class="split_start_disp"></span>(<span class="split_mid_disp"></span>)<sup>i</sup> <span class="split_end_disp"></span> is not in the given language. <br>
+        Your choice:
+        <div>
+            <input id="ichoicefield" type="text" value=""/> <br>
+        </div>
+        <pumpinggame:isubmitbutton></pumpinggame:isubmitbutton> <br>
+        <span id="ichoicefeedback"></span>
+    </div>
+
+    <div id="aichoicei" class="aichoicebox" style="display:none">
+        AI chooses split: (<span class="split_start"></span>, <span class="split_mid"></span>, <span class="split_end"></span>)
+    </div>
+
+    <div style="text-align:center;">
+        <div id="result"></div>
+        <button id="retrybutton" style="display:none" onclick="location.reload()">Retry</button>
+    </div>
+
+    <form>
+        <input id="word" type="hidden" value=""/>
+    </form>
+
+    <pumpinggame:loadsolutionattempt></pumpinggame:loadsolutionattempt>
+
+</div>

@@ -1,0 +1,58 @@
+<div>
+    <h2> Create a new PDA construction problem </h2>
+
+    <lift:embed what="/templates-hidden/generic-pda-problems/applet"></lift:embed>
+
+    <script type="text/javascript">
+        var pda = pdaCreator.PDA.createMutablePDAWithDefaultProperties(document.getElementById('svgcanvaspda'));
+    </script>
+
+    <form form="POST">
+        <table>
+            <tr>
+                <td>Run a simulation to test the created PDA (this is only for you to check your PDA):</td>
+                <td>
+                    <createform:word></createform:word>
+                    <createform:start></createform:start>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <createform:automaton></createform:automaton>
+                </td>
+            </tr>
+            <tr>
+                <td> Short Description:</td>
+                <td>
+                    <createform:shortdescription></createform:shortdescription>
+                </td>
+            </tr>
+            <tr>
+                <td> Long Description (will appear in the problem in the form of "Construct a PDA that recognizes the
+                    following language: {long description}"):
+                </td>
+                <td>
+                    <createform:longdescription></createform:longdescription>
+                </td>
+            </tr>
+            <tr>
+                <td> Stack alphabet should be given:</td>
+                <td>
+                    <createform:givestackalphabet></createform:givestackalphabet>
+                </td>
+            </tr>
+            <tr>
+                <td> Allow simulation before submitting correct solution:</td>
+                <td>
+                    <createform:allowsimulation></createform:allowsimulation>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <createform:submit></createform:submit>
+                </td>
+            </tr>
+    </lift:Identity>
+</div> 

@@ -1,0 +1,58 @@
+<div>
+    <h2> Create a new PDA words problem </h2>
+
+    </br></br>
+
+    <lift:embed what="/templates-hidden/generic-pda-problems/applet"></lift:embed>
+
+    <script type="text/javascript">
+        var pda = pdaCreator.PDA.createMutablePDAWithDefaultProperties(document.getElementById('svgcanvaspda'));
+    </script>
+
+    <lift:Identity form="POST">
+        <table>
+            <tr>
+                <td>Run a simulation to test the created PDA (this is only for you to check your PDA):</td>
+                <td>
+                    <createform:word></createform:word>
+                    <createform:start></createform:start>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <createform:automaton></createform:automaton>
+                </td>
+            </tr>
+            <tr>
+                <td> Short Description:</td>
+                <td>
+                    <createform:shortdescription></createform:shortdescription>
+                </td>
+            </tr>
+            <tr>
+                <td> Number of words in the language:</td>
+                <td>
+                    <createform:numberofwordsinlanguage></createform:numberofwordsinlanguage>
+                </td>
+            </tr>
+            <tr>
+                <td> Number of words not in the language </td>
+                <td>
+                    <createform:numberofwordsnotinlanguage></createform:numberofwordsnotinlanguage>
+                </td>
+            </tr>
+            <tr>
+                <td> Allow simulation before submitting correct solution:</td>
+                <td>
+                    <createform:allowsimulation></createform:allowsimulation>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <createform:submit></createform:submit>
+                </td>
+            </tr>
+    </lift:Identity>
+</div> 

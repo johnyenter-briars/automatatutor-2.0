@@ -1,0 +1,81 @@
+<div>
+
+    <!--<script type="text/javascript" src="/javascript/lib/jquery-2.1.1.min.js"></script>-->
+	<link rel="stylesheet" href="/stylesheets/problemstyle.css" type="text/css"/>    
+    <script type="text/javascript" src="/javascript/alphabetUtil.js"> </script>
+
+
+    <h2> Edit an Equivalence Classes Problem </h2>
+
+	<lift:Regex.rendersyntax>
+	</lift:Regex.rendersyntax >
+
+    <h4> Problem options </h4>
+
+    You can select whether the student should asses if two words are equivalent wrt. the regular expression
+    or if the student should provide equivalent words to a given word<br /> <br />
+
+    <h4> Problem Definition </h4>
+
+    <lift:Identity form="POST">
+        <table>
+            <tr>
+                <td> Alphabet (separated by spaces): </td>
+                <td> <editform:alphabetfield> </editform:alphabetfield> </td>
+            </tr>
+            <tr>
+                <td> Regular Expression: </td>
+                <td> <editform:regexfield> </editform:regexfield> </td>
+            </tr>
+            <tr>
+                <td> Short Description: </td>
+                <td> <editform:shortdescription> </editform:shortdescription> </td>
+            </tr>
+            <tr>
+                <td> Type: </td>
+                <td>
+                    <editform:problemtype> </editform:problemtype>
+                    <editform:problemtypescript></editform:problemtypescript>
+                </td>
+            </tr>
+
+            <tr class="problem-type-0" style="display:none">
+                <td> Words to be checked for equivalency: </td>
+                <td>
+                    <editform:firstwordfield>  </editform:firstwordfield>
+                    <editform:secondwordfield> </editform:secondwordfield>
+                    <editform:evaluate> </editform:evaluate>
+                    <div id="evaluation" />
+                </td>
+            </tr>
+
+            <tr class="problem-type-1" style="display:none">
+                <td> Representative: </td>
+                <td> <editform:representative> </editform:representative> </td>
+            </tr>
+            <tr class="problem-type-1" style="display:none">
+                <td> Word type: </td>
+                <td>
+                    <editform:wordtype> </editform:wordtype>
+                    <editform:wordtypescript> </editform:wordtypescript>
+                </td>
+            </tr>
+            <tr class="problem-type-2" style="display:none">
+                <td> Number of words: </td>
+                <td> <editform:numberofwords> </editform:numberofwords> </td>
+            </tr>
+
+            <tr>
+                <td> </td>
+                <td> <editform:submit> </editform:submit> </td>
+            </tr>
+        </table>
+    </lift:Identity>
+
+    <div id="feedbackdisplay" style="display:none" class="gradefeed">
+        <h3> Parsing Error: </h3>
+        <ul>
+            <div id="parsingerror"/>
+        </ul>
+    </div>
+</div>

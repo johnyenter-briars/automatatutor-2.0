@@ -1,0 +1,53 @@
+<div>
+    <script type="text/javascript" src="/javascript/grammarUtil.js"> </script>
+    <script type="text/javascript" src="/javascript/alphabetUtil.js"> </script>
+	<link rel="stylesheet" href="/stylesheets/problemstyle.css" type="text/css"/>
+
+    <h2> Solve equivalence classes problem </h2>
+
+	<lift:Regex.rendersyntax>
+	</lift:Regex.rendersyntax >
+
+    <h3> Problem </h3>
+
+    For the following regular expression: <br />
+    <strong style="font-size: 150%; font-family: 'Lucida Console', Monaco, monospace"><solveform:regularexpression> </solveform:regularexpression></strong><br />
+    Over the alphabet: <br />
+    <strong style="font-size: 150%; font-family: 'Lucida Console', Monaco, monospace"><solveform:alphabet> </solveform:alphabet></strong><br />
+
+    </br>
+
+    <form class="lift:form">
+        <div id="problem-type-0" style="display:none">
+            Given the following words: <strong><solveform:firstword> </solveform:firstword></strong> and <strong><solveform:secondword> </solveform:secondword></strong> <br />
+            Report whether they are in the same equivalency class or not and justify your answer. <br />
+            <solveform:equivalentradio> </solveform:equivalentradio>
+            <div id="contextual"> </div>
+            <div id="reason-form" style="display:none">
+                <solveform:reasonfield> </solveform:reasonfield>
+            </div>
+            <solveform:script0> </solveform:script0>
+        </div>
+        <div id="problem-type-1" style="display:none">
+            Give the lexicographically smallest word (the representative) of the equivalence class which contains <strong><solveform:representative> </solveform:representative></strong>: <br />
+            <solveform:shortest> </solveform:shortest>
+            <solveform:script1> </solveform:script1>
+        </div>
+        <div id="problem-type-2" style="display:none">
+            Give <strong><solveform:inneededtext> </solveform:inneededtext></strong> that are in the same equivalence class as <strong><solveform:representative> </solveform:representative></strong>: <br />
+            <solveform:wordsin> </solveform:wordsin>
+            <solveform:script2> </solveform:script2>
+        </div>
+        <solveform:submitbutton> </solveform:submitbutton>
+        <solveform:returnlink> </solveform:returnlink> <br />
+    </form>
+
+    <div id="feedbackdisplay" style="display:none" class="gradefeed">
+        <h3> Grade: <span id="grade" /> </h3>
+        <h3> Feedback: </h3>
+        <ul>
+            <div id="feedback"/>
+        </ul>
+    </div>
+
+</div>

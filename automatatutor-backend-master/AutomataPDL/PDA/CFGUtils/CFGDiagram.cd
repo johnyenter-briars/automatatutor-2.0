@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AutomataPDL.PDA.CFGUtils.CFGTo2NFConverter&lt;A, S&gt;">
+    <Position X="3.25" Y="1.5" Width="2.25" />
+    <Members>
+      <Field Name="PrefixOfAddedNonterminals" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\CFGUtils\CFGTo2NFConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.CFGUtils.CYKTable.CFGChainExtender&lt;A&gt;">
+    <Position X="6.75" Y="1.5" Width="2.25" />
+    <Members>
+      <Method Name="AddChainAndEpsilonEntriesForNextEntry" Hidden="true" />
+      <Method Name="AddChainAndEpsilonEntriesForProduction" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAQIAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>PDA\CFGUtils\CYKTable\CFGChainExtender.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AutomataPDL.PDA.CFGUtils.CYKTable.CYKTable&lt;A&gt;">
+    <Position X="3.25" Y="3.5" Width="2" />
+    <Members>
+      <Method Name="AddDirectEpsilonSymbols" Hidden="true" />
+      <Method Name="CYKTable" Hidden="true" />
+      <Method Name="FillBasicRow" Hidden="true" />
+      <Method Name="FillOtherRows" Hidden="true" />
+      <Method Name="InitializeCykTable" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ACQAAQBBQgAACAIAAAAIAAAAAAAAAAACAIAAAAAAAAA=</HashCode>
+      <FileName>PDA\CFGUtils\CYKTable\CYKTable.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cfg" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="epsilonSymbols" />
+      <Property Name="CykTable" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AutomataPDL.PDA.CFGUtils.CYKTable.DerivationNode&lt;A&gt;">
+    <Position X="6.75" Y="4.75" Width="3.25" />
+    <Members>
+      <Method Name="ContainsHelperVariable" Hidden="true" />
+      <Method Name="ContainsTerminal" Hidden="true" />
+      <Method Name="DerivationNode" Hidden="true" />
+      <Method Name="EliminateHelperVariables" Hidden="true" />
+    </Members>
+    <AssociationLine Name="children" Type="AutomataPDL.PDA.CFGUtils.CYKTable.DerivationNode&lt;A&gt;" ManuallyRouted="true">
+      <Path>
+        <Point X="7.882" Y="6.757" />
+        <Point X="7.882" Y="7.288" />
+        <Point X="8.891" Y="7.288" />
+        <Point X="8.891" Y="6.757" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.183" Y="0.331" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAAACgAAAAAAAAQAAAAAAAAgAAAAAAAAAAABAAAACAA=</HashCode>
+      <FileName>PDA\CFGUtils\CYKTable\DerivationNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="children" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AutomataPDL.PDA.CFGUtils.CYKTable.TableField&lt;A&gt;">
+    <Position X="6.75" Y="3" Width="2.25" />
+    <Members>
+      <Method Name="CombineTwoTableFields" Hidden="true" />
+      <Method Name="TableField" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAQAAAAAAAAAAAAAEEAAAAAAAAAAAA=</HashCode>
+      <FileName>PDA\CFGUtils\CYKTable\TableField.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Entries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AutomataPDL.PDA.CFGUtils.PerformanceCFG">
+    <Position X="3.25" Y="6.25" Width="3.25" />
+    <Members>
+      <Method Name="GetKeyOfGrammarSymbols" Hidden="true" />
+      <Method Name="InitializeProductionsByGrammarSymbolsInRightHandSide" Hidden="true" />
+      <Method Name="InitIds" Hidden="true" />
+      <Field Name="productionsByGrammarSymbolsInRightHandSide" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAgAAAAAoAAAAAAABgIAAA=</HashCode>
+      <FileName>PDA\CFGUtils\PerformanceCFG.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

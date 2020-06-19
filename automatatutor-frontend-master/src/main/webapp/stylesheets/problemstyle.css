@@ -1,0 +1,47 @@
+.collapsible {
+    background-color: #ddd;
+    color: #444;
+    cursor: pointer;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 15px;
+}
+
+.collapsible.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+.collapsible-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #fff;
+  border-style: solid;
+  border-color: #6699cc;
+  border-width: 3px;
+  margin-top: 4px;
+}
+
+.notes {
+  margin-top:       4px;
+  margin-bottom:    4px;
+}
+
+.collapsible:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: gray;
+    float: right;
+    margin-left: 5px;
+}
+
+.collapsible.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+ul.sublist {
+    list-style-type:circle;
+}

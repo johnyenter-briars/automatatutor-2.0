@@ -1,0 +1,24 @@
+g.contextMenu > rect {
+    fill: white;
+    stroke: black;
+    stroke-width: 1px;
+}
+
+g.contextMenu g.menuItem rect {
+    visibility: hidden;
+    pointer-events: all;
+    fill: blue;
+    fill-opacity: 0.1;
+}
+
+g.contextMenu g.menuItem rect:hover {
+    visibility: visible;
+}
+
+g.contextMenu g.menuItem text {
+    font-size: 13px;
+}
+
+a.contextmenu {
+    text-decoration: none;
+}

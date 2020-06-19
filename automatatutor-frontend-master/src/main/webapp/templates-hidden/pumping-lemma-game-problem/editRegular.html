@@ -1,0 +1,59 @@
+<div xmlns:pumpinggame="" xmlns:lift="">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/stylesheets/proto2.css" type="text/css"/>
+        <link rel="stylesheet" href="/stylesheets/interface.css" type="text/css"/>
+        <link rel="stylesheet" href="/stylesheets/pumpinggame.css" type="text/css"/>
+
+        <script type="text/javascript" src="/javascript/lib/d3.min.js"></script>
+        <script type="text/javascript" src="/javascript/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="/javascript/lib/jquery.contextmenu.js"></script>
+        <script type="text/javascript" src="/javascript/lib/browser.js"></script>
+        <script type="text/javascript" src="/javascript/lib/contextmenu.js"></script>
+
+        <script type="text/javascript" src="/javascript/plgUtil.js"></script>
+
+    </head>
+
+    <h2>Edit a Pumping Lemma Game (regular)</h2>
+
+    <h4> Problem Definition </h4>
+
+    <lift:Identity form="POST">
+        <table id="inputTable">
+            <tr>
+                <td> Short Description: </td>
+                <td> <pumpinggame:shortdescription> </pumpinggame:shortdescription> </td>
+            </tr>
+            <tr>
+                <td> Long Description: </td>
+                <td> <pumpinggame:longdescription> </pumpinggame:longdescription> </td>
+            </tr>
+            <tr>
+                <td> Alphabet (separated by spaces): </td>
+                <td> <pumpinggame:alphabetfield> </pumpinggame:alphabetfield> </td>
+            </tr>
+            <tr>
+                <td> <input type="button" value="Set Alphabet" onclick="setAlphabet()"></td>
+                <td> (resets the whole automaton) </td>
+            </tr>
+            <tr>
+                <td> <pumpinggame:nfatodfabutton> </pumpinggame:nfatodfabutton> </td>
+                <td> </td>
+            </tr>
+        </table>
+        <pumpinggame:automaton> </pumpinggame:automaton>
+        <pumpinggame:regularField> </pumpinggame:regularField>
+
+    <lift:embed what="/pumping-lemma-game-problem/applet"> </lift:embed>
+
+    <br><br><pumpinggame:submit> </pumpinggame:submit>
+    </lift:Identity>
+
+    <div id="feedbackdisplay" style="display:none" class="gradefeed">
+        <h3> Response: </h3>
+        <span id="errordisplay"></span>
+    </div>
+
+    <pumpinggame:drawdfa></pumpinggame:drawdfa>
+</div>

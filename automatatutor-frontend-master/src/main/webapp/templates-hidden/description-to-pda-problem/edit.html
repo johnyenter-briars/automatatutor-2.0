@@ -1,0 +1,55 @@
+<div>
+    <h2> Edit a PDA construction problem </h2>
+
+    <lift:embed what="/templates-hidden/generic-pda-problems/applet"></lift:embed>
+
+    <lift:Identity form="POST">
+        <editform:setupscript></editform:setupscript>
+        <table>
+            <tr>
+                <td>Run a simulation to test the created PDA (this is only for you to check your PDA):</td>
+                <td>
+                    <editform:word></editform:word>
+                    <editform:start></editform:start>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <editform:automaton></editform:automaton>
+                </td>
+            </tr>
+            <tr>
+                <td> Short Description:</td>
+                <td>
+                    <editform:shortdescription></editform:shortdescription>
+                </td>
+            </tr>
+            <tr>
+                <td> Long Description (will appear in the problem in the form of "Construct a PDA that recognizes the
+                    following language: {long description}"):
+                </td>
+                <td>
+                    <editform:longdescription></editform:longdescription>
+                </td>
+            </tr>
+            <tr>
+                <td> Stack alphabet should be given:</td>
+                <td>
+                    <editform:givestackalphabet></editform:givestackalphabet>
+                </td>
+            </tr>
+            <tr>
+                <td> Allow simulation before submitting correct solution:</td>
+                <td>
+                    <editform:allowsimulation></editform:allowsimulation>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <editform:submit></editform:submit>
+                </td>
+            </tr>
+    </lift:Identity>
+</div> 

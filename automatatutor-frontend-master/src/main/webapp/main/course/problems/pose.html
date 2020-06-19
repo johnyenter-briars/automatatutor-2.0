@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Pose</title></head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=course-surrounding;at=content">
+
+    <h2>Pose a problem</h2>
+
+    <lift:Coursesnippet.renderpose form="POST">
+        <table>
+            <tr>
+                <div id="datepicker"></div>
+                <td> Start date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <poseproblemform:startdatefield> </poseproblemform:startdatefield> </td>
+            </tr>
+            <tr>
+                <td> End date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <poseproblemform:enddatefield> </poseproblemform:enddatefield> </td>
+            </tr>
+            <tr>
+                <td> Max Grade: </td>
+                <td> <poseproblemform:maxgradefield> </poseproblemform:maxgradefield> </td>
+            </tr>
+            <tr>
+                <td> Number of attempts allowed (0 --> unlimited): </td>
+                <td> <poseproblemform:attemptsfield> </poseproblemform:attemptsfield>
+            </tr>
+            <tr>
+                <td> </td>
+                <td> <poseproblemform:posebutton> </poseproblemform:posebutton> </td>
+            </tr>
+        </table>
+    </lift:Coursesnippet.renderpose>
+</div>
+</body>
+</html>

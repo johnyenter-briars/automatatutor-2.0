@@ -1,0 +1,16 @@
+db.driver=org.h2.Driver
+db.url=jdbc:h2:tcp://131.159.22.76:9092/./develop.db
+db.user=admin@automatatutor.com
+db.password=theo_18_ss
+grader.url=http://vmesparza9:54321/Service1.asmx
+grader.methodnamespace=http://automatagrader.com
+
+mail.transport.protocol=smtp
+mail.smtp.host=smtp.1und1.de
+mail.smtp.port=587
+mail.smtp.starttls.enable=true
+mail.smtp.auth=true
+mail.user=automatatutor@martinhelfrich.de
+mail.password=Martin.Theo.18
+
+admin.password=theoFTW42

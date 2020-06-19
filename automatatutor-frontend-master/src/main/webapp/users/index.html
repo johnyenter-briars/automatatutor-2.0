@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+		<title>Home</title>
+	</head>
+	<body class="lift:content_id=main">
+		<div id="main" class="lift:surround?with=default;at=content">
+			<lift:UserSnippet.searchform>
+				<form method="get">
+					<h3>Search / Filter:</h3>
+					<div style="display: flex;">
+						<div style="margin: 5px;">
+							<label class="description" for="input_first_name">First Name</label>
+							<filter:first></filter:first>
+						</div>
+						<div style="margin: 5px;">
+							<label class="description" for="input_last_name">Last Name</label>
+							<filter:last></filter:last>
+						</div>
+						<div style="margin: 5px;">
+							<label class="description" for="input_email">Email</label>
+							<filter:email></filter:email>
+						</div>
+						<div style="margin: 5px;">
+							<label class="description" for="input_id">ID</label>
+							<filter:id></filter:id>
+						</div>
+						<div style="margin: 5px;">
+							<label class="description" for="input_level">Roll</label>
+							<filter:level></filter:level>
+						</div>
+					</div>
+					<input type="submit" value="Search" /><a href="?"><input type='button' value="Clear"></a>
+				</form>
+			</lift:UserSnippet.searchform>
+			
+			<hr style="margin-top: 10px;">
+			<h3>Users:</h3>
+			
+		    <p><nav:records></nav:records></p>
+
+		    <lift:UserSnippet.showall> </lift:UserSnippet.showall>
+
+		    <lift:UserSnippet.paginate>
+		     	<p>
+			    	<nav:first></nav:first> |
+			    	<nav:prev></nav:prev> |
+			    	<nav:allpages></nav:allpages> |
+			    	<nav:next></nav:next> |
+			    	<nav:last></nav:last>
+		    	</p>
+		    </lift:UserSnippet.paginate>
+			
+			<hr style="margin-top: 10px;">
+			<h3>Reset the Database</h3>
+
+		    <lift:UserSnippet.resetLink />
+		</div>
+  </body>
+</html>

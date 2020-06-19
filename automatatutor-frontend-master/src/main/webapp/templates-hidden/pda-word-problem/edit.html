@@ -1,0 +1,55 @@
+<div>
+    <h2> Edit a PDA words problem </h2>
+
+    </br></br>
+
+    <lift:embed what="/templates-hidden/generic-pda-problems/applet"></lift:embed>
+
+    <lift:Identity form="POST">
+        <editform:setupscript></editform:setupscript>
+        <table>
+            <tr>
+                <td>Run a simulation to test the created PDA (this is only for you to check your PDA):</td>
+                <td>
+                    <editform:word></editform:word>
+                    <editform:start></editform:start>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <editform:automaton></editform:automaton>
+                </td>
+            </tr>
+            <tr>
+                <td> Short Description:</td>
+                <td>
+                    <editform:shortdescription></editform:shortdescription>
+                </td>
+            </tr>
+            <tr>
+                <td> Number of words in the language:</td>
+                <td>
+                    <editform:numberofwordsinlanguage></editform:numberofwordsinlanguage>
+                </td>
+            </tr>
+            <tr>
+                <td> Number of words not in the language </td>
+                <td>
+                    <editform:numberofwordsnotinlanguage></editform:numberofwordsnotinlanguage>
+                </td>
+            </tr>
+            <tr>
+                <td> Allow simulation before submitting correct solution:</td>
+                <td>
+                    <editform:allowsimulation></editform:allowsimulation>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <editform:submit></editform:submit>
+                </td>
+            </tr>
+    </lift:Identity>
+</div> 

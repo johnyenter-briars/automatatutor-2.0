@@ -1,0 +1,53 @@
+<div>
+
+	<link rel="stylesheet" href="/stylesheets/problemstyle.css" type="text/css"/>
+	<script type="text/javascript" src="/javascript/alphabetUtil.js"> </script>
+
+	<h2> Create a new RE construction problem </h2>
+
+
+	<lift:Regex.rendersyntax>
+	</lift:Regex.rendersyntax >
+
+	<h4> Problem Definition </h4>
+
+	<lift:Identity form="POST">
+	<table> 
+		<tr>
+			<td> Alphabet (separated by spaces): </td>
+			<td> <createform:alphabetfield> </createform:alphabetfield> </td>
+		</tr> 
+		<tr>
+			<td> Regular Expression: </td>
+			<td> <createform:regexfield> </createform:regexfield> </td>
+		</tr>
+
+
+		<tr>
+			<td> Equivalent Expressions, separated by spaces: </td>
+			<td class = "equivalent-expressions"> <createform:equivalentfield> </createform:equivalentfield>
+			 </td>
+		</tr>
+
+
+		<tr>		
+			<td> Short Description: </td>
+			<td> <createform:shortdescription> </createform:shortdescription> </td>
+		</tr>
+		<tr> 
+			<td> Long Description (will appear in the problem in the form of "Construct a regular expression that recognizes the following language: {long description}"): </td>
+			<td> <createform:longdescription> </createform:longdescription> </td>
+		</tr>
+		<tr> 
+			<td> </td>
+			<td> <createform:submit> </createform:submit> </td>
+		</tr>
+	</lift:Identity>
+
+	<div id="feedbackdisplay" style="display:none" class="gradefeed">
+		<h3> Parsing Error: </h3>
+		<ul>
+			<div id="parsingerror"/>
+		</ul>
+	</div>
+</div> 
