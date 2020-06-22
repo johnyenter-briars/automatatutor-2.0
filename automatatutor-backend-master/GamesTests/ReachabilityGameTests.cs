@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 namespace Games.Tests
 {
-
+    [TestClass]
     public class ReachabilitySolverTests
     {
 
-        [TestMethod()]
+        [TestMethod]
         public void ReachabilitySolverTestZero()
         {
             var arena = new Arena()
@@ -35,7 +35,7 @@ namespace Games.Tests
             Assert.IsTrue(!solution.getStrategy().HasNextMove(3));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ReachabilitySolverTestOne()
         {
             var arena = new Arena()
@@ -67,6 +67,5 @@ namespace Games.Tests
             Assert.IsTrue(solution.getStrategy().GetNextMove(2) == 2);
             Assert.IsTrue(!solution.getStrategy().HasNextMove(3));
         }
-
     }
 }

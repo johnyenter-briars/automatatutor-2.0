@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Games.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ArenaTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void CPreZeroTest()
         {
             var arena = new Arena();
@@ -32,7 +32,7 @@ namespace Games.Tests
             Assert.IsTrue(arena.CPreZero(twoZeroSet).getWinningRegion().Count == 1 && arena.CPreZero(twoZeroSet).getWinningRegion().Contains(2));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CPreOneTest()
         {
             var arena = new Arena();
@@ -57,7 +57,7 @@ namespace Games.Tests
             Assert.IsTrue(arena.CPreOne(twoSet).getWinningRegion().Count == 1 && arena.CPreOne(twoSet).getWinningRegion().Contains(1));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ZeroAttractorTest()
         {
             var arena = new Arena()
@@ -83,7 +83,7 @@ namespace Games.Tests
                 arena.ZeroAttractor(zeroSet).getWinningRegion().Contains(2));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ZeroAttractorTestStrategy()
         {
             var arena = new Arena()
@@ -115,7 +115,7 @@ namespace Games.Tests
             Assert.IsTrue(solution.getStrategy().GetNextMove(3) == 0);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void OneAttractorTest()
         {
             var arena = new Arena();
