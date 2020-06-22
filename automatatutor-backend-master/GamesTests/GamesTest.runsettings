@@ -7,7 +7,7 @@
 
     <!-- x86 or x64 -->
     <!-- You can also change it from the Test menu; choose "Processor Architecture for AnyCPU Projects" -->
-    <TargetPlatform>x64</TargetPlatform>
+    <TargetPlatform>x86</TargetPlatform>
 
     <!-- Framework35 | [Framework40] | Framework45 -->
 

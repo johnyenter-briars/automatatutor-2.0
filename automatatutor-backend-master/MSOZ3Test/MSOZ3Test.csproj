@@ -3,7 +3,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <RunSettingsFilePath>$(MSBuildProjectDirectory)\MSOZ3Test.runsettings</RunSettingsFilePath>
@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Automata">
-      <HintPath>..\external\x64\Microsoft.Automata.dll</HintPath>
+      <HintPath>..\external\Automata.dll</HintPath>
     </Reference>
     <Reference Include="Automata.Z3">
       <HintPath>..\external\Automata.Z3.dll</HintPath>
@@ -23,9 +23,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2"/>
   </ItemGroup>
 </Project>
 

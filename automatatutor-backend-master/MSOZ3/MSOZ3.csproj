@@ -3,17 +3,17 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Automata">
-      <HintPath>..\external\x64\Microsoft.Automata.dll</HintPath>
+      <HintPath>..\external\Automata.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Automata.Z3">
-      <HintPath>..\external\x64\Microsoft.Automata.Z3.dll</HintPath>
+    <Reference Include="Automata.Z3">
+      <HintPath>..\external\Automata.Z3.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Z3">
-      <HintPath>..\external\x64\Microsoft.Z3.dll</HintPath>
+      <HintPath>..\external\Microsoft.Z3.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

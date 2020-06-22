@@ -7,16 +7,16 @@
 
     <!-- x86 or x64 -->
     <!-- You can also change it from the Test menu; choose "Processor Architecture for AnyCPU Projects" -->
-    <TargetPlatform>x64</TargetPlatform>
+    <TargetPlatform>x86</TargetPlatform>
 
     <!-- Framework35 | [Framework40] | Framework45 -->
-
+    
     <!-- Path to Test Adapters -->
 
     <!-- TestSessionTimeout was introduced in Visual Studio 2017 version 15.5 -->
     <!-- Specify timeout in milliseconds. A valid value should be greater than 0 -->
     <TestSessionTimeout>10000</TestSessionTimeout>
-  </RunConfiguration>
+  </RunConfiguration>>
 
   <!-- Parameters used by tests at run time -->
 
