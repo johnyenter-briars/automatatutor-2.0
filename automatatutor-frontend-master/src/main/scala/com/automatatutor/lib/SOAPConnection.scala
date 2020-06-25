@@ -78,7 +78,7 @@ class SOAPConnection(val url : URL) {
 
     def responseIsOk = connection.getResponseCode() != HttpURLConnection.HTTP_OK
     def getReturnAsString = scala.io.Source.fromInputStream(connection.getInputStream()).mkString
-    def getErrorAsString = scala.io.Source.fromInputStream(connection.getErrorStream()).mkString
+		def getErrorAsString = scala.io.Source.fromInputStream(connection.getErrorStream()).mkString
 
 	  try {
       if(responseIsOk) {
@@ -89,10 +89,12 @@ class SOAPConnection(val url : URL) {
           response \ "_" \ "_" \ "_" \ "_"
         }
 
-
         val returnRaw = getReturnAsString
-        val returnWithXmlWrapping = XML.loadString(returnRaw)
-        stripWrappingFromResponse(returnWithXmlWrapping)
+
+				//TODO: remove the need for returnRaw.indexOf("<"). The backend is sending over data with bad unicode prologue
+        val returnWithXmlWrapping = XML.loadString(returnRaw.substring(returnRaw.indexOf("<")))
+				
+				stripWrappingFromResponse(returnWithXmlWrapping)
       }
 	  } catch {
 	    case exception : Exception => Text(getErrorAsString)
@@ -553,7 +555,6 @@ object GraderConnection {
 		  "minDiff" -> Elem(null, "minDiff", Null, TopScope, true, Text(minDiff.toString)),
 		  "maxDiff" -> Elem(null, "maxDiff", Null, TopScope, true, Text(maxDiff.toString))
 	  );
-
 	  val responseXml = soapConnection.callMethod(namespace, "GenerateProblemBestIn", arguments)
 
 	  return responseXml

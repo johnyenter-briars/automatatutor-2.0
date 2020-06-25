@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Services;
 using System.Xml.Linq;
 using System.Text;
 
@@ -26,16 +25,16 @@ namespace WebServicePDL
     /// <summary>
     /// Summary description for Service1
     /// </summary>
-    [WebService(Namespace = "http://automatagrader.com/")]
+    /*[WebService(Namespace = "http://automatagrader.com/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    [System.ComponentModel.ToolboxItem(false)]
+    [System.ComponentModel.ToolboxItem(false)]*/
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     // [System.Web.Script.Services.ScriptService]
-    public class Service1 : System.Web.Services.WebService
+    public class Service1 : IService1
     {
         //-------- Product Construction --------//
 
-        [WebMethod]
+        /*[WebMethod]
         public XElement ComputeFeedbackProductConstruction(XElement dfaDescList, XElement dfaAttemptDesc, XElement booleanOperation, XElement maxGrade, XElement feedbackLevel, XElement enabledFeedbacks)
         {
             //TODO: Alphabet, Arbitrary Boolean Operations
@@ -52,7 +51,7 @@ namespace WebServicePDL
             }
             feedString += "</ul>";
 
-            /*
+            *//*
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
             //Read input
             var dfaPairList = DFAUtilities.parseDFAListFromXML(dfaDescList, solver);
@@ -85,7 +84,7 @@ namespace WebServicePDL
             var feedString = "<ul>";
             foreach (var feed in feedbackGrade.Second)
                 feedString += string.Format("<li>{0}</li>", feed);
-            feedString += "</ul>";*/
+            feedString += "</ul>";*//*
 
             return XElement.Parse(string.Format("<div><grade>{0}</grade><feedString>{1}</feedString></div>", feedbackGrade.Item1, feedString));
         }
@@ -101,7 +100,7 @@ namespace WebServicePDL
 
             var feedbackGrade = AutomataFeedback.FeedbackForMinimizationTable(tableCorrect, tableAttempt, D);
 
-            /*
+            *//*
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
 
             //Read input
@@ -117,7 +116,7 @@ namespace WebServicePDL
             //Output
             //TODO: ...
             var feedbackGrade = DFAGrading.GetGrade(dfaCorrect, dfaAttemptPair.Second, dfaPair.First, solver, 1500, maxG, level);
-            */
+            *//*
 
             //Pretty print feedback
             var feedString = "<ul>";
@@ -833,7 +832,7 @@ namespace WebServicePDL
         //---------------------------
         // Problem Generation Methodes
         //---------------------------
-
+        */
         private readonly int TRIES = 100;
         private readonly Generator[] GENERATORS = new Generator[] {
             WordsInGrammarGenerator.GetInstance(),
@@ -842,6 +841,7 @@ namespace WebServicePDL
             WhileToTMGenerator.GetInstance(),
             FindDerivationGenerator.GetInstance()
         };
+
         private Generator GetMatchingGenerator(String typeS)
         {
             foreach (Generator gen in GENERATORS)
@@ -850,6 +850,7 @@ namespace WebServicePDL
             }
             return null;
         }
+        /*
 
         [WebMethod]
         public XElement GenerateProblem(XElement type, XElement minQual)
@@ -878,8 +879,7 @@ namespace WebServicePDL
 
             return Generation.generateHardestWithMinQuality(gen,TRIES,minQualD).Export();
         }
-
-        [WebMethod]
+    */
         public XElement GenerateProblemBestIn(XElement type, XElement minDiff, XElement maxDiff)
         {
             String typeS = type.Value;
@@ -895,7 +895,7 @@ namespace WebServicePDL
 
             return Generation.generateBestWithDifficultyBounds(gen, TRIES, minDiffI, maxDiffI).Export();
         }
-
+        /*
         //---------------------------
         // Pumping lemma methods
         //---------------------------
@@ -974,12 +974,12 @@ namespace WebServicePDL
             {
                 return XElement.Parse(string.Format("<error>Error: {0} </error>", pdlex.Message));
             }
-                /*
+                *//*
             catch (Exception e)
             {
                 return XElement.Parse(string.Format("<error>Internal Error: {0} </error>", e.Message));
             }
-                 */
+                 *//*
         }
 
         // Checks whether an arithmetic language description parses correctly
@@ -1435,6 +1435,6 @@ namespace WebServicePDL
         private XElement PLGerror(string errorText)
         {
             return new XElement("error", errorText);
-        }
+        }*/
     }
 }
