@@ -14,6 +14,7 @@ namespace WebServicePDL
             services.AddSoapCore();
             services.TryAddSingleton<IService1, Service1>();
             services.AddMvc();
+            services.AddMemoryCache();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

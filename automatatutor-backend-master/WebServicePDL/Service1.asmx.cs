@@ -19,6 +19,8 @@ using AutomataPDL.TM;
 
 using PumpingLemma;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebServicePDL
 {
@@ -32,9 +34,15 @@ namespace WebServicePDL
     // [System.Web.Script.Services.ScriptService]
     public class Service1 : IService1
     {
+        private IMemoryCache _cache;
+        public Service1(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
         //-------- Product Construction --------//
 
-        /*[WebMethod]
+
         public XElement ComputeFeedbackProductConstruction(XElement dfaDescList, XElement dfaAttemptDesc, XElement booleanOperation, XElement maxGrade, XElement feedbackLevel, XElement enabledFeedbacks)
         {
             //TODO: Alphabet, Arbitrary Boolean Operations
@@ -51,13 +59,15 @@ namespace WebServicePDL
             }
             feedString += "</ul>";
 
-            *//*
+            /*
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
             //Read input
             var dfaPairList = DFAUtilities.parseDFAListFromXML(dfaDescList, solver);
             var alphabet = dfaPairList[0].First;
-            for (int i = 1; i < dfaPairList.Count; i++) {
-                foreach(char c in dfaPairList[i].First) {
+            for (int i = 1; i < dfaPairList.Count; i++)
+            {
+                foreach (char c in dfaPairList[i].First)
+                {
                     alphabet.Add(c);
                 }
             }
@@ -66,7 +76,8 @@ namespace WebServicePDL
             //    dfaCorrect = dfaCorrect.Intersect(dfaPairList[i].Second, solver);
 
             var dfaList = new List<Automaton<BDD>>();
-            for (int i = 0; i < dfaPairList.Count; i++) {
+            for (int i = 0; i < dfaPairList.Count; i++)
+            {
                 dfaList.Add(dfaPairList[i].Second.Determinize(solver).Minimize(solver));
             }
             var dfaCorrect = boolOp.executeOperationOnAutomataList(dfaList, solver);
@@ -84,14 +95,14 @@ namespace WebServicePDL
             var feedString = "<ul>";
             foreach (var feed in feedbackGrade.Second)
                 feedString += string.Format("<li>{0}</li>", feed);
-            feedString += "</ul>";*//*
+            feedString += "</ul>"; */
 
             return XElement.Parse(string.Format("<div><grade>{0}</grade><feedString>{1}</feedString></div>", feedbackGrade.Item1, feedString));
         }
 
         //-------- Minimization --------//
 
-        [WebMethod]
+
         public XElement ComputeFeedbackMinimization(XElement dfaDesc, XElement minimizationTableAttempt, XElement dfaAttemptDesc, XElement maxGrade, XElement feedbackLevel, XElement enableFeedbacks)
         {
             var D = AutomataUtilities.ParseDFAFromXML(dfaDesc);
@@ -100,7 +111,7 @@ namespace WebServicePDL
 
             var feedbackGrade = AutomataFeedback.FeedbackForMinimizationTable(tableCorrect, tableAttempt, D);
 
-            *//*
+            /*
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
 
             //Read input
@@ -112,11 +123,11 @@ namespace WebServicePDL
 
             var level = FeedbackLevel.Hint;
             var maxG = int.Parse(maxGrade.Value);
-            
+
             //Output
             //TODO: ...
             var feedbackGrade = DFAGrading.GetGrade(dfaCorrect, dfaAttemptPair.Second, dfaPair.First, solver, 1500, maxG, level);
-            *//*
+            */
 
             //Pretty print feedback
             var feedString = "<ul>";
@@ -129,7 +140,7 @@ namespace WebServicePDL
 
         //-------- DFA Construction --------//
 
-        [WebMethod]
+
         public XElement ComputeFeedbackXML(XElement dfaCorrectDesc, XElement dfaAttemptDesc, XElement maxGrade, XElement feedbackLevel, XElement enabledFeedbacks)
         {
             #region Check if item is in cache
@@ -141,25 +152,25 @@ namespace WebServicePDL
             key.Append(enabledFeedbacks.ToString());
             string keystr = key.ToString();
 
-            var cachedValue = HttpContext.Current.Cache.Get(key.ToString());
+            var cachedValue = _cache.Get(key.ToString());
             if (cachedValue != null)
             {
-                HttpContext.Current.Cache.Remove(keystr);
-                HttpContext.Current.Cache.Add(keystr, cachedValue, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(30), System.Web.Caching.CacheItemPriority.Normal, null);
+                _cache.Remove(keystr);
+                _cache.Set(keystr, cachedValue, TimeSpan.FromDays(30));
                 return (XElement)cachedValue;
-            } 
+            }
             #endregion
-            
+
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
 
             //Read input 
             var dfaCorrectPair = DFAUtilities.parseBlockFromXML(dfaCorrectDesc, solver);
             var dfaAttemptPair = DFAUtilities.parseBlockFromXML(dfaAttemptDesc, solver);
 
-            var level = (FeedbackLevel) Enum.Parse(typeof(FeedbackLevel), feedbackLevel.Value, true);
+            var level = (FeedbackLevel)Enum.Parse(typeof(FeedbackLevel), feedbackLevel.Value, true);
             var enabList = (enabledFeedbacks.Value).Split(',').ToList<String>();
             //bool dfaedit = enabList.Contains("dfaedit"), moseledit = enabList.Contains("moseledit"), density = enabList.Contains("density");
-            bool dfaedit =true, moseledit = true, density = true;
+            bool dfaedit = true, moseledit = true, density = true;
 
             var maxG = int.Parse(maxGrade.Value);
 
@@ -176,20 +187,20 @@ namespace WebServicePDL
             feedString += "</ul>";
 
             //var output = string.Format("<result><grade>{0}</grade><feedString>{1}</feedString></result>", feedbackGrade.First, feedString);
-            var outXML = new XElement("result",  
+            var outXML = new XElement("result",
                                     new XElement("grade", feedbackGrade.First),
                                     new XElement("feedString", XElement.Parse(feedString)));
             //XElement outXML = XElement.Parse(output);
             //Add this element to chace and return it
-            HttpContext.Current.Cache.Add(key.ToString(), outXML, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(30), System.Web.Caching.CacheItemPriority.Normal, null);
+            _cache.Set(key.ToString(), outXML, TimeSpan.FromDays(30));
 
             return outXML;
         }
 
-        
+
         //-------- NFA Construction --------//
 
-        [WebMethod]
+
         public XElement ComputeFeedbackNFAXML(XElement nfaCorrectDesc, XElement nfaAttemptDesc, XElement maxGrade, XElement feedbackLevel, XElement enabledFeedbacks, XElement userId)
         {
             #region Check if item is in cache
@@ -201,11 +212,11 @@ namespace WebServicePDL
             key.Append(enabledFeedbacks.ToString());
             string keystr = key.ToString();
 
-            var cachedValue = HttpContext.Current.Cache.Get(key.ToString());
+            var cachedValue = _cache.Get(key.ToString());
             if (cachedValue != null)
             {
-                HttpContext.Current.Cache.Remove(keystr);
-                HttpContext.Current.Cache.Add(keystr, cachedValue, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(30), System.Web.Caching.CacheItemPriority.Normal, null);
+                _cache.Remove(keystr);
+                _cache.Set(keystr, cachedValue, TimeSpan.FromDays(30));
                 return (XElement)cachedValue;
             }
             #endregion
@@ -243,14 +254,14 @@ namespace WebServicePDL
 
             XElement outXML = XElement.Parse(output);
             //Add this element to chace and return it
-            HttpContext.Current.Cache.Add(key.ToString(), outXML, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(30), System.Web.Caching.CacheItemPriority.Normal, null);
+            _cache.Set(key.ToString(), outXML, TimeSpan.FromDays(30));
 
             return outXML;
         }
 
         //-------- NFA to DFA --------//
 
-        [WebMethod]
+
         public XElement ComputeFeedbackNfaToDfa(XElement nfaCorrectDesc, XElement dfaAttemptDesc, XElement maxGrade)
         {
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
@@ -270,7 +281,7 @@ namespace WebServicePDL
             return XElement.Parse(string.Format("<div><grade>{0}</grade><feedString>{1}</feedString></div>", feedbackGrade.Item1, feedString));
         }
 
-        [WebMethod]
+
         public XElement ComputeFeedbackNfaToDfaOld(XElement nfaCorrectDesc, XElement dfaAttemptDesc, XElement maxGrade)
         {
             #region Check if item is in cache
@@ -280,11 +291,11 @@ namespace WebServicePDL
             key.Append(dfaAttemptDesc.ToString());
             string keystr = key.ToString();
 
-            var cachedValue = HttpContext.Current.Cache.Get(key.ToString());
+            var cachedValue = _cache.Get(key.ToString());
             if (cachedValue != null)
             {
-                HttpContext.Current.Cache.Remove(keystr);
-                HttpContext.Current.Cache.Add(keystr, cachedValue, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(30), System.Web.Caching.CacheItemPriority.Normal, null);
+                _cache.Remove(keystr);
+                _cache.Set(keystr, cachedValue, TimeSpan.FromDays(30));
                 return (XElement)cachedValue;
             }
             #endregion
@@ -299,7 +310,7 @@ namespace WebServicePDL
 
             var level = FeedbackLevel.Hint;
 
-            var maxG = int.Parse(maxGrade.Value);            
+            var maxG = int.Parse(maxGrade.Value);
 
             //Compute feedback
             var feedbackGrade = DFAGrading.GetGrade(dfaCorrect, dfaAttemptPair.Second, nfaCorrectPair.First, solver, 1500, maxG, level);
@@ -314,7 +325,7 @@ namespace WebServicePDL
 
             XElement outXML = XElement.Parse(output);
             //Add this element to chace and return it
-            HttpContext.Current.Cache.Add(key.ToString(), outXML, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(30), System.Web.Caching.CacheItemPriority.Normal, null);
+            _cache.Set(key.ToString(), outXML, TimeSpan.FromDays(30));
 
             return outXML;
         }
@@ -322,11 +333,11 @@ namespace WebServicePDL
         //---------------------------
         // RegEx Methods
         //---------------------------
-        [WebMethod]
+
         public XElement ComputeFeedbackDynamicRegexpEditDistance(XElement regexCorrectDesc, XElement equivRegex, XElement regexAttemptDesc, XElement alphabet, XElement maxGrade)
         {
             string correct = XElement.Parse(DFAUtilities.RemoveAllNamespaces(regexCorrectDesc.ToString())).Value.Trim();
-            string[] equivalent = XElement.Parse(DFAUtilities.RemoveAllNamespaces(equivRegex.ToString())).Value.Trim().Split(new char[] {' ', '\n'});
+            string[] equivalent = XElement.Parse(DFAUtilities.RemoveAllNamespaces(equivRegex.ToString())).Value.Trim().Split(new char[] { ' ', '\n' });
             string attempt = XElement.Parse(DFAUtilities.RemoveAllNamespaces(regexAttemptDesc.ToString())).Value.Trim();
 
 
@@ -338,10 +349,10 @@ namespace WebServicePDL
                 CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
                 var dfaCorrectPair = DFAUtilities.parseRegexFromXML(regexCorrectDesc, alphabet, solver);
                 var dfaAttemptPair = DFAUtilities.parseRegexFromXML(regexAttemptDesc, alphabet, solver);
-                
+
 
                 var feedbackGrade = DFAGrading.GetGrade(dfaCorrectPair.Second, dfaAttemptPair.Second, dfaCorrectPair.First, solver, 1500, maxG, FeedbackLevel.Minimal, false, false, true);
-                
+
                 foreach (var feed in feedbackGrade.Second)
                     feedString += string.Format("<li>{0}</li>", feed);
                 feedString += "</ul>";
@@ -358,10 +369,10 @@ namespace WebServicePDL
             for (var i = 0; i < equivalent.Length; i++)
                 minimumDistance = Math.Min(minimumDistance, LevenshteinDistance.Compute(attempt.toConventional(), equivalent[i].toConventional()));
 
-            return XElement.Parse(string.Format("<div><grade>{0}</grade><feedback>{1}</feedback></div>", (int)Math.Ceiling(Math.Max(maxG*(1 - 0.2*minimumDistance), 0.0)), feedString));
+            return XElement.Parse(string.Format("<div><grade>{0}</grade><feedback>{1}</feedback></div>", (int)Math.Ceiling(Math.Max(maxG * (1 - 0.2 * minimumDistance), 0.0)), feedString));
         }
 
-        [WebMethod]
+
         public XElement CheckEquivalentRegexp(XElement correctRegex, XElement equivRegex, XElement alphabet)
         {
             try
@@ -374,7 +385,8 @@ namespace WebServicePDL
                 if (same)
                     return XElement.Parse(string.Format("<div>Equivalent</div>"));
                 //Note we can also get the regex directly in scala
-                else {
+                else
+                {
                     XElement Regex = XElement.Parse(DFAUtilities.RemoveAllNamespaces(equivRegex.ToString()));
                     string equiv = Regex.Value.Trim();
                     return XElement.Parse(string.Format("<div>{0} is not equivalent to the initial regular expression</div>", equiv));
@@ -390,22 +402,22 @@ namespace WebServicePDL
         // Equivalence class (Regex)
         //---------------------------
 
-        [WebMethod]
+
         public XElement ComputeEquivalentWordsFeedback(XElement regex, XElement alphabet, XElement representative, XElement wordsIn, XElement maxGrade)
         {
             return EquivalencyClasses.getWordsFeedback(regex, alphabet, representative, wordsIn, maxGrade);
         }
-        [WebMethod]
+
         public XElement ComputeEquivalentShortestFeedback(XElement regex, XElement alphabet, XElement representative, XElement shortest, XElement maxGrade)
         {
             return EquivalencyClasses.getShortestFeedback(regex, alphabet, representative, shortest, maxGrade);
         }
-        [WebMethod]
+
         public XElement ComputeSameEquivalencyClassFeedback(XElement regex, XElement alphabet, XElement firstWord, XElement secondWord, XElement notEquivalent, XElement reason, XElement maxGrade)
         {
-            return EquivalencyClasses.getSameFeedback(regex, alphabet, firstWord, secondWord, notEquivalent, reason, maxGrade);  
+            return EquivalencyClasses.getSameFeedback(regex, alphabet, firstWord, secondWord, notEquivalent, reason, maxGrade);
         }
-        [WebMethod]
+
         public XElement ComputeEquivalencyClassTwoWordsFeedback(XElement regex, XElement alphabet, XElement firstWord, XElement secondWord)
         {
             return EquivalencyClasses.getTwoWordsInstructorFeedback(regex, alphabet, firstWord, secondWord);
@@ -415,7 +427,7 @@ namespace WebServicePDL
         // Words in Regex
         //---------------------------
 
-        [WebMethod]
+
         public XElement ComputeWordsInRegexpFeedback(XElement regEx, XElement wordsIn, XElement wordsOut, XElement maxGrade)
         {
             //read inputs
@@ -445,7 +457,8 @@ namespace WebServicePDL
             var escapedRexpr = string.Format(@"^({0})$", rexpr);
             HashSet<string> hash = new HashSet<string>();
             HashSet<string> multi = new HashSet<string>();
-            foreach (var word in wordsInList) {
+            foreach (var word in wordsInList)
+            {
                 //Mind exceptions
                 // w is used only for display, word is used in all the calculations and checks
                 var w = word.emptyToEpsilon();
@@ -463,10 +476,11 @@ namespace WebServicePDL
                     feedString += String.Format("<li>'{0}' was used multiple times</li>", w);
                     multi.Add(word);
                 }
-                
+
                 hash.Add(word);
             }
-            foreach (var word in wordsOutList) {
+            foreach (var word in wordsOutList)
+            {
                 var w = word.emptyToEpsilon();
                 if (!Regex.Match(word, escapedRexpr, RegexOptions.None).Success && !hash.Contains(word) && !wordsInList.Contains(word))
                     correct++;
@@ -489,7 +503,7 @@ namespace WebServicePDL
         //---------------------------
         // RegEx to epsilon-NFA
         //---------------------------
-        [WebMethod]
+
         public XElement ComputeFeedbackRegexToNfa(XElement regex, XElement alphabet, XElement attemptNfa, XElement maxGrade)
         {
             try
@@ -506,7 +520,7 @@ namespace WebServicePDL
         // Pumping lemma methods
         //---------------------------
 
-        [WebMethod]
+
         public XElement ComputeFeedbackRegexp(XElement regexCorrectDesc, XElement regexAttemptDesc, XElement alphabet, XElement feedbackLevel, XElement enabledFeedbacks, XElement maxGrade)
         {
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
@@ -538,7 +552,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement CheckRegexp(XElement regexDesc, XElement alphabet)
         {
             CharSetSolver solver = new CharSetSolver(BitWidth.BV64);
@@ -564,7 +578,7 @@ namespace WebServicePDL
             return x;
         };
 
-        [WebMethod]
+
         public XElement CheckGrammar(XElement grammar)
         {
             try
@@ -579,7 +593,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement isCNF(XElement grammar)
         {
             try
@@ -609,7 +623,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement ComputeWordsInGrammarFeedback(XElement grammar, XElement wordsIn, XElement wordsOut, XElement maxGrade)
         {
             //read inputs
@@ -650,7 +664,7 @@ namespace WebServicePDL
             return XElement.Parse(string.Format("<div><grade>{0}</grade><feedback>{1}</feedback></div>", grade, feedString));
         }
 
-        [WebMethod]
+
         public XElement ComputeGrammarEqualityFeedback(XElement solution, XElement attempt, XElement maxGrade, XElement checkEmptyWord)
         {
             var feedString = "<ul>";
@@ -691,7 +705,7 @@ namespace WebServicePDL
             return XElement.Parse(string.Format("<div><grade>{0}</grade><feedback>{1}</feedback></div>", grade, feedString));
         }
 
-        [WebMethod]
+
         public XElement ComputeCYKFeedback(XElement grammar, XElement word, XElement attempt, XElement maxGrade)
         {
             //read inputs
@@ -742,7 +756,7 @@ namespace WebServicePDL
             return XElement.Parse(string.Format("<div><grade>{0}</grade><feedback>{1}</feedback></div>", grade, feedString));
         }
 
-        [WebMethod]
+
         public XElement ComputeFindDerivationFeedback(XElement grammar, XElement word, XElement derivation, XElement maxGrade, XElement derivationType)
         {
             //read inputs
@@ -785,7 +799,7 @@ namespace WebServicePDL
 
         //-------- Turing Machines (from while-programs) --------//
 
-        [WebMethod]
+
         public XElement ComputeFeedbackWhileToTM(XElement correctProgram, XElement attemptTM, XElement maxGrade)
         {
             TMCB<int, string> attemptTm = TMXmlParser.ParseTMFromXml(attemptTM);
@@ -797,7 +811,7 @@ namespace WebServicePDL
             content = content.Replace("&gt;", ">");
             content = AutomataPDL.WhileProgram.WhileUtilities.RemoveNamespacesFromString(content);
             correctProgram = XElement.Parse(content);
-            
+
             AutomataPDL.WhileProgram.WExpr program = AutomataPDL.WhileProgram.WhileUtilities.ParseWhileProgramFromXML(correctProgram);
             int maxG = int.Parse(maxGrade.Value);
 
@@ -810,12 +824,12 @@ namespace WebServicePDL
                 feedString += string.Format("<li>{0}</li>", feed);
             }
             feedString += "</ul>";
-            
+
             //returns grade, feedback strings, and a sample input for the tape simulator
             return XElement.Parse(string.Format("<div><grade>{0}</grade><feedback><feedString>{1}</feedString><sampleInput>{2}</sampleInput></feedback></div>", feedbackGrade.Item1, feedString, feedbackGrade.Item3));
         }
 
-        [WebMethod]
+
         public XElement CheckWhileFormat(XElement program)
         {
             string content = program.Value;
@@ -832,7 +846,7 @@ namespace WebServicePDL
         //---------------------------
         // Problem Generation Methodes
         //---------------------------
-        */
+
         private readonly int TRIES = 100;
         private readonly Generator[] GENERATORS = new Generator[] {
             WordsInGrammarGenerator.GetInstance(),
@@ -850,9 +864,9 @@ namespace WebServicePDL
             }
             return null;
         }
-        /*
 
-        [WebMethod]
+
+
         public XElement GenerateProblem(XElement type, XElement minQual)
         {
             String typeS = type.Value;
@@ -866,7 +880,7 @@ namespace WebServicePDL
             return Generation.generateWithMinQuality(gen, TRIES, minQualD).Export();
         }
 
-        [WebMethod]
+
         public XElement GenerateProblemHardest(XElement type, XElement minQual)
         {
             String typeS = type.Value;
@@ -877,11 +891,13 @@ namespace WebServicePDL
 
             if (gen == null) return new XElement("error", "problem type not supported '" + typeS + "'");
 
-            return Generation.generateHardestWithMinQuality(gen,TRIES,minQualD).Export();
+            return Generation.generateHardestWithMinQuality(gen, TRIES, minQualD).Export();
         }
-    */
+
         public XElement GenerateProblemBestIn(XElement type, XElement minDiff, XElement maxDiff)
         {
+            Console.WriteLine(_cache.ToString());
+
             String typeS = type.Value;
             var gen = GetMatchingGenerator(typeS);
             int minDiffI = int.Parse(minDiff.Value);
@@ -895,16 +911,16 @@ namespace WebServicePDL
 
             return Generation.generateBestWithDifficultyBounds(gen, TRIES, minDiffI, maxDiffI).Export();
         }
-        /*
+
         //---------------------------
         // Pumping lemma methods
         //---------------------------
 
         // Checks whether an arithmetic language description parses correctly
-        [WebMethod]
+
         public XElement CheckArithLanguageDescription(
             XElement languageDesc,
-            XElement constraintDesc, 
+            XElement constraintDesc,
             XElement alphabet,
             XElement pumpingString)
         {
@@ -924,9 +940,9 @@ namespace WebServicePDL
 
                 return XElement.Parse(string.Format("<div>CorrectLanguageDescription</div>"));
                 // if (PumpingLemma.ProofChecker.check(language, pumpingSymString))
-                    // return XElement.Parse(string.Format("<div>CorrectLanguageDescription</div>"));
+                // return XElement.Parse(string.Format("<div>CorrectLanguageDescription</div>"));
                 // else
-                    // throw new PumpingLemma.PumpingLemmaException("Unable to prove non-regularity of language using the pumping string!");
+                // throw new PumpingLemma.PumpingLemmaException("Unable to prove non-regularity of language using the pumping string!");
             }
             catch (PumpingLemma.PumpingLemmaException ex)
             {
@@ -939,7 +955,7 @@ namespace WebServicePDL
         }
 
         // Checks whether an arithmetic language description parses correctly
-        [WebMethod]
+
         public XElement GenerateStringSplits(
             XElement languageDesc,
             XElement constraintDesc,
@@ -974,16 +990,16 @@ namespace WebServicePDL
             {
                 return XElement.Parse(string.Format("<error>Error: {0} </error>", pdlex.Message));
             }
-                *//*
-            catch (Exception e)
-            {
-                return XElement.Parse(string.Format("<error>Internal Error: {0} </error>", e.Message));
-            }
-                 *//*
+            /*
+        catch (Exception e)
+        {
+            return XElement.Parse(string.Format("<error>Internal Error: {0} </error>", e.Message));
+        }
+             */
         }
 
         // Checks whether an arithmetic language description parses correctly
-        [WebMethod]
+
         public XElement GetPumpingLemmaFeedback(
             XElement languageDesc,
             XElement constraintDesc,
@@ -1019,7 +1035,7 @@ namespace WebServicePDL
         /// <param name="xmlWordsNotInLanguage">words entered by the student, that are not in the language accepted by the PDA</param>
         /// <param name="xmlMaxGrade">the maximum grade that can be achieved in this problem</param>
         /// <returns></returns>
-        [WebMethod]
+
         public XElement ComputeFeedbackPDAWordProblem(XElement xmlPda, XElement xmlWordsInLanguage, XElement xmlWordsNotInLanguage, XElement xmlMaxGrade)
         {
             return WordProblemGrader.GradeWordProblemAsync(xmlPda, xmlWordsInLanguage, xmlWordsNotInLanguage, xmlMaxGrade);
@@ -1033,7 +1049,7 @@ namespace WebServicePDL
         /// <param name="xmlGiveStackAlphabet">if the stack alphabet was predefined by the instructor</param>
         /// <param name="xmlMaxGrade">the maximum grade that can be achieved in this problem</param>
         /// <returns></returns>
-        [WebMethod]
+
         public XElement ComputeFeedbackPDAConstruction(XElement xmlPdaCorrect, XElement xmlPdaAttempt, XElement xmlGiveStackAlphabet, XElement xmlMaxGrade)
         {
             return ConstructionProblemGrader.GradeConstructionProblem(xmlPdaCorrect, xmlPdaAttempt, xmlGiveStackAlphabet, xmlMaxGrade);
@@ -1046,7 +1062,7 @@ namespace WebServicePDL
         /// <param name="xmlPda">PDA</param>
         /// <param name="xmlWord">word</param>
         /// <returns></returns>
-        [WebMethod]
+
         public XElement SimulateWordInPDA(XElement xmlPda, XElement xmlWord)
         {
             return SimulationAdapter.RunSimulationAsync(xmlPda, xmlWord);
@@ -1057,7 +1073,7 @@ namespace WebServicePDL
         //---------------------------
 
 
-        [WebMethod]
+
         public XElement PLGRegularGetDFAFromSymbolicString(XElement alphabet, XElement symbolicString, XElement constraints)
         {
             ArithmeticLanguage lang;
@@ -1083,7 +1099,7 @@ namespace WebServicePDL
             return strDfa.ToXML(lang.alphabet.ToArray());
         }
 
-        [WebMethod]
+
         public XElement PLGNonRegularCheckValidity(XElement alphabet, XElement symbolicString, XElement constraints, XElement unpumpableWord)
         {
             try
@@ -1097,7 +1113,7 @@ namespace WebServicePDL
                     throw new PumpingLemmaException("contains illegal integer variables");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return PLGerror("Could not parse unpumpable Word: " + e.Message);
             }
@@ -1113,7 +1129,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement PLGNfaToDfa(XElement automaton)
         {
             try
@@ -1128,7 +1144,7 @@ namespace WebServicePDL
         }
 
         //returns an n if the language is regular
-        [WebMethod]
+
         public XElement PLGRegularGetN(XElement automaton)
         {
             try
@@ -1142,15 +1158,15 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement PLGNonRegularGetN(XElement max)
         {
             int parsed = Int32.Parse(max.Value);
             int num = new Random().Next(1, parsed + 1);
-            return XElement.Parse("<n>"+num+"</n>");
+            return XElement.Parse("<n>" + num + "</n>");
         }
 
-        [WebMethod]
+
         public XElement PLGRegularGetWord(XElement automaton, XElement n)
         {
             int parsed = Int32.Parse(n.Value);
@@ -1165,15 +1181,15 @@ namespace WebServicePDL
                     throw new PumpingLemmaException("Could not find word.");
                 }
             }
-             
+
             if (word == null)
             {
                 return PLGerror("no word could be found");
             }
-            return XElement.Parse("<word>"+word+"</word>");
+            return XElement.Parse("<word>" + word + "</word>");
         }
 
-        [WebMethod]
+
         public XElement PLGNonRegularGetWord(XElement alphabet, XElement symbolicString, XElement constraints, XElement n, XElement unpumpableWord)
         {
             ArithmeticLanguage lang = loadArithmeticLanguage(alphabet.Value, symbolicString.Value, constraints.Value);
@@ -1218,7 +1234,7 @@ namespace WebServicePDL
                 string word = PumpingLemmaGame.NonRegularGetUnpumpableWord(lang, unpWord, n_num);
                 if (word != null)
                 {
-                    return XElement.Parse("<word>"+word+"</word>");
+                    return XElement.Parse("<word>" + word + "</word>");
                 }
                 return PLGerror("Couldn't find word.");
             }
@@ -1228,7 +1244,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement PLGRegularCheckI(XElement automaton, XElement start, XElement mid, XElement end, XElement i)
         {
             try
@@ -1253,7 +1269,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement PLGNonRegularCheckI(XElement alphabet, XElement symbolicString, XElement constraints, XElement start, XElement mid, XElement end, XElement i)
         {
             try
@@ -1278,7 +1294,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement PLGRegularCheckWordGetSplit(XElement automaton, XElement n, XElement word)
         {
             StringDFA strDFA = new StringDFA(automaton, true);
@@ -1299,7 +1315,7 @@ namespace WebServicePDL
             }
         }
 
-        [WebMethod]
+
         public XElement PLGNonRegularCheckWordGetSplit(XElement alphabet, XElement symbolicString, XElement constraints, XElement n, XElement word)
         {
             ArithmeticLanguage lang = loadArithmeticLanguage(alphabet.Value, symbolicString.Value, constraints.Value);
@@ -1316,9 +1332,9 @@ namespace WebServicePDL
                 split = PumpingLemmaGame.NonRegularGetRandomSplit(lang, word.Value, Int32.Parse(n.Value));
             }
             return XElement.Parse("<split><start>" + split.Item1 + "</start><mid>" + split.Item2 + "</mid><end>" + split.Item3 + "</end></split>");
-        }     
+        }
 
-        [WebMethod]
+
         public XElement PLGRegularGetI(XElement automaton, XElement start, XElement mid, XElement end)
         {
             StringDFA dfa = new StringDFA(automaton, true);
@@ -1332,7 +1348,7 @@ namespace WebServicePDL
             return XElement.Parse("<loss>" + i + "</loss>");
         }
 
-        [WebMethod]
+
         public XElement PLGNonRegularGetI(XElement alphabet, XElement symbolicString, XElement constraints, XElement start, XElement mid, XElement end)
         {
             ArithmeticLanguage lang;
@@ -1435,6 +1451,6 @@ namespace WebServicePDL
         private XElement PLGerror(string errorText)
         {
             return new XElement("error", errorText);
-        }*/
+        }
     }
 }
