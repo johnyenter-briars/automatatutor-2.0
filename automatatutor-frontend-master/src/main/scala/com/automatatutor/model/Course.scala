@@ -68,6 +68,11 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	  if (this.canBeSupervisedBy(user)) return this.getProblems
 	  return this.getSolvableProblems
 	}
+	def getFoldersForUser(user: User) : List[Folder] = {
+		if (!user.isAdmin && !this.isEnrolled(user)) return List()
+		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
+		return List()
+	}
 
     override def delete_! : Boolean = {
         UserToCourse.deleteByCourse(this)

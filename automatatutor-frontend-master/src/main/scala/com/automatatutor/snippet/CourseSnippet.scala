@@ -29,6 +29,16 @@ object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null)		// Requ
 
 class Coursesnippet {
 
+  def showfolders(ignored: NodeSeq): NodeSeq = {
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    var folders = CurrentCourse.getFoldersForUser(user)
+    if (folders.isEmpty) return Text("There are no folders in this course")
+    return TableHelper.renderTableWithHeader(
+      folders,
+      ("attribute", (folder: Folder) => Text(folder.getLongDescription))
+    )
+  }
+
   def showproblems(ignored: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 	var problems = CurrentCourse.getProblemsForUser(user)

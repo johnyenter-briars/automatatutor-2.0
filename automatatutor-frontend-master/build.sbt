@@ -22,7 +22,7 @@ libraryDependencies ++= {
     "net.liftweb"             %% "lift-webkit"            % "2.5.1"               % "compile",
     "net.liftweb"             %% "lift-mapper"            % "2.5.1"               % "compile",
     "net.liftweb"             %% "lift-testkit"           % "2.5.1"               % "compile",
-    "net.liftmodules"         %% "lift-jquery-module_2.5" % "2.4",
+    "net.liftmodules"         %% "lift-jquery-module_3.0" % "2.8",
     "org.eclipse.jetty"       % "jetty-jsp"               % "9.2.1.v20140609"     % "container,test",
     "org.eclipse.jetty"       % "jetty-webapp"            % "9.2.5.v20141112"     % "container,test",
     "org.eclipse.jetty.orbit" % "javax.servlet"           % "3.0.0.v201112011016" % "container,test" artifacts Artifact("javax.servlet", "jar", "jar"),
