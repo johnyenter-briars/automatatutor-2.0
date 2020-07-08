@@ -82,7 +82,8 @@ class Boot {
 		  Menu.i("Pose Problem") / "main" / "course" / "problems" / "pose" >> Hidden,
 		  Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
 		  Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
-		  Menu.i("Edit Problem") / "main" / "course" / "problems" / "edit" >> Hidden
+		  Menu.i("Edit Problem") / "main" / "course" / "problems" / "edit" >> Hidden,
+      Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden
 		)
 	  ),
 	  
