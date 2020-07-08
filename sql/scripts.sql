@@ -17,14 +17,22 @@ insert into FOLDER Values(
     false
 );
 
+insert into FOLDER Values(
+    2,
+    'Homework 2',
+    1,
+    1,
+    false
+);
+
 drop table PROBLEMTOFOLDER;
 
 create table PROBLEMTOFOLDER(
+    ID BigInt PRIMARY KEY AUTO_INCREMENT,
     PROBLEMID BigInt,
     FOLDERID BigInt,
     FOREIGN KEY (PROBLEMID) REFERENCES PROBLEM(ID),
-    FOREIGN KEY (FOLDERID) REFERENCES FOLDER(ID),
-    PRIMARY KEY (PROBLEMID, FOLDERID)
+    FOREIGN KEY (FOLDERID) REFERENCES FOLDER(ID)
 );
 
 insert into PROBLEMTOFOLDER Values(

@@ -30,12 +30,55 @@ object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null)		// Requ
 class Coursesnippet {
 
   def showfolders(ignored: NodeSeq): NodeSeq = {
+
+    def expandButton(folder: Folder) : NodeSeq = {
+      SHtml.button("expand", null, "class" -> "btn_collapse", "id" -> ("btn_collapse" + folder.getFolderID))
+    }
+
+    def previewButton(problem: Problem) : NodeSeq = {
+      SHtml.link(
+        "/main/course/problems/preview",
+        () => {CurrentProblemInCourse(problem)},
+        <button type='button'>Preview</button>)
+    }
+
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     var folders = CurrentCourse.getFoldersForUser(user)
     if (folders.isEmpty) return Text("There are no folders in this course")
-    return TableHelper.renderTableWithHeader(
-      folders,
-      ("attribute", (folder: Folder) => Text(folder.getLongDescription))
+    var problemsUnderFolder = folders.map(folder => folder.getProblemsUnderFolder)
+
+    return (
+      <table>
+        <tr><td><b>Description</b></td><td><b>Posed</b></td><td></td></tr>
+        {
+          folders.map(folder => {
+            <div>
+              <tr>
+              <td>
+                {folder.getLongDescription}
+              </td>
+              <td>{folder.getPosed.toString()}</td><td>{expandButton(folder)}</td>
+              </tr>
+              <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
+              <td></td><td><b>Description</b></td><td><b>Problem Type</b></td>
+              <td><b>Attempts</b></td><td><b>Max Grade</b></td><td></td>
+              </tr>
+              {
+                folder.getProblemsUnderFolder.map(problem => {
+                  <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
+                    <td></td>
+                    <td>{problem.getShortDescription}</td>
+                    <td>{problem.getTypeName}</td>
+                    <td>{problem.getAllowedAttemptsString}</td>
+                    <td>{problem.getMaxGrade.toString}</td>
+                    <td>{previewButton(problem)}</td>
+                  </tr>
+                })
+              }
+          </div>
+          })
+        }
+      </table>
     )
   }
 

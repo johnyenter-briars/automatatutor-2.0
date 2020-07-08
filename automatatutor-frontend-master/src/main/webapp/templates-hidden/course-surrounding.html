@@ -51,6 +51,33 @@
         }
     </script>
 
+    <script>
+        window.addEventListener('load', () => {
+            var buttons = document.getElementsByTagName("button");
+            var buttons_arr = Array.from(buttons);
+            var filtered_buttons_arr = buttons_arr.filter(button => {
+                return button.className.includes("btn_collapse")
+            })
+            for(var button of filtered_buttons_arr){
+                button.onclick = (e) => {
+                    var targetButton = e.target;
+                    var targetClass = "collapsable_" + targetButton.id.slice(-1);
+                    console.log(targetClass)
+                    var targetElems = Array.from(document.getElementsByClassName(targetClass));
+                    for(var row of targetElems){
+                        row.style.display = row.style.display == 'table-row' ? 'none' : 'table-row';
+
+                    }
+
+
+
+                }
+            }
+
+
+        }, false);
+    </script>
+
 </head>
 <body>
 

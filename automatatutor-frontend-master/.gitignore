@@ -4,3 +4,4 @@ project/project
 target
 src/main/resources/props/default.props
 console.devmode.log
+automatatutor.db.trace.db
