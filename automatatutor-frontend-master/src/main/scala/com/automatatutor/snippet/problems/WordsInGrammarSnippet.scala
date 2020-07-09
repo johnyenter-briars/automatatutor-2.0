@@ -35,7 +35,7 @@ import net.liftweb.common.Empty
 object WordsInGrammarSnippet extends SpecificProblemSnippet {
 
   override def renderCreate(createUnspecificProb: (String, String) => Problem,
-                             returnFunc:          (Problem) => Unit) : NodeSeq = {
+                            returnFunc: (Problem) => Unit): NodeSeq = {
 
     def create(formValues: String): JsCmd = {
       val formValuesXml = XML.loadString(formValues)
@@ -52,13 +52,14 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
         val specificProblem: WordsInGrammarProblem = WordsInGrammarProblem.create
         specificProblem.problemId(unspecificProblem).grammar(grammar).inNeeded(inNeeded).outNeeded(outNeeded)
         specificProblem.save
-        return SHtml.ajaxCall("", (ignored : String) => returnFunc(unspecificProblem))
+        return SHtml.ajaxCall("", (ignored: String) => returnFunc(unspecificProblem))
       } else {
         val error = Grammar.preprocessFeedback(parsingErrors.mkString("<br/>"))
         return JsCmds.JsShowId("submitbutton") & JsCmds.JsShowId("feedbackdisplay") & JsCmds.SetHtml("parsingerror", Text(error))
       }
 
     }
+
     val grammarField = SHtml.textarea("S -> a S b | x | S S", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
     val inNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Empty, value => {}, "id" -> "inneededfield")
     val outNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Empty, value => {}, "id" -> "outneededfield")
@@ -74,7 +75,7 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
     //val checkGrammarAndSubmit : JsCmd = JsIf(Call("multipleAlphabetChecks",Call("parseAlphabetByFieldName", "terminalsfield"),Call("parseAlphabetByFieldName", "nonterminalsfield")), hideSubmitButton & ajaxCall)
     val submit: JsCmd = hideSubmitButton & ajaxCall
 
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={submit}>Submit</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "words-in-grammar-problem", "create")) openOr Text("Could not find template /templates-hidden/words-in-grammar-problem/create")
     Helpers.bind("createform", template,
@@ -107,7 +108,7 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
       if (parsingErrors.isEmpty) {
         problem.setShortDescription(shortDescription).setLongDescription(shortDescription).save()
         wordsInGrammarProblem.grammar(grammar).inNeeded(inNeeded).outNeeded(outNeeded).save()
-        return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
+        return SHtml.ajaxCall("", (ignored: String) => returnFunc(problem))
       } else {
         val error = Grammar.preprocessFeedback(parsingErrors.mkString("<br/>"))
         return JsCmds.JsShowId("submitbutton") & JsCmds.JsShowId("feedbackdisplay") & JsCmds.SetHtml("parsingerror", Text(error))
@@ -128,7 +129,7 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
 
     val submit: JsCmd = hideSubmitButton & ajaxCall
 
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={submit}>Submit</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "words-in-grammar-problem", "edit")) openOr Text("Could not find template /templates-hidden/words-in-grammar-problem/edit")
     Helpers.bind("editform", template,
@@ -140,8 +141,8 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
   }
 
   override def renderSolve(generalProblem: Problem, maxGrade: Long, lastAttempt: Box[SolutionAttempt],
-                           recordSolutionAttempt: (Int, Date) => SolutionAttempt, returnFunc: (Problem => Unit), 
-						   remainingAttempts: () => Int, bestGrade: () => Int): NodeSeq = {
+                           recordSolutionAttempt: (Int, Date) => SolutionAttempt, returnFunc: (Problem => Unit),
+                           remainingAttempts: () => Int, bestGrade: () => Int): NodeSeq = {
     val specificProblem = WordsInGrammarProblem.findByGeneralProblem(generalProblem)
 
     def grade(formValues: String): JsCmd = {
@@ -168,19 +169,19 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
       val attemptTime = Calendar.getInstance.getTime()
 
       val gradeAndFeedback = GraderConnection.getWordsInGrammarFeedback(specificProblem.grammar.is, wordsIn, wordsOut, maxGrade.toInt)
-	  
-	  var numericalGrade = gradeAndFeedback._1
-      val validAttempt = numericalGrade >= 0 
-	  if (!validAttempt) { 
-	    numericalGrade = 0
-	  } else {
-	    val generalAttempt = recordSolutionAttempt(numericalGrade, attemptTime)
-		if (generalAttempt != null) {
+
+      var numericalGrade = gradeAndFeedback._1
+      val validAttempt = numericalGrade >= 0
+      if (!validAttempt) {
+        numericalGrade = 0
+      } else {
+        val generalAttempt = recordSolutionAttempt(numericalGrade, attemptTime)
+        if (generalAttempt != null) {
           val ins = Grammar.preprocessGrammar((formValuesXml \ "ins").toString())
           val outs = Grammar.preprocessGrammar((formValuesXml \ "outs").toString())
           WordsInGrammarSolutionAttempt.create.solutionAttemptId(generalAttempt).attemptWordsIn(ins).attemptWordsOut(outs).save
         }
-	  }
+      }
 
       val setNumericalGrade: JsCmd = SetHtml("grade", Text(gradeAndFeedback._1.toString + "/" + maxGrade.toString))
       val setFeedback: JsCmd = SetHtml("feedback", Grammar.preprocessFeedback(gradeAndFeedback._2))
@@ -191,47 +192,59 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
 
     //reconstruct last attempt
     val lastAttemptIn = lastAttempt.map({ generalAttempt =>
-      ( XML.loadString(WordsInGrammarSolutionAttempt.getByGeneralAttempt(generalAttempt).attemptWordsIn.is) \ "in") }
+      (XML.loadString(WordsInGrammarSolutionAttempt.getByGeneralAttempt(generalAttempt).attemptWordsIn.is) \ "in")
+    }
     ) openOr List()
     val lastAttemptOut = lastAttempt.map({ generalAttempt =>
-      ( XML.loadString(WordsInGrammarSolutionAttempt.getByGeneralAttempt(generalAttempt).attemptWordsOut.is) \ "out")
+      (XML.loadString(WordsInGrammarSolutionAttempt.getByGeneralAttempt(generalAttempt).attemptWordsOut.is) \ "out")
     }) openOr List()
 
     //build html
     val problemDescription = generalProblem.getLongDescription
-    val grammarText =
-    { specificProblem.getGrammar
-      .replaceAll("->", " -> ")
-      .replaceAll("=>", " -> ")
-      .replaceAll("\\|", " \\| ")
-      .replaceAll("\\s{2,}", " ")
-      .replaceAll("_", "\u03B5")
-      .split("\\s(?=\\S+\\s*->)")
-      .map { Text(_) ++ <br/> } reduceLeft (_ ++ _) }
+    val grammarText = {
+      specificProblem.getGrammar
+        .replaceAll("->", " -> ")
+        .replaceAll("=>", " -> ")
+        .replaceAll("\\|", " \\| ")
+        .replaceAll("\\s{2,}", " ")
+        .replaceAll("_", "\u03B5")
+        .split("\\s(?=\\S+\\s*->)")
+        .map {
+          Text(_) ++ <br/>
+        } reduceLeft (_ ++ _)
+    }
     var inNeededText = Text(specificProblem.inNeeded + " words")
     if (specificProblem.inNeeded == 1) inNeededText = Text(specificProblem.inNeeded + " word")
     var outNeededText = Text(specificProblem.outNeeded + " words")
     if (specificProblem.outNeeded == 1) outNeededText = Text(specificProblem.outNeeded + " word")
     val wordsInFields = new Array[NodeSeq](specificProblem.getInNeeded)
     for (i <- 0 to specificProblem.getInNeeded - 1) {
-      val lastAttemt = (lastAttemptIn.lift(i)).map({ word => word.text}) getOrElse ""
+      val lastAttemt = (lastAttemptIn.lift(i)).map({ word => word.text }) getOrElse ""
       wordsInFields(i) = SHtml.text(
         lastAttemt,
         value => {},
         "id" -> ("wordinfield" + i.toString),
         "maxlength" -> "75")
     }
-    val wordsInFieldNodeSeq = <ul>{ wordsInFields.map(i => <li>{ i }</li>) }</ul>
+    val wordsInFieldNodeSeq = <ul>
+      {wordsInFields.map(i => <li>
+        {i}
+      </li>)}
+    </ul>
     val wordsOutFields = new Array[NodeSeq](specificProblem.getOutNeeded)
     for (i <- 0 to specificProblem.getOutNeeded - 1) {
-      val lastAttemt = (lastAttemptOut.lift(i)).map({ word => word.text}) getOrElse ""
+      val lastAttemt = (lastAttemptOut.lift(i)).map({ word => word.text }) getOrElse ""
       wordsOutFields(i) = SHtml.text(
         lastAttemt,
         value => {},
         "id" -> ("wordoutfield" + i.toString),
         "maxlength" -> "75")
     }
-    val wordsOutFieldNodeSeq = <ul>{ wordsOutFields.map(i => <li>{ i }</li>) }</ul>
+    val wordsOutFieldNodeSeq = <ul>
+      {wordsOutFields.map(i => <li>
+        {i}
+      </li>)}
+    </ul>
 
     val insValXmlJs: StringBuilder = new StringBuilder("<ins>")
     for (i <- 0 to specificProblem.getInNeeded - 1) {
@@ -246,7 +259,7 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<solveattempt>" + insValXmlJs + outsValXmlJs + "</solveattempt>'"), grade(_))
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ hideSubmitButton & ajaxCall }>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={hideSubmitButton & ajaxCall}>Submit</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "words-in-grammar-problem", "solve")) openOr Text("Could not find template /templates-hidden/words-in-grammar-problem/solve")
     Helpers.bind("solveform", template,

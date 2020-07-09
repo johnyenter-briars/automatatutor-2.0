@@ -46,5 +46,7 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
 
 object Folder extends Folder with LongKeyedMetaMapper[Folder] {
   def findAllByCourse(course: Course): List[Folder] = findAll(By(Folder.courseId, course))
+
+  def findByID(ID: String): Folder = this.findAll().filter(_.getFolderID == ID.toLong).head
 }
 
