@@ -13,6 +13,9 @@ import net.liftweb.common.Empty
 import net.liftweb.common.Full
 import net.liftweb.http._
 import net.liftweb.http.SHtml.ElemAttr.pairToBasic
+import net.liftweb.http.js.JsCmd
+import net.liftweb.http.js.JsCmds
+import net.liftweb.http.js.JsCmds._
 import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.mapper.By
 import net.liftweb.util.AnyVar.whatVarIs
@@ -28,6 +31,28 @@ object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar ma
 object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // RequestVar as only needed in a single request
 
 class Coursesnippet {
+
+  def rendercreatefolder(xhtml: NodeSeq): NodeSeq ={
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+
+    if(!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
+
+    def process(folderName: String): Unit = {
+      val newFolder = new Folder
+      newFolder.setCreator(user)
+      newFolder.setLongDescription(folderName)
+      newFolder.setCourse(CurrentCourse.is)
+      newFolder.setPosed(false)
+      newFolder.save
+
+    }
+    return <form>
+              <div>
+                {SHtml.text("", process, "type" -> "input")}
+                <button type="submit">Add Folder</button>
+              </div>
+            </form>
+  }
 
   def renderaccessedit(xhtml: NodeSeq): NodeSeq = {
     if (CurrentProblemInCourse.is == null) {
@@ -263,8 +288,6 @@ class Coursesnippet {
         })}
         </table>
         )
-
-
     }
   }
 
