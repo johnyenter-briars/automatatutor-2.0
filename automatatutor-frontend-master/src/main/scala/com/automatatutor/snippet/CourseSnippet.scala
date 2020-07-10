@@ -28,8 +28,11 @@ import net.liftweb.http.js.JsCmds._
 import SHtml._
 import js._
 import JsCmds._
+
 import util._
 import Helpers._
+
+import scala.collection.JavaConverters._
 
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
@@ -381,57 +384,54 @@ class Coursesnippet {
         )
     }
     else {
-      return (
-        <table>
-          <tr>
+      return <table>
+        <tr>
+          <td>
+            <b>Description</b>
+          </td> <td></td>
+        </tr>{folders.map(folder => {
+          if(folder.getEndDate.compareTo(Calendar.getInstance().getTime) < 0) <div></div> else
+        <tr>
+          <td>
+            {folder.getLongDescription}
+          </td>
+          <td>
+            {expandButton(folder)}
+          </td>
+        </tr>
+          <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
+            <td></td> <td>
+            <b>Description</b>
+          </td> <td>
+            <b>Problem Type</b>
+          </td>
             <td>
-              <b>Description</b>
-            </td> <td></td>
-          </tr>{folders.map(folder => {
-          <div>
-            <tr>
-              <td>
-                {folder.getLongDescription}
-              </td>
-              <td>
-                {expandButton(folder)}
-              </td>
-            </tr>
-            <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
-              <td></td> <td>
-              <b>Description</b>
+              <b>Attempts</b>
             </td> <td>
-              <b>Problem Type</b>
-            </td>
-              <td>
-                <b>Attempts</b>
-              </td> <td>
-              <b>Max Grade</b>
-            </td> <td></td>
-            </tr>{folder.getProblemsUnderFolder.map(problem => {
-            <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
-              <td></td>
-              <td>
-                {problem.getShortDescription}
-              </td>
-              <td>
-                {problem.getTypeName}
-              </td>
-              <td>
-                {problem.getAllowedAttemptsString}
-              </td>
-              <td>
-                {problem.getMaxGrade.toString}
-              </td>
-              <td>
-                {solveButton(problem)}
-              </td>
-            </tr>
-          })}
-          </div>
-        })}
-        </table>
-        )
+            <b>Max Grade</b>
+          </td> <td></td>
+          </tr> ++ {folder.getProblemsUnderFolder.map(problem => {
+        <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
+          <td></td>
+          <td>
+            {problem.getShortDescription}
+          </td>
+          <td>
+            {problem.getTypeName}
+          </td>
+          <td>
+            {problem.getAllowedAttemptsString}
+          </td>
+          <td>
+            {problem.getMaxGrade.toString}
+          </td>
+          <td>
+            {solveButton(problem)}
+          </td>
+        </tr>
+      })}
+      })}
+      </table>
     }
   }
 
