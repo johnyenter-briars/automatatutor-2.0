@@ -22,8 +22,8 @@ const NOTES = [
         explanations: [
             '"a" is alphabet-symbol or epsilon --> epsilon is represented by E',
             '"Y" is arbitrary sequence of stack symbols (if the transition only pops from the stack, "Y" is left empty)',
-            'example: reading alphabet-symbol "b" with stack "->XXZ" and following a transition "b,X/YX" results in the stack "->YXXZ"'
-            'example: reading alphabet-symbol "b" with stack "->XXZ" and following a transition "b,X/" results in the stack "->XZ"'
+            'example: reading alphabet-symbol "b" with stack "->XXZ" and following a transition "b,X/YX" results in the stack "->YXXZ"',
+            'example: reading alphabet-symbol "b" with stack "->XXZ" and following a transition "b,X/" results in the stack "->XZ"',
             'transition of wrong format are ignored'
         ]
     },

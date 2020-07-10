@@ -34,6 +34,7 @@ import Helpers._
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
 object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // RequestVar as only needed in a single request
+object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
 
@@ -45,38 +46,57 @@ class Coursesnippet {
     val oneWeekFromNow: Calendar = Calendar.getInstance();
     oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
 
-    var folderName = ""
-    var startDate: String = dateFormat.format(now.getTime())
-    var endDate: String = dateFormat.format(oneWeekFromNow.getTime())
-    val from = S.referer openOr "/main/course/index"
+    val currentFolder = CurrentFolderInCourse.is
+
+    var folderName = currentFolder.getLongDescription
+    var startDateString: String = if(currentFolder.getStartDate == null) dateFormat.format(now.getTime()) else currentFolder.getStartDate.toString
+    var endDateString: String = if(currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime()) else currentFolder.getEndDate.toString
 
     if(!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
-    def createFolderCallback(): Unit = {
-      //      val newFolder = new Folder
-      //      newFolder.setCreator(user)
-      //      newFolder.setLongDescription(folderName)
-      //      newFolder.setCourse(CurrentCourse.is)
-      //      newFolder.setPosed(false)
-      //      newFolder.save
+    def editFolderCallback(): Unit = {
+      var errors: List[String] = List()
+      val startDate: Date = try {
+        dateFormat.parse(startDateString)
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(e.getMessage())
+          null
+        }
+      }
+      val endDate: Date = try {
+        dateFormat.parse(endDateString)
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(e.getMessage())
+          null
+        }
+      }
+      if (endDate.compareTo(startDate) < 0) errors = errors ++ List("The end date must not be before the start date")
+      if (!errors.isEmpty) {
+        S.warning(errors.head)
+      } else {
+        currentFolder.setLongDescription(folderName)
+        currentFolder.setCreator(user)
+        currentFolder.setStartDate(startDate)
+        currentFolder.setEndDate(endDate)
+        currentFolder.save
 
-      println("new folder")
-      println(folderName)
-      println(startDate)
-      println(endDate)
+        S.redirectTo("/main/course/index", () => {})
+      }
     }
 
     var folderNameField = SHtml.text(folderName, folderName = _)
-    val startDateField = SHtml.text(startDate, startDate = _)
-    val endDateField = SHtml.text(endDate, endDate = _)
+    val startDateField = SHtml.text(startDateString, startDateString = _)
+    val endDateField = SHtml.text(endDateString, endDateString = _)
 
-    val creatFolderButton = SHtml.submit("Create Folder", createFolderCallback)
+    val editFolderButton = SHtml.submit("Save changes to folder", editFolderCallback)
 
     Helpers.bind("createfolderform", xhtml,
       "foldernamefield" -> folderNameField,
       "startdatefield" -> startDateField,
       "enddatefield" -> endDateField,
-      "createbutton" -> creatFolderButton)
+      "editbutton" -> editFolderButton)
   }
 
   def renderaddfolderform(xhtml: NodeSeq): NodeSeq ={
@@ -132,13 +152,13 @@ class Coursesnippet {
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
 
-    val creatFolderButton = SHtml.submit("Create Folder", createFolderCallback)
+    val createFolderButton = SHtml.submit("Create Folder", createFolderCallback)
 
       Helpers.bind("createfolderform", xhtml,
       "foldernamefield" -> folderNameField,
       "startdatefield" -> startDateField,
       "enddatefield" -> endDateField,
-      "createbutton" -> creatFolderButton)
+      "createbutton" -> createFolderButton)
   }
 
   def renderaccessedit(xhtml: NodeSeq): NodeSeq = {
@@ -225,6 +245,7 @@ class Coursesnippet {
       SHtml.link(
         "/main/course/folders/edit",
         () => {
+          CurrentFolderInCourse(folder)
         },
         <button type='button'>Edit Folder</button>)
     }
@@ -346,10 +367,8 @@ class Coursesnippet {
           </div>
         })}
         </table> ++ SHtml.link("/main/course/folders/create", () => {},
-          <button type="button">Create a folder</button>
+          <button type="button">Create a folder</button>)
         )
-        )
-
     }
     else {
       return (
