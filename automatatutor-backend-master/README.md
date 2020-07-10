@@ -1,13 +1,38 @@
-# automatatutor-backend
+# How to Run Automata-tutor Backend on Linux
 
-The following section explains how to get the backend of Automata Tutor running
+#### Prerequisites
 
-## Prerequisites
+To run the AT backend on linux, you need mono and msbuild installed. 
 
-The website is written in C# and uses .Net Framework 4.5. The easiest way to run the code is to use Visual Studio >2014.
-Visual Studio Community 2015 is free and you can download it from the Microsoft website.
+Instructions can be installed at: https://www.mono-project.com/download/stable/
 
-## Initial configuration
+REQUIRED Packages:
+- mono-devel
+- mono-complete
+- mono-dbg
+- referenceassemblies-pcl
+- ca-certificates-mono
+- mono-xsp4
 
-Open AutomataPDL.sln using Visual Studio and set WebServicePDL as your start up project.
-If you run the solution this will start a web serice on localhost:53861/Service1.asmx that offers the grading and feedback capabilities of Automata Tutor.
+##### Build the Project
+
+Next, move to the root of the backend project at automata-tutor-master/ and run:
+```
+msbuild
+```
+
+You will see some errors akin to "The type or namespace name 'VisualStudio' does not exist in the namespace 'Microsoft' (are you missing an assembly reference?)"
+
+This is because the tests were build using the visual studio suite, which obviously do not exist in linux.
+
+#### Run XSP
+
+Next, move within the WebServicePDL/ project and run:
+
+```
+xsp4 --port=53861
+```
+
+Note: the port must be set at 53981 becuase that port is what's expected by the front end
+
+To check that the back end is working, navigate in a web browser to http://localhost:53861/Service1.asmx and you should see the SOAP interface.

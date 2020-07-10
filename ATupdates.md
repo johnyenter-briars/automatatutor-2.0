@@ -9,9 +9,9 @@ The idea is that the notion of "loose" questions is not practical, and leads to 
 Therefore, a "folder" system is implimented to allow for the grouping of related problems. In this, folders are now posed instead of individual problems being posed. 
 
 
-####Implementation of Folderes
+#### Implementation of Folderes
 
-This was done by following the Lift patterns laid out previously, and "lifting" (hehe) the appropiate code logic into new scala classes called Folders. 
+This was done by following the Lift patterns laid out previously, and "lifting" (hehe) the appropiate code logic from the Problem class into a new scala class called Folder. 
 
 In addition, the database also has records to connect problems to folders, in an identical manor as users are connected to courses. 
 

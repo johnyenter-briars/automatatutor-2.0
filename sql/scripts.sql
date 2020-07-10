@@ -26,7 +26,9 @@ insert into FOLDER Values(
     'Homework 2',
     1,
     1,
-    false
+    false,
+    null,
+    null
 );
 
 drop table PROBLEMTOFOLDER;
@@ -40,6 +42,7 @@ create table PROBLEMTOFOLDER(
 );
 
 insert into PROBLEMTOFOLDER Values(
+    1,
     2, 
     1
 );
