@@ -31,6 +31,7 @@ import JsCmds._
 
 import util._
 import Helpers._
+import net.liftweb.http.provider.HTTPCookie
 
 import scala.collection.JavaConverters._
 
@@ -214,6 +215,7 @@ class Coursesnippet {
         S.warning(errors.head)
       } else {
         problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+
         S.redirectTo("/main/course/index", () => {})
       }
     }
@@ -231,7 +233,6 @@ class Coursesnippet {
 
 
   def showfolders(ignored: NodeSeq): NodeSeq = {
-
     def expandButton(folder: Folder): NodeSeq = {
       SHtml.button("expand/collapse", null, "class" -> "btn_collapse", "id" -> ("btn_collapse" + folder.getFolderID))
     }
@@ -390,7 +391,7 @@ class Coursesnippet {
             <b>Description</b>
           </td> <td></td>
         </tr>{folders.map(folder => {
-          if(folder.getEndDate.compareTo(Calendar.getInstance().getTime) < 0) <div></div> else
+          if(folder.getEndDate.compareTo(Calendar.getInstance().getTime) < 0) NodeSeq.Empty else
         <tr>
           <td>
             {folder.getLongDescription}

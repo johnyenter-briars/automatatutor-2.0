@@ -1,18 +1,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:lift="http://liftweb.net/">
 <head>
 
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
     <title class="lift:Menu.title">ATv3: </title>
     <style class="lift:CSS.blueprint"></style>
     <style class="lift:CSS.fancyType"></style>
 
-    <link rel="stylesheet" type="text/css" href="/stylesheets/AT.css" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/mobile.css" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/sidebar.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/AT.css"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/mobile.css"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/sidebar.css"/>
 
     <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
     <script id="json" src="/classpath/json.js" type="text/javascript"></script>
@@ -43,16 +43,75 @@
                 return id + " false";
             }
         }
+
     </script>
 
     <script>
         function setSidebar(content) {
             document.getElementById('sidebarinterior').innerHTML = content;
         }
+
     </script>
 
     <script>
+        function setCookie(key, value, exdays) {
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = key + "=" + value + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+          var name = cname + "=";
+          var decodedCookie = decodeURIComponent(document.cookie);
+          var ca = decodedCookie.split(';');
+          for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        }
+
+        function openRowsBasedOnCookies(){
+            var cookie = getCookie('openfolders')
+
+            if(cookie == "") return;
+            folderIDs = cookie.split(',')
+
+            for (fID of folderIDs){
+                if(fID == "") continue;
+
+                Array.from(document.getElementsByClassName('collapsable_'+fID)).forEach(row =>{
+                    row.style.display = 'table-row'
+                })
+            }
+            /*folderIDs.forEach(id => {
+                if(id == "") continue;
+                document.getElementsByClassName('collapsable_'+id).style.display = 'table-row'
+            })*/
+        }
+
+        function setCookiesFromClick(folderID){
+            var value = getCookie('openfolders').split(',')
+            if(value.includes(folderID)) return;
+            value.push(folderID)
+            document.cookie = 'openfolders=' + value.join(',');
+        }
+
+        function removeCookiesFromClick(folderID){
+            var arr = getCookie('openfolders').split(',')
+            arr.splice(arr.indexOf(folderID),1)
+            document.cookie = 'openfolders=' + arr.join(',');
+        }
+
         window.addEventListener('load', () => {
+            openRowsBasedOnCookies()
+
             var buttons = document.getElementsByTagName("button");
             var buttons_arr = Array.from(buttons);
             var filtered_buttons_arr = buttons_arr.filter(button => {
@@ -61,21 +120,27 @@
             for(var button of filtered_buttons_arr){
                 button.onclick = (e) => {
                     var targetButton = e.target;
+                    var folderID = targetButton.id.slice(-1)
                     var targetClass = "collapsable_" + targetButton.id.slice(-1);
-                    console.log(targetClass)
+
                     var targetElems = Array.from(document.getElementsByClassName(targetClass));
                     for(var row of targetElems){
-                        row.style.display = row.style.display == 'table-row' ? 'none' : 'table-row';
+                        if(row.style.display == 'table-row'){
+                            //the row is already expanded, close it and remove the cookie
+                            removeCookiesFromClick(folderID)
+                            row.style.display = 'none'
+                        }else if(row.style.display == 'none'){
+                            //row is collapsed, expand it and add the cookie
+                            setCookiesFromClick(folderID)
+
+                           row.style.display = 'table-row'
+                        }
 
                     }
-
-
-
                 }
             }
-
-
         }, false);
+
     </script>
 
 </head>
@@ -84,42 +149,44 @@
 <div class="container">
 
     <!-- #========# HEADLINE OF ENTIRE PAGE #========# -->
-    <div class="column span-19 last" style="vertical-align:middle; text-align: left; width: 100%"> 
+    <div class="column span-19 last" style="vertical-align:middle; text-align: left; width: 100%">
         <div style="float: left">
-			<a href="/index" style="text-decoration: none;"><h1 class="alt" style="margin-bottom: 0.1em;">Automata Tutor v3</h1></a>
-		</div>
-		<div style="float: right; margin: 7px;" id="navigation">
-			<lift:Coursesnippet.rendernavigation></lift:Coursesnippet.rendernavigation>
-			<lift:Mainsnippet.rendernavigation></lift:Mainsnippet.rendernavigation>
-		</div>
+            <a href="/index" style="text-decoration: none;"><h1 class="alt" style="margin-bottom: 0.1em;">Automata Tutor
+                v3</h1></a>
+        </div>
+        <div style="float: right; margin: 7px;" id="navigation">
+            <lift:Coursesnippet.rendernavigation></lift:Coursesnippet.rendernavigation>
+            <lift:Mainsnippet.rendernavigation></lift:Mainsnippet.rendernavigation>
+        </div>
     </div>
 
-    <hr />
+    <hr/>
 
 
     <!-- #========# SIDEBAR (FOR SELECTING PROBLEM TYPE) #========# -->
     <div class="column colborder span-5 sidebar" id="SideBar">
-        <hr class="space" />
+        <hr class="space"/>
         <lift:Coursesidebar.rendersidebar form="POST" id="sidebarinterior">
-		</lift:Coursesidebar.rendersidebar>
-        <hr class="space" />
+        </lift:Coursesidebar.rendersidebar>
+        <hr class="space"/>
     </div>
 
     <!-- #========# MAIN CONTENT OF THE PAGE #========# -->
     <div class="column main-content last">
         <div class="lift:Msgs?showAll=true"></div>
         <div id="content">The main content will get bound here</div>
-        <img alt="" id="ajax-loader" style="display:none; margin-bottom: 0px; margin-left: 5px" src="/images/ajax-loader.gif" />
+        <img alt="" id="ajax-loader" style="display:none; margin-bottom: 0px; margin-left: 5px"
+             src="/images/ajax-loader.gif"/>
     </div>
 
-    <hr />
+    <hr/>
 
-   <!-- #========# BOTTOM LINE OF ENTIRE PAGE #======# -->
+    <!-- #========# BOTTOM LINE OF ENTIRE PAGE #======# -->
     <div class="column span-24 last" style="text-align: center">
-<a href="/privacy"><i>ATv3 Privacy statement</i></a><br>
-            <a href="http://www.liftweb.net"><i>Lift</i></a>
-            is Copyright 2016 WorldWide Conferencing, LLC.
-            Distributed under an Apache 2.0 License. 
+        <a href="/privacy"><i>ATv3 Privacy statement</i></a><br>
+        <a href="http://www.liftweb.net"><i>Lift</i></a>
+        is Copyright 2016 WorldWide Conferencing, LLC.
+        Distributed under an Apache 2.0 License.
     </div>
 </div>
 </body>
