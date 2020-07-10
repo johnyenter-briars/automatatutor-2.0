@@ -281,7 +281,7 @@ class Coursesnippet {
         },
         Text("Yes"), "title" -> "Click to unpose!")
       else return SHtml.link(
-        "/main/course/problems/pose",
+        "/main/course/index",
         () => {
           folder.setPosed(true).save
         },
