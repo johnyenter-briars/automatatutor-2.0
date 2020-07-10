@@ -20,6 +20,8 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   protected object longDescription extends MappedText(this)
   protected object createdBy extends MappedLongForeignKey(this, User)
   protected object isPosed extends MappedBoolean(this)
+  protected object startDate extends MappedDateTime(this)
+  protected object endDate extends MappedDateTime(this)
 
   def getFolderID: Long = this.id.is
 
@@ -39,6 +41,34 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getProblemsUnderFolder(): List[Problem] = {
     val problems = ProblemToFolder.findAllByFolder(this).map(_.getProblem)
     return problems
+  }
+
+  def getStartDate: Date = this.startDate.is
+  def setStartDate(startDate: Date) = this.startDate(startDate)
+
+  def getEndDate: Date = this.endDate.is
+  def setEndDate(endDate: Date) = this.endDate(endDate)
+
+  def getTimeToExpirationInMs : Long = {
+    val nowTimestamp = Calendar.getInstance().getTime().getTime()
+    val endDateTimestamp = this.endDate.is.getTime()
+    return endDateTimestamp - nowTimestamp
+  }
+  def getTimeToExpirationString : String = {
+    val ms = this.getTimeToExpirationInMs
+    if (ms < 0) return "ended"
+
+    val msPerSecond = 1000
+    val msPerMinute = 60 * msPerSecond
+    val msPerHour = 60 * msPerMinute
+    val msPerDay = 24 * msPerHour
+
+    val days = ms / msPerDay
+    val hours = (ms % msPerDay) / msPerHour
+    val minutes = (ms % msPerHour) / msPerMinute
+    val seconds = (ms % msPerMinute) / msPerSecond
+
+    return (days + " days, " + hours + ":" + minutes + ":" + seconds + " hours")
   }
 
   def canBeDeleted : Boolean = true

@@ -6,6 +6,8 @@ create table FOLDER(
     COURSEID BigInt,
     CREATEDBY BigInt,
     ISPOSED BOOLEAN,
+    ENDDATE TimeStamp,
+    STARTDATE TimeStamp,
     FOREIGN KEY (COURSEID) REFERENCES COURSE(ID)
 );
 
@@ -14,7 +16,9 @@ insert into FOLDER Values(
     'Homework 1',
     1,
     1,
-    false
+    false,
+    null,
+    null
 );
 
 insert into FOLDER Values(

@@ -25,6 +25,11 @@ import net.liftweb.util.Helpers.strToSuperArrowAssoc
 import net.liftweb.util.SecurityHelpers
 import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JsCmds._
+import SHtml._
+import js._
+import JsCmds._
+import util._
+import Helpers._
 
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
@@ -32,26 +37,108 @@ object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // Reque
 
 class Coursesnippet {
 
-  def rendercreatefolder(xhtml: NodeSeq): NodeSeq ={
+  def rendereditfolderform(xhtml: NodeSeq): NodeSeq ={
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+
+    val dateFormat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+    val now: Calendar = Calendar.getInstance()
+    val oneWeekFromNow: Calendar = Calendar.getInstance();
+    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
+
+    var folderName = ""
+    var startDate: String = dateFormat.format(now.getTime())
+    var endDate: String = dateFormat.format(oneWeekFromNow.getTime())
+    val from = S.referer openOr "/main/course/index"
 
     if(!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
-    def process(folderName: String): Unit = {
-      val newFolder = new Folder
-      newFolder.setCreator(user)
-      newFolder.setLongDescription(folderName)
-      newFolder.setCourse(CurrentCourse.is)
-      newFolder.setPosed(false)
-      newFolder.save
+    def createFolderCallback(): Unit = {
+      //      val newFolder = new Folder
+      //      newFolder.setCreator(user)
+      //      newFolder.setLongDescription(folderName)
+      //      newFolder.setCourse(CurrentCourse.is)
+      //      newFolder.setPosed(false)
+      //      newFolder.save
 
+      println("new folder")
+      println(folderName)
+      println(startDate)
+      println(endDate)
     }
-    return <form>
-              <div>
-                {SHtml.text("", process, "type" -> "input")}
-                <button type="submit">Add Folder</button>
-              </div>
-            </form>
+
+    var folderNameField = SHtml.text(folderName, folderName = _)
+    val startDateField = SHtml.text(startDate, startDate = _)
+    val endDateField = SHtml.text(endDate, endDate = _)
+
+    val creatFolderButton = SHtml.submit("Create Folder", createFolderCallback)
+
+    Helpers.bind("createfolderform", xhtml,
+      "foldernamefield" -> folderNameField,
+      "startdatefield" -> startDateField,
+      "enddatefield" -> endDateField,
+      "createbutton" -> creatFolderButton)
+  }
+
+  def renderaddfolderform(xhtml: NodeSeq): NodeSeq ={
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+
+    val dateFormat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+    val now: Calendar = Calendar.getInstance()
+    val oneWeekFromNow: Calendar = Calendar.getInstance();
+    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
+
+    var folderName = ""
+    var startDateString: String = dateFormat.format(now.getTime())
+    var endDateString: String = dateFormat.format(oneWeekFromNow.getTime())
+    val from = S.referer openOr "/main/course/index"
+
+    if(!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
+
+    def createFolderCallback(): Unit = {
+      var errors: List[String] = List()
+      val startDate: Date = try {
+        dateFormat.parse(startDateString)
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(e.getMessage())
+          null
+        }
+      }
+      val endDate: Date = try {
+        dateFormat.parse(endDateString)
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(e.getMessage())
+          null
+        }
+      }
+      if (endDate.compareTo(startDate) < 0) errors = errors ++ List("The end date must not be before the start date")
+      if (!errors.isEmpty) {
+        S.warning(errors.head)
+      } else {
+        val folder = new Folder
+        folder.setCreator(user)
+        folder.setLongDescription(folderName)
+        folder.setCourse(CurrentCourse.is)
+        folder.setStartDate(startDate)
+        folder.setEndDate(endDate)
+        folder.save
+
+        S.redirectTo("/main/course/index", () => {})
+      }
+    }
+
+    var folderNameField = SHtml.text(folderName, folderName = _)
+    val startDateField = SHtml.text(startDateString, startDateString = _)
+    val endDateField = SHtml.text(endDateString, endDateString = _)
+
+    val creatFolderButton = SHtml.submit("Create Folder", createFolderCallback)
+
+      Helpers.bind("createfolderform", xhtml,
+      "foldernamefield" -> folderNameField,
+      "startdatefield" -> startDateField,
+      "enddatefield" -> endDateField,
+      "createbutton" -> creatFolderButton)
   }
 
   def renderaccessedit(xhtml: NodeSeq): NodeSeq = {
@@ -134,6 +221,14 @@ class Coursesnippet {
         <button type='button'>Edit problem</button>)
     }
 
+    def editFolderButton(folder: Folder): NodeSeq = {
+      SHtml.link(
+        "/main/course/folders/edit",
+        () => {
+        },
+        <button type='button'>Edit Folder</button>)
+    }
+
     def editAccessButton(problem: Problem): NodeSeq = {
       SHtml.link(
         "/main/course/problems/editproblemaccess",
@@ -178,9 +273,17 @@ class Coursesnippet {
           <tr>
             <td>
               <b>Description</b>
-            </td> <td>
-            <b>Posed</b>
-          </td> <td></td>
+            </td>
+            <td>
+              <b>Posed</b>
+            </td>
+            <td>
+              <b>Start Date</b>
+            </td>
+            <td>
+              <b>End Date</b>
+            </td>
+            <td></td>
           </tr>{folders.map(folder => {
           <div>
             <tr>
@@ -189,9 +292,19 @@ class Coursesnippet {
               </td>
               <td>
                 {poseUnposeLink(folder)}
-              </td> <td>
-              {expandButton(folder)}
-            </td>
+              </td>
+              <td>
+                {folder.getStartDate}
+              </td>
+              <td>
+                {folder.getEndDate}
+              </td>
+              <td>
+                {expandButton(folder)}
+              </td>
+              <td>
+                {editFolderButton(folder)}
+              </td>
             </tr>
             <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
               <td></td> <td>
@@ -232,7 +345,9 @@ class Coursesnippet {
           })}
           </div>
         })}
-        </table>
+        </table> ++ SHtml.link("/main/course/folders/create", () => {},
+          <button type="button">Create a folder</button>
+        )
         )
 
     }

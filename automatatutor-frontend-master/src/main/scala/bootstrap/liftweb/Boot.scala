@@ -83,7 +83,9 @@ class Boot {
 		  Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
 		  Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
 		  Menu.i("Edit Problem") / "main" / "course" / "problems" / "edit" >> Hidden,
-      Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden
+      Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden,
+			Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
+			Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden
 		)
 	  ),
 	  
