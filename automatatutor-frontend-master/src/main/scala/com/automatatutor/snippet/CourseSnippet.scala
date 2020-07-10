@@ -37,7 +37,6 @@ object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // Reque
 object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
-
   def rendereditfolderform(xhtml: NodeSeq): NodeSeq ={
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
@@ -48,9 +47,9 @@ class Coursesnippet {
 
     val currentFolder = CurrentFolderInCourse.is
 
-    var folderName = currentFolder.getLongDescription
-    var startDateString: String = if(currentFolder.getStartDate == null) dateFormat.format(now.getTime()) else currentFolder.getStartDate.toString
-    var endDateString: String = if(currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime()) else currentFolder.getEndDate.toString
+    var folderName = if(currentFolder.getLongDescription == null) "" else currentFolder.getLongDescription
+    var startDateString: String = if(currentFolder.getStartDate == null) dateFormat.format(now.getTime()) else dateFormat.format(currentFolder.getStartDate)
+    var endDateString: String = if(currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime()) else dateFormat.format(currentFolder.getEndDate)
 
     if(!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
@@ -73,7 +72,7 @@ class Coursesnippet {
         }
       }
       if (endDate.compareTo(startDate) < 0) errors = errors ++ List("The end date must not be before the start date")
-      if (!errors.isEmpty) {
+      if (errors.nonEmpty) {
         S.warning(errors.head)
       } else {
         currentFolder.setLongDescription(folderName)
@@ -86,17 +85,28 @@ class Coursesnippet {
       }
     }
 
+    val deleteFolderButton = SHtml.link("/main/course/index", () => {
+      val currentFolder = CurrentFolderInCourse.is
+
+      //before deleting the folder, we must send all the problems within the folder back to their original state
+      ProblemToFolder.deleteProblemsUnderFolder(currentFolder)
+
+      currentFolder.delete_!
+
+    }, Text("Delete Folder"), "onclick" -> JsRaw("return confirm('Are you sure you want to delete this folder?')").toJsCmd, "style" -> "color: red")
+
     var folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
 
     val editFolderButton = SHtml.submit("Save changes to folder", editFolderCallback)
 
-    Helpers.bind("createfolderform", xhtml,
+    Helpers.bind("editfolderform", xhtml,
       "foldernamefield" -> folderNameField,
       "startdatefield" -> startDateField,
       "enddatefield" -> endDateField,
-      "editbutton" -> editFolderButton)
+      "editbutton" -> editFolderButton,
+      "deletebutton" -> deleteFolderButton)
   }
 
   def renderaddfolderform(xhtml: NodeSeq): NodeSeq ={

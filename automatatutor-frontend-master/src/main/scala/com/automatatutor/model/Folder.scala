@@ -38,9 +38,8 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getPosed: Boolean = this.isPosed.is
   def setPosed(posed: Boolean) = this.isPosed(posed)
 
-  def getProblemsUnderFolder(): List[Problem] = {
-    val problems = ProblemToFolder.findAllByFolder(this).map(_.getProblem)
-    return problems
+  def getProblemsUnderFolder: List[Problem] = {
+    ProblemToFolder.findAllByFolder(this).map(_.getProblem)
   }
 
   def getStartDate: Date = this.startDate.is
@@ -70,8 +69,6 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
 
     return (days + " days, " + hours + ":" + minutes + ":" + seconds + " hours")
   }
-
-  def canBeDeleted : Boolean = true
 }
 
 object Folder extends Folder with LongKeyedMetaMapper[Folder] {
