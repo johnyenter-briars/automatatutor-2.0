@@ -1,0 +1,27 @@
+db.driver=org.h2.Driver
+db.url=jdbc:h2:./automatatutor.db
+grader.url=http://localhost:53861/Service1.asmx
+grader.methodnamespace=http://automatagrader.com
+
+mail.transport.protocol=smtp
+mail.smtp.host=my_host.com
+mail.smtp.port=25
+mail.smtp.starttls.enable=true
+mail.smtp.auth=true
+mail.user=username
+mail.password=password
+mail.from=noreply@model.in.tum.de
+mail.contact=automatatutor@model.in.tum.de
+
+admin.firstname=Ad
+admin.lastname=Min
+admin.password=admin
+admin.email=admin
+
+layout.usersperpage = 50
+
+base_url.url=http://localhost:8080
+
+security.verifyEmails=true
+
+auth.tum_secret=SecretForTumLogin

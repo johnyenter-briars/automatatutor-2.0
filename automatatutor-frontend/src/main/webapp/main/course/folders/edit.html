@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Home</title></head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=course-surrounding;at=content">
+    <h2>Pose a problem</h2>
+    <lift:Coursesnippet.rendereditfolderform form="POST">
+        <table>
+            <tr>
+                <td> Folder Name</td>
+                <td> <editfolderform:foldernamefield> </editfolderform:foldernamefield> </td>
+            </tr>
+            <tr>
+                <td> Start date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <editfolderform:startdatefield> </editfolderform:startdatefield> </td>
+            </tr>
+            <tr>
+                <td> End date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <editfolderform:enddatefield> </editfolderform:enddatefield> </td>
+            </tr>
+            <tr>
+                <td> </td>
+                <td> <editfolderform:editbutton> </editfolderform:editbutton> </td>
+            </tr>
+            <tr>
+                <td> </td>
+                <td> <editfolderform:deletebutton> </editfolderform:deletebutton> </td>
+            </tr>
+        </table>
+    </lift:Coursesnippet.rendereditfolderform>
+</div>
+</body>
+</html>
