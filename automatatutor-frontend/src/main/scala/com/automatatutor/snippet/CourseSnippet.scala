@@ -297,7 +297,8 @@ class Coursesnippet {
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     val folders = CurrentCourse.getFoldersForUser(user)
-    if (folders.isEmpty) return Text("There are no folders in this course")
+    if (folders.isEmpty) return Text("There are no folders in this course")++
+      SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
 
     if (CurrentCourse.canBeSupervisedBy(user)) {
       (<div>

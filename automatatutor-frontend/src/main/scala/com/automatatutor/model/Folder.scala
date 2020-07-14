@@ -70,6 +70,7 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     return (days + " days, " + hours + ":" + minutes + ":" + seconds + " hours")
   }
 
+
   def canBeDeleted : Boolean = true
 
   override def delete_! : Boolean = {
@@ -87,5 +88,9 @@ object Folder extends Folder with LongKeyedMetaMapper[Folder] {
   def findAllByCourse(course: Course): List[Folder] = findAll(By(Folder.courseId, course))
 
   def findByID(ID: String): Folder = this.findAll().filter(_.getFolderID == ID.toLong).head
+
+  def deleteByCourse(course: Course) : Unit = {
+    this.findAllByCourse(course).filter( folder => folder.getCourse == course).foreach(folder => folder.delete_!)
+  }
 }
 
