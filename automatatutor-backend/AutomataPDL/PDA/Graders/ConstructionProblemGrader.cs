@@ -121,11 +121,11 @@ namespace AutomataPDL.PDA.Graders
 
             if (grade == maxGrade)
             {
-                feedback.Add("Correct!");
+                feedback.Add("Perfect!");
             }
             else if (pdaEqualityResult.AreEqual && pdaEqualityResult.InconsistentWordsInPdaAttempt.Count() == 0)
             {
-                feedback.Add("Almost correct!");
+                feedback.Add("Correct (but not perfect)!");
             }
 
             return Grader.CreateXmlFeedback(grade, feedback);

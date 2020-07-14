@@ -147,10 +147,12 @@ namespace AutomataPDL.CFG
             {
                 if (Rhs.Length == 0) return "_";
                 StringBuilder sb = new StringBuilder();
+                bool first = true;
                 foreach (GrammarSymbol s in Rhs)
                 {
+                    if (first) first = false;
+                    else sb.Append(" ");
                     sb.Append(s.Name);
-                    sb.Append(" ");
                 }
                 return sb.ToString();
             }

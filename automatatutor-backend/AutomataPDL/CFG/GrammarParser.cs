@@ -58,7 +58,7 @@ namespace AutomataPDL.CFG
 
         public Lexer(string buf)
         {
-            lexbuf = buf;
+            lexbuf = buf.Trim();
             input = buf;
             tokendescs[TokenType.NT] = new Regex(@"^([A-Z])"); // NonExprinal
             tokendescs[TokenType.T] = new Regex(@"^([a-z<>\[\]()\{\}])");   // Exprinal
