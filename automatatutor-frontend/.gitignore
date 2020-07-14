@@ -4,4 +4,4 @@ project/project
 target
 console.devmode.log
 automatatutor.db.trace.db
-node_modules/
+node_modules

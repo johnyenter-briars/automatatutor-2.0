@@ -8,6 +8,7 @@ The idea is that the notion of "loose" questions is not practical, and leads to 
 
 Therefore, a "folder" system is implimented to allow for the grouping of related problems. In this, folders are now posed instead of individual problems being posed. 
 
+You can now delete, edit, and pose folders. You can add an unlimited number of problems to each folder. When you delete a folder, its containing problems go back to a "courseless" state, and will be shown in the autogen/index page. When you delete a course, all of the folders are deleted but the problems are preserved as previously specified. 
 
 #### Implementation of Folderes
 
