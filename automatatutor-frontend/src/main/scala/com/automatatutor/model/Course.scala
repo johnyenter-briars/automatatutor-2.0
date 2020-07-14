@@ -75,11 +75,12 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		return Folder.findAllByCourse(this).filter(_.getPosed)
 	}
 
-    override def delete_! : Boolean = {
-        UserToCourse.deleteByCourse(this)
-	    Problem.deleteByCourse(this)
-	    return super.delete_!
-    }
+	override def delete_! : Boolean = {
+		UserToCourse.deleteByCourse(this)
+		Folder.deleteByCourse(this)
+		Problem.deleteByCourse(this)
+		return super.delete_!
+	}
 
 	def renderGradesCsv: String = {
 		val posedProblems = this.getPosedProblems

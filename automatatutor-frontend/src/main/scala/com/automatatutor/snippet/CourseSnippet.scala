@@ -92,11 +92,7 @@ class Coursesnippet {
     val deleteFolderButton = SHtml.link("/main/course/index", () => {
       val currentFolder = CurrentFolderInCourse.is
 
-      //before deleting the folder, we must send all the problems within the folder back to their original state
-      ProblemToFolder.deleteProblemsUnderFolder(currentFolder)
-
       currentFolder.delete_!
-
     }, Text("Delete Folder"), "onclick" -> JsRaw("return confirm('Are you sure you want to delete this folder?')").toJsCmd, "style" -> "color: red")
 
     var folderNameField = SHtml.text(folderName, folderName = _)
@@ -297,145 +293,72 @@ class Coursesnippet {
         <button type='button'>Solve</button>)
     }
 
+    def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" +folder.getFolderID), ("style", "display: none"))
+
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
-    var folders = CurrentCourse.getFoldersForUser(user)
-    if (folders.isEmpty) return Text("There are no folders in this course")
-    var problemsUnderFolder = folders.map(folder => folder.getProblemsUnderFolder)
+    val folders = CurrentCourse.getFoldersForUser(user)
+    if (folders.isEmpty) return Text("There are no folders in this course")++
+      SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
 
     if (CurrentCourse.canBeSupervisedBy(user)) {
-      return (
-        <table>
-          <tr>
-            <td>
-              <b>Description</b>
-            </td>
-            <td>
-              <b>Posed</b>
-            </td>
-            <td>
-              <b>Start Date</b>
-            </td>
-            <td>
-              <b>End Date</b>
-            </td>
-            <td></td>
-          </tr>{folders.map(folder => {
-          <div>
-            <tr>
-              <td>
-                {folder.getLongDescription}
-              </td>
-              <td>
-                {poseUnposeLink(folder)}
-              </td>
-              <td>
-                {folder.getStartDate}
-              </td>
-              <td>
-                {folder.getEndDate}
-              </td>
-              <td>
-                {expandButton(folder)}
-              </td>
-              <td>
-                {editFolderButton(folder)}
-              </td>
-            </tr>
-            <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
-              <td></td> <td>
-              <b>Description</b>
-            </td> <td>
-              <b>Problem Type</b>
-            </td>
-              <td>
-                <b>Attempts</b>
-              </td> <td>
-              <b>Max Grade</b>
-            </td> <td></td>
-            </tr>{folder.getProblemsUnderFolder.map(problem => {
-            <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
-              <td></td>
-              <td>
-                {problem.getShortDescription}
-              </td>
-              <td>
-                {problem.getTypeName}
-              </td>
-              <td>
-                {problem.getAllowedAttemptsString}
-              </td>
-              <td>
-                {problem.getMaxGrade.toString}
-              </td>
-              <td>
-                {editButton(problem)}
-              </td>
-              <td>
-                {editAccessButton(problem)}
-              </td>
-              <td>
-                {previewButton(problem)}
-              </td>
-            </tr>
-          })}
-          </div>
-        })}
-        </table> ++ SHtml.link("/main/course/folders/create", () => {},
-          <button type="button">Create a folder</button>)
-        )
+      (<div>
+        {
+          folders.map(folder => {
+            TableHelper.renderTableWithHeader(
+              List(folder),
+              ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+              ("Posed", (folder: Folder) => poseUnposeLink(folder)),
+              ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+              ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+              ("Expand", (folder: Folder) => expandButton(folder)),
+              ("Edit", (folder: Folder) => editFolderButton(folder))
+            )
+            .theSeq.++(
+              TableHelper.renderTableWithHeaderPlusAttributes(
+                folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
+                ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
+                ("Type", (problem: Problem) => Text(problem.getTypeName)),
+                ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
+                ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
+                ("Edit Problem", (problem: Problem) => editButton(problem)),
+                ("Edit Access Problem", (problem: Problem) => editAccessButton(problem)),
+                ("", (problem: Problem) => solveButton(problem))
+              )
+            )
+          })
+        }
+      </div>
+        ++
+        SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
+      )
     }
     else {
-      return <table>
-        <tr>
-          <td>
-            <b>Description</b>
-          </td> <td></td>
-        </tr>{folders.map(folder => {
-          if(folder.getEndDate.compareTo(Calendar.getInstance().getTime) < 0) NodeSeq.Empty else
-        <tr>
-          <td>
-            {folder.getLongDescription}
-          </td>
-          <td>
-            {expandButton(folder)}
-          </td>
-        </tr>
-          <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
-            <td></td> <td>
-            <b>Description</b>
-          </td> <td>
-            <b>Problem Type</b>
-          </td>
-            <td>
-              <b>Attempts</b>
-            </td> <td>
-            <b>Max Grade</b>
-          </td> <td></td>
-          </tr> ++ {folder.getProblemsUnderFolder.map(problem => {
-        <tr class={"collapsable_tr collapsable_" + folder.getFolderID} style="display: none">
-          <td></td>
-          <td>
-            {problem.getShortDescription}
-          </td>
-          <td>
-            {problem.getTypeName}
-          </td>
-          <td>
-            {problem.getAllowedAttemptsString}
-          </td>
-          <td>
-            {problem.getMaxGrade.toString}
-          </td>
-          <td>
-            {solveButton(problem)}
-          </td>
-        </tr>
-      })}
-      })}
-      </table>
+      //logged in user is a student
+      <div>
+          {
+            folders.map(folder => {
+              TableHelper.renderTableWithHeader(
+                List(folder),
+                ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+                ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+                ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+                ("Expand", (folder: Folder) => expandButton(folder))
+              )
+              .theSeq.++(
+                TableHelper.renderTableWithHeaderPlusAttributes(
+                  folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
+                  ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
+                  ("Type", (problem: Problem) => Text(problem.getTypeName)),
+                  ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
+                  ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
+                  ("", (problem: Problem) => solveButton(problem))
+                )
+                )
+            })
+          }
+      </div>
     }
   }
-
 
   def showproblems(ignored: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
