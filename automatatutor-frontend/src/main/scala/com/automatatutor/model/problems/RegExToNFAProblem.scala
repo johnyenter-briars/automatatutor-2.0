@@ -1,6 +1,7 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+import net.liftweb.common.{Box, Full}
 import net.liftweb.mapper._
 
 import scala.xml.XML
@@ -46,13 +47,13 @@ object RegExToNFAProblem extends RegExToNFAProblem with SpecificProblemSingleton
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(RegExToNFAProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new RegExToNFAProblem
     retVal.problemId(generalProblem)
     retVal.regEx((xml \ "RegEx").text)
     retVal.alphabet((xml \ "Alphabet").text)
 
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

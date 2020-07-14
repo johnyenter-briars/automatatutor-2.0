@@ -41,7 +41,7 @@ object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // Reque
 object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
-  def rendereditfolderform(xhtml: NodeSeq): NodeSeq ={
+  def rendereditfolderform(xhtml: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
     val dateFormat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
@@ -51,11 +51,11 @@ class Coursesnippet {
 
     val currentFolder = CurrentFolderInCourse.is
 
-    var folderName = if(currentFolder.getLongDescription == null) "" else currentFolder.getLongDescription
-    var startDateString: String = if(currentFolder.getStartDate == null) dateFormat.format(now.getTime()) else dateFormat.format(currentFolder.getStartDate)
-    var endDateString: String = if(currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime()) else dateFormat.format(currentFolder.getEndDate)
+    var folderName = if (currentFolder.getLongDescription == null) "" else currentFolder.getLongDescription
+    var startDateString: String = if (currentFolder.getStartDate == null) dateFormat.format(now.getTime()) else dateFormat.format(currentFolder.getStartDate)
+    var endDateString: String = if (currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime()) else dateFormat.format(currentFolder.getEndDate)
 
-    if(!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
+    if (!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
     def editFolderCallback(): Unit = {
       var errors: List[String] = List()
@@ -109,7 +109,7 @@ class Coursesnippet {
       "deletebutton" -> deleteFolderButton)
   }
 
-  def renderaddfolderform(xhtml: NodeSeq): NodeSeq ={
+  def renderaddfolderform(xhtml: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
     val dateFormat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
@@ -122,7 +122,7 @@ class Coursesnippet {
     var endDateString: String = dateFormat.format(oneWeekFromNow.getTime())
     val from = S.referer openOr "/main/course/index"
 
-    if(!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
+    if (!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
     def createFolderCallback(): Unit = {
       var errors: List[String] = List()
@@ -164,7 +164,7 @@ class Coursesnippet {
 
     val createFolderButton = SHtml.submit("Create Folder", createFolderCallback)
 
-      Helpers.bind("createfolderform", xhtml,
+    Helpers.bind("createfolderform", xhtml,
       "foldernamefield" -> folderNameField,
       "startdatefield" -> startDateField,
       "enddatefield" -> endDateField,
@@ -181,6 +181,7 @@ class Coursesnippet {
 
     var attempts = "0"
     var maxGrade = "10"
+
     def editProblem() = {
       var errors: List[String] = List()
       val numMaxGrade = try {
@@ -293,69 +294,65 @@ class Coursesnippet {
         <button type='button'>Solve</button>)
     }
 
-    def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" +folder.getFolderID), ("style", "display: none"))
+    def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" + folder.getFolderID), ("style", "display: none"))
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     val folders = CurrentCourse.getFoldersForUser(user)
-    if (folders.isEmpty) return Text("There are no folders in this course")++
+    if (folders.isEmpty) return Text("There are no folders in this course") ++
       SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
 
     if (CurrentCourse.canBeSupervisedBy(user)) {
       (<div>
-        {
-          folders.map(folder => {
-            TableHelper.renderTableWithHeader(
-              List(folder),
-              ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-              ("Posed", (folder: Folder) => poseUnposeLink(folder)),
-              ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-              ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-              ("Expand", (folder: Folder) => expandButton(folder)),
-              ("Edit", (folder: Folder) => editFolderButton(folder))
-            )
+        {folders.map(folder => {
+          TableHelper.renderTableWithHeader(
+            List(folder),
+            ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+            ("Posed", (folder: Folder) => poseUnposeLink(folder)),
+            ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+            ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+            ("Expand", (folder: Folder) => expandButton(folder)),
+            ("Edit", (folder: Folder) => editFolderButton(folder))
+          )
             .theSeq.++(
-              TableHelper.renderTableWithHeaderPlusAttributes(
-                folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-                ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
-                ("Type", (problem: Problem) => Text(problem.getTypeName)),
-                ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
-                ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
-                ("Edit Problem", (problem: Problem) => editButton(problem)),
-                ("Edit Access Problem", (problem: Problem) => editAccessButton(problem)),
-                ("", (problem: Problem) => solveButton(problem))
-              )
+            TableHelper.renderTableWithHeaderPlusAttributes(
+              folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
+              ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
+              ("Type", (problem: Problem) => Text(problem.getTypeName)),
+              ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
+              ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
+              ("Edit Problem", (problem: Problem) => editButton(problem)),
+              ("Edit Access Problem", (problem: Problem) => editAccessButton(problem)),
+              ("", (problem: Problem) => solveButton(problem))
             )
-          })
-        }
+          )
+        })}
       </div>
         ++
         SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
-      )
+        )
     }
     else {
       //logged in user is a student
       <div>
-          {
-            folders.map(folder => {
-              TableHelper.renderTableWithHeader(
-                List(folder),
-                ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-                ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-                ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-                ("Expand", (folder: Folder) => expandButton(folder))
-              )
-              .theSeq.++(
-                TableHelper.renderTableWithHeaderPlusAttributes(
-                  folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-                  ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
-                  ("Type", (problem: Problem) => Text(problem.getTypeName)),
-                  ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
-                  ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
-                  ("", (problem: Problem) => solveButton(problem))
-                )
-                )
-            })
-          }
+        {folders.map(folder => {
+        TableHelper.renderTableWithHeader(
+          List(folder),
+          ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+          ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+          ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+          ("Expand", (folder: Folder) => expandButton(folder))
+        )
+          .theSeq.++(
+          TableHelper.renderTableWithHeaderPlusAttributes(
+            folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
+            ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
+            ("Type", (problem: Problem) => Text(problem.getTypeName)),
+            ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
+            ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
+            ("", (problem: Problem) => solveButton(problem))
+          )
+        )
+      })}
       </div>
     }
   }
@@ -432,8 +429,15 @@ class Coursesnippet {
     val gradesCsvLink = SHtml.link("/main/course/downloadCSV", () => {}, Text("Grades (as .csv)"))
     val gradesXmlLink = SHtml.link("/main/course/downloadXML", () => {}, Text("Grades (as .xml)"))
     val userLink = SHtml.link("/main/course/users", () => {}, Text("Users"))
+    val exportLink = SHtml.link("/main/course/export", () => {}, Text("Export Problems"))
+    val importLink = SHtml.link("/main/course/import", () => {}, Text("Import Problems"))
 
-    return <h2>Manage Course</h2> ++ gradesCsvLink ++ Unparsed("&emsp;") ++ gradesXmlLink ++ Unparsed("&emsp;") ++ userLink
+
+    return <h2>Manage Course</h2> ++ gradesCsvLink ++
+      Unparsed("&emsp;") ++ gradesXmlLink ++
+      Unparsed("&emsp;") ++ userLink ++
+      Unparsed("&emsp;") ++ exportLink ++
+      Unparsed("&emsp;") ++ importLink
   }
 
   def renderxmldownloadlink(ignored: NodeSeq): NodeSeq = {
@@ -686,6 +690,63 @@ class Coursesnippet {
       "maxgradefield" -> maxGradeField,
       "attemptsfield" -> attemptsField,
       "posebutton" -> poseButton)
+  }
+
+  def renderexport(ignored: NodeSeq): NodeSeq = {
+    val course = CurrentCourse.is
+
+    //create export xml
+    var xml = NodeSeq.Empty
+    course.getProblems.foreach(
+      (problem) => {
+        xml = xml ++ problem.toXML
+      })
+    xml = <exported>
+      {xml}
+    </exported>
+
+    val returnLink = SHtml.link("/main/course/index", () => {}, <button type='button'>Return to course</button>)
+    val downloadLink = DownloadHelper.renderXmlDownloadLink(xml, "Download all problems as an XML file.", <button type='button'>Download</button>)
+    val exportOutputField = SHtml.textarea(xml.toString, (input) => {}, "cols" -> "80", "rows" -> "40")
+
+    return downloadLink ++ new Unparsed("<br><br>") ++ returnLink ++ new Unparsed("<br><br>") ++ exportOutputField
+  }
+
+  def renderimport(ignored: NodeSeq): NodeSeq = {
+    val course = CurrentCourse.is
+
+    def importProblems(importing: String) = {
+      var imported = 0
+      var failed = 0
+
+      val xml = XML.loadString(importing)
+      (xml \ "_").foreach(
+        (problemXML) => {
+          val problem = Problem.fromXML(problemXML)
+          if (problem != Empty) {
+            (problem openOrThrowException "problem should never be empty").setCourse(course).save
+            imported += 1
+          }
+          else {
+            failed += 1
+          }
+        })
+      //give feedback
+      if (imported > 0) {
+        S.notice("Successfully imported " + imported.toString + " problems")
+      }
+      if (failed > 0) {
+        S.error("Could not import " + failed.toString + " problems")
+      }
+      S.redirectTo("/main/course/index")
+    }
+
+    val importForm = <form method="post">
+      {SHtml.textarea("", importProblems(_), "cols" -> "80", "rows" -> "40", "placeholder" -> "please copy exported xml data here")}<input type="submit" value="Import"/>
+    </form>
+    val returnLink = SHtml.link("/main/course/index", () => {}, <button type='button'>Return to course</button>)
+
+    return importForm ++ new Unparsed("<br><br>") ++ returnLink
   }
 
   def rendernavigation(ignored: NodeSeq): NodeSeq = {

@@ -71,13 +71,16 @@ class Boot {
     // Build SiteMap
     val entries = List(
       Menu.i("Home") / "index" >> notLoggedInPredicate,
-	  
+			Menu.i("Try it out") / "tryit" / "index" submenus(
+				Menu.i("Solve Example Problem") / "tryit" / "practice" >> Hidden),
 	  Menu.i("Main") / "main" / "index" >> loggedInPredicate submenus(
 	    Menu.i("Become Instructor") / "main" / "become_instructor" >> Hidden,
 	    Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus(
 		  Menu.i("User List") / "main" / "course" / "users" >> canSuperviseCoursePredicate,
 		  Menu.i("Grade Download XML") / "main" / "course" / "downloadXML" >> canSuperviseCoursePredicate,
 		  Menu.i("Grade Download CSV") / "main" / "course" / "downloadCSV" >> canSuperviseCoursePredicate,
+			Menu.i("Export Problems") / "main" / "course" / "export" >> canSuperviseCoursePredicate,
+			Menu.i("Import Problems") / "main" / "course" / "import" >> canSuperviseCoursePredicate,
 		  Menu.i("Create Problem") / "main" / "course" / "problems" / "create" >> Hidden,
 		  Menu.i("Pose Problem") / "main" / "course" / "problems" / "pose" >> Hidden,
 		  Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,

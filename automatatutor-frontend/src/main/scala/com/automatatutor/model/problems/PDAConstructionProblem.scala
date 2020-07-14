@@ -1,6 +1,8 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+import net.liftweb.common.{Box, Full}
+
 import scala.xml.NodeSeq
 import scala.xml.Node
 import scala.xml.XML
@@ -68,11 +70,11 @@ object PDAConstructionProblem extends PDAConstructionProblem with SpecificProble
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(PDAConstructionProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new PDAConstructionProblem
     retVal.problemId(generalProblem)
     retVal.automaton((xml \ "Automaton").text)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

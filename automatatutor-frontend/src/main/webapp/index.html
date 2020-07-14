@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Home</title>
+</head>
+<body class="lift:content_id=main">
+
+<div id="main" class="lift:surround?with=default;at=content">
+	
+
+	
+	<h2>Welcome to Automata Tutor v3</h2>
+	<p>
+	We help students learn and teachers teach.
+    <br>
+    Please make sure you have javascript enabled when using Automata Tutor
+	</p>
+	
+	<lift:Tryitsnippet.showiftryitisenabled>
+		<div id="landing_page_button_group" style="margin: auto; width: 70%;">
+			<a href="/tryit/index"><button type="" class="landingPageButton">Try it out!</button></a>
+		</div>
+	</lift:Tryitsnippet.showiftryitisenabled>
+	
+
+	<div id="landing_page_button_group" style="margin: auto; width: 70%;">
+		<table><tr>
+			<td style="background: transparent; width: 50%;"><a href="/getting_started"><button type="" class="landingPageButton">Getting Started</button></a></td> 
+			<td style="background: transparent; width: 50%;"><a href="/user_mgt/sign_up"><button type="" class="landingPageButton">Register</button></a></td> 
+		</tr><tr>
+			<td style="background: transparent; width: 50%;"><a href="/user_mgt/login"><button type="" class="landingPageButton">Login</button></a></td>
+			<td style="background: transparent; width: 50%;"><lift:Loginsnippet.rendertumlogin></lift:Loginsnippet.rendertumlogin></td>
+		</tr></table>
+	</div>
+	<lift:Loginsnippet.checktumaccesscode></lift:Loginsnippet.checktumaccesscode>
+</div>
+  </body>
+</html>
+

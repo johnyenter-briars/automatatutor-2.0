@@ -1,6 +1,8 @@
 package com.automatatutor.model
 
+import net.liftweb.common.{Box, Full}
 import net.liftweb.mapper._
+
 import scala.xml.Node
 
 class EquivalenceClassesProblem extends LongKeyedMapper[EquivalenceClassesProblem] with IdPK with SpecificProblem[EquivalenceClassesProblem] {
@@ -68,7 +70,7 @@ object EquivalenceClassesProblem extends EquivalenceClassesProblem with Specific
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(EquivalenceClassesProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new EquivalenceClassesProblem
     retVal.problemId(generalProblem)
     retVal.regEx((xml \ "RegEx").text)
@@ -79,6 +81,6 @@ object EquivalenceClassesProblem extends EquivalenceClassesProblem with Specific
     retVal.secondWord((xml \ "SecondWord").text)
     retVal.representative((xml \ "Representative").text)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

@@ -25,3 +25,7 @@ base_url.url=http://localhost:8080
 security.verifyEmails=true
 
 auth.tum_secret=SecretForTumLogin
+
+try_it.enabled=true
+try_it.course_name=TryItOut
+try_it.course_pw=miscpithw

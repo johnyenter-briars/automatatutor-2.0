@@ -8,10 +8,12 @@ import net.liftweb.mapper.MappedLongForeignKey
 import net.liftweb.mapper.IdPK
 import net.liftweb.mapper.By
 import net.liftweb.mapper.MappedText
+
 import scala.xml.XML
 import scala.xml.NodeSeq
 import scala.xml.Node
 import bootstrap.liftweb.StartupHook
+import net.liftweb.common.{Box, Full}
 
 class DFAConstructionProblem extends LongKeyedMapper[DFAConstructionProblem] with IdPK with SpecificProblem[DFAConstructionProblem] {
   def getSingleton = DFAConstructionProblem
@@ -51,11 +53,11 @@ object DFAConstructionProblem extends DFAConstructionProblem with SpecificProble
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     bulkDelete_!!(By(DFAConstructionProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new DFAConstructionProblem
     retVal.problemId(generalProblem)
     retVal.automaton((xml \ "Automaton").text)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

@@ -1,6 +1,7 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+
 import scala.xml.NodeSeq
 import scala.xml.XML
 import net.liftweb.mapper.By
@@ -12,6 +13,8 @@ import net.liftweb.mapper.MappedText
 import net.liftweb.mapper.MappedInt
 import net.liftweb.mapper.MappedLongForeignKey
 import bootstrap.liftweb.StartupHook
+import net.liftweb.common.{Box, Full}
+
 import scala.xml.Node
 
 class GrammarToCNFProblem extends LongKeyedMapper[GrammarToCNFProblem] with IdPK with SpecificProblem[GrammarToCNFProblem] {
@@ -47,11 +50,11 @@ object GrammarToCNFProblem extends GrammarToCNFProblem with SpecificProblemSingl
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(GrammarToCNFProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new GrammarToCNFProblem
     retVal.problemId(generalProblem)
     retVal.grammar((xml \ "Grammar").text)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }
