@@ -49,6 +49,7 @@ regexpenum.txt
 /TestPDL/obj
 /WebServicePDL/bin
 /WebServicePDL/obj
+/WebServicePDL/Properties
 .vs
 /UpgradeLog.htm
 /WhileProgramTest/obj

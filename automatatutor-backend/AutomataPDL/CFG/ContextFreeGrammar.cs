@@ -1035,12 +1035,11 @@ namespace AutomataPDL.CFG
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(DescribeProductions(StartSymbol));
-                sb.Append("\n");
                 foreach (Nonterminal v in variables)
                 {
                     if (v.Equals(StartSymbol)) continue;
-                    sb.Append(DescribeProductions(v));
                     sb.Append("\n");
+                    sb.Append(DescribeProductions(v));
                 }
                 return sb.ToString();
             }
@@ -1065,7 +1064,7 @@ namespace AutomataPDL.CFG
                 sb.Append(prods[0].DescriptionOfRhs);
                 for (int i = 1; i < prods.Count; i++)
                 {
-                    sb.Append(" |  ");
+                    sb.Append(" | ");
                     sb.Append(prods[i].DescriptionOfRhs);
                 }
             }
