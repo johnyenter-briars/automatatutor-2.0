@@ -178,10 +178,7 @@ class CourseHierarchy(var topNodes : List[CourseHierarchyNode]) {
 
     val secundaryClass = if(isPosed) "red" else ""
 
-    return if(isSupervisor)
-      <div class="problemNode">{mainButton ++ poseButton ++ deleteLink}</div>
-    else
-      <div class="problemNode">{mainButton}</div>
+    return <div class="problemNode">{mainButton}</div>
   }
 
   // Builds a map from each node ID in this hierarchy to a boolean value
