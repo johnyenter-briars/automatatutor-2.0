@@ -69,6 +69,18 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
 
     return (days + " days, " + hours + ":" + minutes + ":" + seconds + " hours")
   }
+
+  def canBeDeleted : Boolean = true
+
+  override def delete_! : Boolean = {
+    if (!canBeDeleted) {
+      false
+    } else {
+      //before deleting the folder, we must send all the problems within the folder back to their original state
+      ProblemToFolder.deleteProblemsUnderFolder(this)
+      super.delete_!
+    }
+  }
 }
 
 object Folder extends Folder with LongKeyedMetaMapper[Folder] {
