@@ -1,6 +1,7 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+
 import scala.xml.NodeSeq
 import scala.xml.XML
 import net.liftweb.mapper.By
@@ -12,6 +13,8 @@ import net.liftweb.mapper.MappedText
 import net.liftweb.mapper.MappedInt
 import net.liftweb.mapper.MappedLongForeignKey
 import bootstrap.liftweb.StartupHook
+import net.liftweb.common.{Box, Full}
+
 import scala.xml.Node
 
 class CYKProblem extends LongKeyedMapper[CYKProblem] with IdPK with SpecificProblem[CYKProblem] {
@@ -52,12 +55,12 @@ object CYKProblem extends CYKProblem with SpecificProblemSingleton with LongKeye
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(CYKProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new CYKProblem
     retVal.problemId(generalProblem)
     retVal.grammar((xml \ "Grammar").text)
     retVal.word((xml \ "Word").text)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

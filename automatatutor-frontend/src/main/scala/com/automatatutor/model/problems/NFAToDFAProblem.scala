@@ -1,6 +1,7 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+import net.liftweb.common.{Box, Full}
 import net.liftweb.mapper.MappedString
 import net.liftweb.mapper.LongKeyedMapper
 import net.liftweb.mapper.LongKeyedMetaMapper
@@ -8,6 +9,7 @@ import net.liftweb.mapper.MappedLongForeignKey
 import net.liftweb.mapper.IdPK
 import net.liftweb.mapper.By
 import net.liftweb.mapper.MappedText
+
 import scala.xml.XML
 import scala.xml.NodeSeq
 import scala.xml.Node
@@ -50,11 +52,11 @@ object NFAToDFAProblem extends NFAToDFAProblem  with SpecificProblemSingleton wi
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     NFAToDFAProblem.bulkDelete_!!(By(NFAToDFAProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new NFAToDFAProblem
     retVal.problemId(generalProblem)
     retVal.automaton((xml \ "Automaton").text)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

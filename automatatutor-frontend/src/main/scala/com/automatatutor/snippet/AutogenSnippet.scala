@@ -60,7 +60,7 @@ class Autogensnippet {
 
       //import
       val createdProblem = Problem.fromXML(response.head)
-      if (createdProblem) {
+      if (createdProblem != Empty) {
         S.notice("created new problem with quality=" + (response \\ "@quality").text + " difficulty=" + (response \\ "@difficulty"))
       }
       else {

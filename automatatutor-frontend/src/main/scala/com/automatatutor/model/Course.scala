@@ -8,6 +8,8 @@ import net.liftweb.mapper._
 import net.liftweb.util.SecurityHelpers
 import java.util.Date
 
+import com.automatatutor.lib.Config
+
 import scala.xml._
 
 class Course extends LongKeyedMapper[Course] with IdPK {
@@ -113,6 +115,20 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 }
 
 object Course extends Course with LongKeyedMetaMapper[Course] {
+
+	def createNewCourse(name: String, user: User, pw: String = SecurityHelpers.randomString(8)) : Box[Course] = {
+		if (name.isEmpty() || Course.findByName(name) != Empty) {
+			return Empty
+		} else {
+			val course: Course = Course.create.setName(name).setContact(user.email.is).setPassword(pw)
+			course.setNeededLevelForSupervise(user.getLevel)
+			course.save
+
+			course.enroll(user)
+			return Full(course)
+		}
+	}
+
 	def findByName ( name : String ) : Box[Course] = {
 	  val courses = this.findAll()
 	  val coursesWithId = courses.filter(_.getName.equals(name))
@@ -121,5 +137,10 @@ object Course extends Course with LongKeyedMetaMapper[Course] {
 	    case 1 => Full(coursesWithId.head)
 	    case 2 => Failure("Multiple courses with same name")
 	  }
+	}
+
+	def findTryitCourse() : Box[Course] = {
+		if (! Config.try_it.enabled.get) return Empty
+		return Course.find(By(Course.name, Config.try_it.course_name.get))
 	}
 }

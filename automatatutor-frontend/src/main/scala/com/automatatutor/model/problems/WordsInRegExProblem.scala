@@ -1,6 +1,7 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+
 import scala.xml.NodeSeq
 import scala.xml.XML
 import net.liftweb.mapper.By
@@ -12,6 +13,8 @@ import net.liftweb.mapper.MappedText
 import net.liftweb.mapper.MappedInt
 import net.liftweb.mapper.MappedLongForeignKey
 import bootstrap.liftweb.StartupHook
+import net.liftweb.common.{Box, Full}
+
 import scala.xml.Node
 
 class WordsInRegExProblem extends LongKeyedMapper[WordsInRegExProblem] with IdPK with SpecificProblem[WordsInRegExProblem] {
@@ -62,7 +65,7 @@ object WordsInRegExProblem extends WordsInRegExProblem with SpecificProblemSingl
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(WordsInRegExProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new WordsInRegExProblem
     retVal.problemId(generalProblem)
     retVal.regEx((xml \ "RegEx").text)
@@ -70,6 +73,6 @@ object WordsInRegExProblem extends WordsInRegExProblem with SpecificProblemSingl
     retVal.inNeeded((xml \ "InNeeded").text.toInt)
     retVal.outNeeded((xml \ "OutNeeded").text.toInt)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

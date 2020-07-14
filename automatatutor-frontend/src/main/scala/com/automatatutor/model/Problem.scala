@@ -260,11 +260,11 @@ object Problem extends Problem with LongKeyedMetaMapper[Problem] {
   def deleteByCourse(course: Course) : Unit = this.bulkDelete_!!(By(Problem.courseId, course))
   
   def findAllOfType(problemType: ProblemType) : List[Problem] = findAll(By(Problem.problemType, problemType))
-  
-  def fromXML(xml: Node): Boolean = {
+
+  def fromXML(xml: Node): Box[Problem] = {
     //find matching specific type
     val matchingTypes = ProblemType.findByName((xml \ "typeName").text)
-    if (matchingTypes.isEmpty) return false
+    if (matchingTypes.isEmpty) return Empty
     val specificType = matchingTypes.head
     //generate general problem
     val generalProblem = new Problem
@@ -274,10 +274,28 @@ object Problem extends Problem with LongKeyedMetaMapper[Problem] {
     generalProblem.longDescription((xml \ "longDescription").text)
     generalProblem.save()
     //build specific problem
-    val worked = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)
-    if (!worked) { generalProblem.delete_! }
-    return worked
+    val specificProblem = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)
+    if (specificProblem == Empty) { generalProblem.delete_! }
+    return Full(generalProblem)
   }
+
+//  def fromXML(xml: Node): Boolean = {
+//    //find matching specific type
+//    val matchingTypes = ProblemType.findByName((xml \ "typeName").text)
+//    if (matchingTypes.isEmpty) return false
+//    val specificType = matchingTypes.head
+//    //generate general problem
+//    val generalProblem = new Problem
+//    generalProblem.problemType(specificType)
+//    generalProblem.createdBy(User.currentUser)
+//    generalProblem.shortDescription((xml \ "shortDescription").text)
+//    generalProblem.longDescription((xml \ "longDescription").text)
+//    generalProblem.save()
+//    //build specific problem
+//    val worked = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)
+//    if (!worked) { generalProblem.delete_! }
+//    return worked
+//  }
 }
 
 abstract trait SpecificProblem[T] {
@@ -289,7 +307,7 @@ abstract trait SpecificProblem[T] {
 }
 
 abstract trait SpecificProblemSingleton {
-  def fromXML(generalProblem: Problem, xml: Node): Boolean
+  def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]]
   def findByGeneralProblem(generalProblem: Problem): SpecificProblem[_]
   def deleteByGeneralProblem(generalProblem: Problem): Boolean
 }

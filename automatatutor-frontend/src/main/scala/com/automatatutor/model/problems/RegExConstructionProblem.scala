@@ -1,7 +1,9 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+import net.liftweb.common.{Box, Full}
 import net.liftweb.mapper._
+
 import scala.xml.XML
 import scala.xml.NodeSeq
 import scala.xml.Node
@@ -53,7 +55,7 @@ object RegExConstructionProblem extends RegExConstructionProblem with SpecificPr
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(RegExConstructionProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new RegExConstructionProblem
     retVal.problemId(generalProblem)
     retVal.regEx((xml \ "RegEx").text)
@@ -61,6 +63,6 @@ object RegExConstructionProblem extends RegExConstructionProblem with SpecificPr
     retVal.equivalent((xml \ "Equivalent").text)
 
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

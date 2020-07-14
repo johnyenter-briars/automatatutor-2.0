@@ -1,6 +1,7 @@
 package com.automatatutor.model.problems
 
 import com.automatatutor.model._
+import net.liftweb.common.{Box, Full}
 import net.liftweb.mapper.LongKeyedMapper
 import net.liftweb.mapper.LongKeyedMetaMapper
 import net.liftweb.mapper.MappedLongForeignKey
@@ -101,7 +102,7 @@ object PumpingLemmaGameProblem extends PumpingLemmaGameProblem with SpecificProb
   def deleteByGeneralProblem(generalProblem: Problem): Boolean =
     this.bulkDelete_!!(By(PumpingLemmaGameProblem.problemId, generalProblem))
 
-  override def fromXML(generalProblem: Problem, xml: Node): Boolean = {
+  override def fromXML(generalProblem: Problem, xml: Node): Box[SpecificProblem[_]] = {
     val retVal = new PumpingLemmaGameProblem
     retVal.problemId(generalProblem)
     retVal.regular((xml \ "Regular").text)
@@ -111,6 +112,6 @@ object PumpingLemmaGameProblem extends PumpingLemmaGameProblem with SpecificProb
     retVal.unpumpableWord((xml \ "UnpumpableWord").text)
     retVal.automaton((xml \ "Automaton").text)
     retVal.save()
-    return true
+    return Full(retVal)
   }
 }

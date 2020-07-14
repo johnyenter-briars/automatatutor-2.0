@@ -73,4 +73,10 @@ object Config {
   object buchiGameSolving {
     val enabled : ConfigParam[Boolean] = BoolParam(Prop("buchigamesolving.enabled", Default("false")))
   }
+
+  object try_it {
+    val enabled : ConfigParam[Boolean] = BoolParam(Prop("try_it.enabled", Default("true")))
+    val course_name : ConfigParam[String] = StringParam(Prop("try_it.course_name", Default("TryItOut")))
+    val pw : ConfigParam[String] = StringParam(Prop("try_it.pw", Default("mistpithw")))
+  }
 }
