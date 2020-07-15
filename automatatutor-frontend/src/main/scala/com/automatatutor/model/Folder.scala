@@ -82,6 +82,21 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
       super.delete_!
     }
   }
+
+
+  //TODO 7/15/2020 update this isOpen function and reference it in CourseSnippit
+  /**
+    * A problem is defined as closed if either the user has used all attempts
+    * or if they have reached the maximal possible grade
+    */
+//  def isOpen(user: User): Boolean = {
+//    val allowedAttempts = this.allowedAttempts.is
+//    val takenAttempts = this.getNumberAttempts(user)
+//    val maxGrade = this.maxGrade.is
+//    val userGrade = this.getGrade(user)
+//
+//    return takenAttempts < allowedAttempts && userGrade < maxGrade
+//  }
 }
 
 object Folder extends Folder with LongKeyedMetaMapper[Folder] {

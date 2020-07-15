@@ -102,12 +102,12 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
   protected object longDescription extends MappedText(this)
   
   // "posed" information
-  protected object courseId extends MappedLongForeignKey(this, Course)
-  protected object isPosed extends MappedBoolean(this)
-  protected object allowedAttempts extends MappedLong(this)
-  protected object maxGrade extends MappedLong(this)
-  protected object startDate extends MappedDateTime(this)
-  protected object endDate extends MappedDateTime(this)
+//  protected object courseId extends MappedLongForeignKey(this, Course)
+//  protected object isPosed extends MappedBoolean(this)
+//  protected object allowedAttempts extends MappedLong(this)
+//  protected object maxGrade extends MappedLong(this)
+//  protected object startDate extends MappedDateTime(this)
+//  protected object endDate extends MappedDateTime(this)
 
   def getProblemID: Long = this.id.is
 
@@ -125,46 +125,74 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
   def getLongDescription = this.longDescription.is
   def setLongDescription(description: String) = this.longDescription(description)
 
-  def getCourse : Box[Course] = this.courseId.obj
-  def setCourse ( course : Course ) = this.courseId(course)
-  def setCourse ( course: Box[Course] ) = this.courseId(course)
-  
-  def getPosed: Boolean = this.isPosed.is
-  def setPosed(posed: Boolean) = this.isPosed(posed)
-  
-  def getAllowedAttempts: Long = this.allowedAttempts.is
-  def getAllowedAttemptsString: String = if (this.allowedAttempts.is == 0) "∞" else this.allowedAttempts.is.toString
-  def setAllowedAttempts(attempts: Long) = this.allowedAttempts(attempts)
+  def getCourse : Box[Course] =
+    throw new NotImplementedError("Problems are no longer tied directly to courses. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def setCourse ( course : Course ) =
+    throw new NotImplementedError("Problems are no longer tied directly to courses. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def setCourse ( course: Box[Course] ) =
+    throw new NotImplementedError("Problems are no longer tied directly to courses. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
 
-  def getMaxGrade: Long = this.maxGrade.is
-  def setMaxGrade(maxGrade: Long) = this.maxGrade(maxGrade)
+  def getPosed: Boolean =
+    throw new NotImplementedError("Problems are no longer posed directly to courses. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def setPosed(posed: Boolean) =
+    throw new NotImplementedError("Problems are no longer posed directly to courses. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
 
-  def getStartDate: Date = this.startDate.is
-  def setStartDate(startDate: Date) = this.startDate(startDate)
+  def getAllowedAttempts: Long =
+    throw new NotImplementedError("Problems no longer have allowed attempts. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def getAllowedAttemptsString: String =
+    throw new NotImplementedError("Problems no longer have allowed attempts. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def setAllowedAttempts(attempts: Long) =
+    throw new NotImplementedError("Problems no longer have allowed attempts. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
 
-  def getEndDate: Date = this.endDate.is
-  def setEndDate(endDate: Date) = this.endDate(endDate)
-  
+  def getMaxGrade: Long =
+    throw new NotImplementedError("Problems no longer have a maxgrade. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def setMaxGrade(maxGrade: Long) =
+    throw new NotImplementedError("Problems no longer have a maxgrade. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
 
-  def shareWithUserByEmail(email: String): Boolean = {
-    val otherUser = User.findByEmail(email) match {
-      case Full(user) => user
-      case _          => return false
-    }
+  def getStartDate: Date =
+    throw new NotImplementedError("Problems no longer have a startdate. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def setStartDate(startDate: Date) =
+    throw new NotImplementedError("Problems no longer have a startdate. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
 
-    val copiedGeneralProblem = new Problem
-    copiedGeneralProblem.problemType(this.problemType.get)
-    copiedGeneralProblem.createdBy(otherUser)
-    copiedGeneralProblem.shortDescription(this.shortDescription.get)
-    copiedGeneralProblem.longDescription(this.longDescription.get)
-    copiedGeneralProblem.save()
+  def getEndDate: Date =
+    throw new NotImplementedError("Problems no longer have a enddate. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
+  def setEndDate(endDate: Date) =
+    throw new NotImplementedError("Problems no longer have a enddate. ProblemLinks are the objects" +
+      "which live under courses and reference problem objects")
 
-    val copiedSpecificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this).copy()
-    copiedSpecificProblem.setGeneralProblem(copiedGeneralProblem)
-    copiedSpecificProblem.save()
-
-    return true
-  }
+  //TODO 7/15/2020 figure out what to do with this
+//  def shareWithUserByEmail(email: String): Boolean = {
+//    val otherUser = User.findByEmail(email) match {
+//      case Full(user) => user
+//      case _          => return false
+//    }
+//
+//    val copiedGeneralProblem = new Problem
+//    copiedGeneralProblem.problemType(this.problemType.get)
+//    copiedGeneralProblem.createdBy(otherUser)
+//    copiedGeneralProblem.shortDescription(this.shortDescription.get)
+//    copiedGeneralProblem.longDescription(this.longDescription.get)
+//    copiedGeneralProblem.save()
+//
+//    val copiedSpecificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this).copy()
+//    copiedSpecificProblem.setGeneralProblem(copiedGeneralProblem)
+//    copiedSpecificProblem.save()
+//
+//    return true
+//  }
 
   def toXML: Node = {
     val specificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this)
@@ -189,75 +217,76 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     }
   }
   
-  def getAttempts(user: User): Seq[SolutionAttempt] = {
-    SolutionAttempt.findAll(
-      By(SolutionAttempt.userId, user),
-      By(SolutionAttempt.problemId, this))
-  }
-
-  def getNumberAttempts(user: User): Int = {
-    this.getAttempts(user).size
-  }
-
-  def getNumberAttemptsRemaining(user: User): Long = {
-    if (this.allowedAttempts == 0) return 99
-    else return this.allowedAttempts.is - this.getNumberAttempts(user)
-  }
-  def getNumberAttemptsRemainingString(user: User): String = {
-    if (this.allowedAttempts == 0) return "∞"
-    else return this.getNumberAttemptsRemaining(user).toString
-  }
-
-  def getGrade(user: User): Int = {
-    val grades = this.getAttempts(user).map(_.grade.is)
-    if (grades.isEmpty) {
-      0
-    } else {
-      grades.max
-    }
-  }
-
-  def getTimeToExpirationInMs : Long = {
-    val nowTimestamp = Calendar.getInstance().getTime().getTime()
-    val endDateTimestamp = this.endDate.is.getTime()
-    return endDateTimestamp - nowTimestamp
-  }
-  def getTimeToExpirationString : String = {
-    val ms = this.getTimeToExpirationInMs
-	if (ms < 0) return "ended"
-	
-	val msPerSecond = 1000
-    val msPerMinute = 60 * msPerSecond
-    val msPerHour = 60 * msPerMinute
-    val msPerDay = 24 * msPerHour
-
-    val days = ms / msPerDay
-    val hours = (ms % msPerDay) / msPerHour
-    val minutes = (ms % msPerHour) / msPerMinute
-    val seconds = (ms % msPerMinute) / msPerSecond
-
-    return (days + " days, " + hours + ":" + minutes + ":" + seconds + " hours")
-  }
-
-  /**
-    * A problem is defined as closed if either the user has used all attempts
-    * or if they have reached the maximal possible grade
-    */
-  def isOpen(user: User): Boolean = {
-    val allowedAttempts = this.allowedAttempts.is
-    val takenAttempts = this.getNumberAttempts(user)
-    val maxGrade = this.maxGrade.is
-    val userGrade = this.getGrade(user)
-
-    return takenAttempts < allowedAttempts && userGrade < maxGrade
-  }
+//  def getAttempts(user: User): Seq[SolutionAttempt] = {
+//    SolutionAttempt.findAll(
+//      By(SolutionAttempt.userId, user),
+//      By(SolutionAttempt.problemId, this))
+//  }
+//
+//  def getNumberAttempts(user: User): Int = {
+//    this.getAttempts(user).size
+//  }
+//
+//  def getNumberAttemptsRemaining(user: User): Long = {
+//    if (this.allowedAttempts == 0) return 99
+//    else return this.allowedAttempts.is - this.getNumberAttempts(user)
+//  }
+//  def getNumberAttemptsRemainingString(user: User): String = {
+//    if (this.allowedAttempts == 0) return "∞"
+//    else return this.getNumberAttemptsRemaining(user).toString
+//  }
+//
+//  def getGrade(user: User): Int = {
+//    val grades = this.getAttempts(user).map(_.grade.is)
+//    if (grades.isEmpty) {
+//      0
+//    } else {
+//      grades.max
+//    }
+//  }
+//
+//  def getTimeToExpirationInMs : Long = {
+//    val nowTimestamp = Calendar.getInstance().getTime().getTime()
+//    val endDateTimestamp = this.endDate.is.getTime()
+//    return endDateTimestamp - nowTimestamp
+//  }
+//  def getTimeToExpirationString : String = {
+//    val ms = this.getTimeToExpirationInMs
+//	if (ms < 0) return "ended"
+//
+//	val msPerSecond = 1000
+//    val msPerMinute = 60 * msPerSecond
+//    val msPerHour = 60 * msPerMinute
+//    val msPerDay = 24 * msPerHour
+//
+//    val days = ms / msPerDay
+//    val hours = (ms % msPerDay) / msPerHour
+//    val minutes = (ms % msPerHour) / msPerMinute
+//    val seconds = (ms % msPerMinute) / msPerSecond
+//
+//    return (days + " days, " + hours + ":" + minutes + ":" + seconds + " hours")
+//  }
+//
+//  /**
+//    * A problem is defined as closed if either the user has used all attempts
+//    * or if they have reached the maximal possible grade
+//    */
+//  def isOpen(user: User): Boolean = {
+//    val allowedAttempts = this.allowedAttempts.is
+//    val takenAttempts = this.getNumberAttempts(user)
+//    val maxGrade = this.maxGrade.is
+//    val userGrade = this.getGrade(user)
+//
+//    return takenAttempts < allowedAttempts && userGrade < maxGrade
+//  }
 }
 
 object Problem extends Problem with LongKeyedMetaMapper[Problem] {
   def findAllByCreator(creator: User): List[Problem] = findAll(By(Problem.createdBy, creator))
-  def deleteByCreator(creator: User) : Unit = this.bulkDelete_!!(By(Problem.createdBy, creator))
-  def findAllByCourse(course: Course): List[Problem] = findAll(By(Problem.courseId, course), OrderBy(Problem.startDate, Descending), OrderBy(Problem.shortDescription, Ascending))
-  def deleteByCourse(course: Course) : Unit = this.bulkDelete_!!(By(Problem.courseId, course))
+  //TODO 7/15/2020 update these methods
+  //  def deleteByCreator(creator: User) : Unit = this.bulkDelete_!!(By(Problem.createdBy, creator))
+//  def findAllByCourse(course: Course): List[Problem] = findAll(By(Problem.courseId, course), OrderBy(Problem.startDate, Descending), OrderBy(Problem.shortDescription, Ascending))
+//  def deleteByCourse(course: Course) : Unit = this.bulkDelete_!!(By(Problem.courseId, course))
   
   def findAllOfType(problemType: ProblemType) : List[Problem] = findAll(By(Problem.problemType, problemType))
 
@@ -278,24 +307,6 @@ object Problem extends Problem with LongKeyedMetaMapper[Problem] {
     if (specificProblem == Empty) { generalProblem.delete_! }
     return Full(generalProblem)
   }
-
-//  def fromXML(xml: Node): Boolean = {
-//    //find matching specific type
-//    val matchingTypes = ProblemType.findByName((xml \ "typeName").text)
-//    if (matchingTypes.isEmpty) return false
-//    val specificType = matchingTypes.head
-//    //generate general problem
-//    val generalProblem = new Problem
-//    generalProblem.problemType(specificType)
-//    generalProblem.createdBy(User.currentUser)
-//    generalProblem.shortDescription((xml \ "shortDescription").text)
-//    generalProblem.longDescription((xml \ "longDescription").text)
-//    generalProblem.save()
-//    //build specific problem
-//    val worked = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)
-//    if (!worked) { generalProblem.delete_! }
-//    return worked
-//  }
 }
 
 abstract trait SpecificProblem[T] {

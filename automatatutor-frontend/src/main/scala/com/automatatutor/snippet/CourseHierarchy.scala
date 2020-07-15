@@ -145,7 +145,8 @@ class CourseHierarchy(var topNodes : List[CourseHierarchyNode]) {
 
     // Method that removes any PosedProblems referencing 'problem' from this course
     def unpose = {
-      problem.setPosed(false).setStartDate(null).setEndDate(null).save
+      //TODO: 7/15/2020 fix this
+      //      problem.setPosed(false).setStartDate(null).setEndDate(null).save
 	  S.redirectTo("/main/course/index", () => {})
     }
  

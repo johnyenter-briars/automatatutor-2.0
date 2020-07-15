@@ -211,7 +211,8 @@ class Coursesnippet {
       if (!errors.isEmpty) {
         S.warning(errors.head)
       } else {
-        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        //TODO: 7/15/2020 fix this
+//        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
 
         S.redirectTo("/main/course/index", () => {})
       }
@@ -368,7 +369,8 @@ class Coursesnippet {
         if (problem.getPosed) return SHtml.link(
           "/main/course/index",
           () => {
-            problem.setPosed(false).setStartDate(null).setEndDate(null).save
+            //TODO: 7/15/2020 fix this
+//            problem.setPosed(false).setStartDate(null).setEndDate(null).save
           },
           Text("Yes"), "title" -> "Click to unpose!")
         else return SHtml.link(
@@ -412,9 +414,10 @@ class Coursesnippet {
         problems,
         ("Description", (problem: Problem) => Text(problem.getShortDescription)),
         ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
-        ("Grade / Max. Grade", (problem: Problem) => Text(problem.getGrade(user).toString + " / " + problem.getMaxGrade.toString)),
-        ("Remaining Attempts", (problem: Problem) => Text(problem.getNumberAttemptsRemainingString(user))),
-        ("Ends in", (problem: Problem) => Text(problem.getTimeToExpirationString)),
+        //TODO: 7/15/2020 fix this
+//        ("Grade / Max. Grade", (problem: Problem) => Text(problem.getGrade(user).toString + " / " + problem.getMaxGrade.toString)),
+//        ("Remaining Attempts", (problem: Problem) => Text(problem.getNumberAttemptsRemainingString(user))),
+//        ("Ends in", (problem: Problem) => Text(problem.getTimeToExpirationString)),
         ("", solveButton(_)))
     }
   }
@@ -482,8 +485,9 @@ class Coursesnippet {
         ("First Name", (user: User) => Text(user.firstName.is)),
         ("Last Name", (user: User) => Text(user.lastName.is)),
         ("Email", (user: User) => Text(user.email.is)),
-        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
-        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
+        //TODO: 7/15/2020 fix this
+//        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
+//        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
         ("", (user: User) => dismissLink(user)))
     } else {
       <h2>Participants</h2> ++ Text("There are no paticipants yet.")
@@ -573,11 +577,15 @@ class Coursesnippet {
     }
 
     def remainingAttempts(): Int = {
-      problem.getNumberAttemptsRemaining(user).toInt
+      //TODO: 7/15/2020 fix this
+//      problem.getNumberAttemptsRemaining(user).toInt
+      -1000
     }
 
     def bestGrade(): Int = {
-      problem.getGrade(user)
+      //TODO: 7/15/2020 fix this
+//      problem.getGrade(user)
+      -1000
     }
 
     problemSnippet.renderSolve(problem, CurrentProblemInCourse.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
@@ -672,7 +680,8 @@ class Coursesnippet {
       if (!errors.isEmpty) {
         S.warning(errors.head)
       } else {
-        problem.setPosed(true).setStartDate(startDate).setEndDate(endDate).setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        //TODO: 7/15/2020 fix this
+//        problem.setPosed(true).setStartDate(startDate).setEndDate(endDate).setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
         S.redirectTo("/main/course/index", () => {})
       }
     }
@@ -724,7 +733,8 @@ class Coursesnippet {
         (problemXML) => {
           val problem = Problem.fromXML(problemXML)
           if (problem != Empty) {
-            (problem openOrThrowException "problem should never be empty").setCourse(course).save
+            //TODO 7/15/2020 add logic to create the problem, and then generate the problemmirror and attach it to the course
+//            (problem openOrThrowException "problem should never be empty").setCourse(course).save
             imported += 1
           }
           else {

@@ -62,7 +62,8 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 
 	def isEnrolled(user : User) = !UserToCourse.findByUserAndCourse(user, this).isEmpty
 
-	def getProblems : List[Problem] = Problem.findAllByCourse(this)
+	//TODO 7/4/2020 fix this
+	def getProblems : List[Problem] = List()
 	def getPosedProblems : List[Problem] = getProblems.filter(_.getPosed)
 	def getSolvableProblems : List[Problem] = getPosedProblems.filter(problem => problem.getStartDate.compareTo(new Date()) < 0)
 	def getProblemsForUser(user : User) : List[Problem] = {
@@ -71,45 +72,52 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	  return this.getSolvableProblems
 	}
 	def getFoldersForUser(user: User) : List[Folder] = {
-		if (!user.isAdmin && !this.isEnrolled(user)) return List()
-		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
-		//otherwise, this is a student, show them all posted foldrs
-		return Folder.findAllByCourse(this).filter(_.getPosed)
+
+		return List()
+//		if (!user.isAdmin && !this.isEnrolled(user)) return List()
+//		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
+//		//otherwise, this is a student, show them all posted foldrs
+//		return Folder.findAllByCourse(this).filter(_.getPosed)
 	}
 
 	override def delete_! : Boolean = {
 		UserToCourse.deleteByCourse(this)
 		Folder.deleteByCourse(this)
-		Problem.deleteByCourse(this)
+		//TODO: 7/15/2020 fix this
+//		ProblemLink.deleteByCourse(this)
+//		Problem.deleteByCourse(this)
 		return super.delete_!
 	}
 
 	def renderGradesCsv: String = {
-		val posedProblems = this.getPosedProblems
-		val participantsWithGrades : Seq[(User, Seq[Int])] = this.getParticipants.map(participant => (participant, posedProblems.map(_.getGrade(participant))))
-		val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";") 
-		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";")).mkString(";"))
-		return firstLine + "\n" + csvLines.mkString("\n")
+		//TODO: 7/15/2020 fix this
+		return "not working"
+//		val posedProblems = this.getPosedProblems
+//		val participantsWithGrades : Seq[(User, Seq[Int])] = this.getParticipants.map(participant => (participant, posedProblems.map(_.getGrade(participant))))
+//		val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";")
+//		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";")).mkString(";"))
+//		return firstLine + "\n" + csvLines.mkString("\n")
 	}
 
 	def renderGradesXml: Node = {
-		val userGrades = this.getParticipants.map(participant => {
-			val userEmailAttribute = new UnprefixedAttribute("email", participant.email.is, Null)
-			val userLastNameAttribute = new UnprefixedAttribute("lastname", participant.lastName.is, userEmailAttribute)
-			val userFirstNameAttribute = new UnprefixedAttribute("firstname", participant.firstName.is, userLastNameAttribute)
-			val children: NodeSeq = this.getPosedProblems.map(problem => {
-				val problemDescriptionAttribute = new UnprefixedAttribute("shortDescription", problem.getShortDescription, Null)
-				val maxGradeAttribute = new UnprefixedAttribute("maxGrade", problem.getMaxGrade.toString, problemDescriptionAttribute)
-				val problemTypeAttribute = new UnprefixedAttribute("problemType", problem.getTypeName, maxGradeAttribute)
-				val attemptsByUserAttribute = new UnprefixedAttribute("attemptsByUser", problem.getNumberAttempts(participant).toString, problemTypeAttribute)
-				val allowedAttemptsAttribute = new UnprefixedAttribute("allowedAttempts", problem.getAllowedAttempts.toString, attemptsByUserAttribute)
-				Elem(null, "grade", allowedAttemptsAttribute, TopScope, true, Text(problem.getGrade(participant).toString))
-			})
-			new Elem(null, "usergrades", userFirstNameAttribute, TopScope, true, children: _*)
-		})
+		//TODO: 7/15/2020 fix this
+//		val userGrades = this.getParticipants.map(participant => {
+//			val userEmailAttribute = new UnprefixedAttribute("email", participant.email.is, Null)
+//			val userLastNameAttribute = new UnprefixedAttribute("lastname", participant.lastName.is, userEmailAttribute)
+//			val userFirstNameAttribute = new UnprefixedAttribute("firstname", participant.firstName.is, userLastNameAttribute)
+//			val children: NodeSeq = this.getPosedProblems.map(problem => {
+//				val problemDescriptionAttribute = new UnprefixedAttribute("shortDescription", problem.getShortDescription, Null)
+//				val maxGradeAttribute = new UnprefixedAttribute("maxGrade", problem.getMaxGrade.toString, problemDescriptionAttribute)
+//				val problemTypeAttribute = new UnprefixedAttribute("problemType", problem.getTypeName, maxGradeAttribute)
+//				val attemptsByUserAttribute = new UnprefixedAttribute("attemptsByUser", problem.getNumberAttempts(participant).toString, problemTypeAttribute)
+//				val allowedAttemptsAttribute = new UnprefixedAttribute("allowedAttempts", problem.getAllowedAttempts.toString, attemptsByUserAttribute)
+//				Elem(null, "grade", allowedAttemptsAttribute, TopScope, true, Text(problem.getGrade(participant).toString))
+//			})
+//			new Elem(null, "usergrades", userFirstNameAttribute, TopScope, true, children: _*)
+//		})
 			
 		return <coursegrades>
-			{userGrades}
+			{"not working"}
 		</coursegrades>
 	}
 }
