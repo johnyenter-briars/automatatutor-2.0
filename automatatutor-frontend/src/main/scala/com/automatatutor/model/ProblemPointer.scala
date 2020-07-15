@@ -66,6 +66,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     else return this.getNumberAttemptsRemaining(user).toString
   }
 
+  //TODO 7/15/20 fix this
   def getGrade(user: User): Int = {
     0
 //    val grades = this.getAttempts(user).map(_.grade.is)
@@ -100,39 +101,15 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
 object ProblemPointer extends ProblemPointer with LongKeyedMetaMapper[ProblemPointer] {
 
-  //TODO 7/15/2020 fix these commented out methods
-  //  def deleteByCreator(creator: User) : Unit = this.bulkDelete_!!(By(Problem.createdBy, creator))
   def findAllByCourse(course: Course): List[ProblemPointer] = findAll(By(ProblemPointer.courseId, course))
 
   def findAllByFolder(folder: Folder): List[ProblemPointer] = findAll(By(ProblemPointer.folderId, folder))
-  //  def deleteByCourse(course: Course) : Unit = this.bulkDelete_!!(By(Problem.courseId, course))
 
-//  def findAllOfType(problemType: ProblemType) : List[Problem] = findAll(By(Problem.problemType, problemType))
+  def findAllByReferencedProblem(problem: Problem): List[ProblemPointer] = findAll(By(ProblemPointer.referencedProblemId, problem))
 
+  def deleteProblemsUnderFolder(folder: Folder): Unit = this.findAllByFolder(folder).foreach(_.delete_!)
 
-  //  def fromXML(xml: Node): Boolean = {
-  //    //find matching specific type
-  //    val matchingTypes = ProblemType.findByName((xml \ "typeName").text)
-  //    if (matchingTypes.isEmpty) return false
-  //    val specificType = matchingTypes.head
-  //    //generate general problem
-  //    val generalProblem = new Problem
-  //    generalProblem.problemType(specificType)
-  //    generalProblem.createdBy(User.currentUser)
-  //    generalProblem.shortDescription((xml \ "shortDescription").text)
-  //    generalProblem.longDescription((xml \ "longDescription").text)
-  //    generalProblem.save()
-  //    //build specific problem
-  //    val worked = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)
-  //    if (!worked) { generalProblem.delete_! }
-  //    return worked
-  //  }
-
-    def deleteProblemsUnderFolder(folder: Folder): Unit = {
-      var x = this.findAllByFolder(folder)
-        .filter(problemPointer => problemPointer.getFolder == folder)
-          .foreach(_.delete_!)
-    }
+  def deleteByReferencedProblem(problem: Problem) : Unit = this.findAllByReferencedProblem(problem).foreach(_.delete_!)
 
 }
 

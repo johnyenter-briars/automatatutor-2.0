@@ -211,8 +211,9 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     if (!canBeDeleted) {
       return false
     } else {
+      ProblemPointer.deleteByReferencedProblem(this)
       val specificDel = this.getProblemType.getSpecificProblemSingleton.deleteByGeneralProblem(this)
-	  val superDel = super.delete_! 
+      val superDel = super.delete_!
       return specificDel & superDel
     }
   }
