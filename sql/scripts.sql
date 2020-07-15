@@ -11,6 +11,8 @@ create table PROBLEM(
     FOREIGN KEY (CREATEDBY) REFERENCES USER_T(ID)
 );
 
+insert into PROBLEM Values(1, 'Test Problem', 4, 1, 'idkman');
+
 drop table PROBLEMLINK;
 
 create table PROBLEMLINK(
@@ -23,6 +25,8 @@ create table PROBLEMLINK(
     FOREIGN KEY (REFERENCEDPROBLEMID) REFERENCES PROBLEM(ID),
     FOREIGN KEY (COURSEID) REFERENCES COURSE(ID)
 );
+
+insert into PROBLEMLINK Values(1, 1, 1, 10, 10);
 
 drop table FOLDER;
 
@@ -47,15 +51,6 @@ insert into FOLDER Values(
     null
 );
 
-insert into FOLDER Values(
-    2,
-    'Homework 2',
-    1,
-    1,
-    false,
-    null,
-    null
-);
 
 drop table PROBLEMTOFOLDER;
 
@@ -69,6 +64,6 @@ create table PROBLEMTOFOLDER(
 
 insert into PROBLEMTOFOLDER Values(
     1,
-    2, 
+    1, 
     1
 );

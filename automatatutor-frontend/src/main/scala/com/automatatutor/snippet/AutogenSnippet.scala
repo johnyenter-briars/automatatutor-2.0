@@ -157,7 +157,10 @@ class Autogensnippet {
       val folder = Folder.findByID(folderID)
       val problem = CurrentPracticeProblem.is
       val probToFol = new ProblemToFolder
-      probToFol.setProblem(problem)
+
+      //TODO 7/15/2020 fix this
+//      probToFol.setProblem(problem)
+
       probToFol.setFolder(folder)
       probToFol.save
 

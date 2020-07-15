@@ -62,7 +62,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 
 	def isEnrolled(user : User) = !UserToCourse.findByUserAndCourse(user, this).isEmpty
 
-	//TODO 7/4/2020 fix this
+	//TODO 7/15/2020 fix this
 	def getProblems : List[Problem] = List()
 	def getPosedProblems : List[Problem] = getProblems.filter(_.getPosed)
 	def getSolvableProblems : List[Problem] = getPosedProblems.filter(problem => problem.getStartDate.compareTo(new Date()) < 0)
@@ -72,12 +72,10 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	  return this.getSolvableProblems
 	}
 	def getFoldersForUser(user: User) : List[Folder] = {
-
-		return List()
-//		if (!user.isAdmin && !this.isEnrolled(user)) return List()
-//		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
-//		//otherwise, this is a student, show them all posted foldrs
-//		return Folder.findAllByCourse(this).filter(_.getPosed)
+		if (!user.isAdmin && !this.isEnrolled(user)) return List()
+		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
+		//otherwise, this is a student, show them all posted foldrs
+		return Folder.findAllByCourse(this).filter(_.getPosed)
 	}
 
 	override def delete_! : Boolean = {

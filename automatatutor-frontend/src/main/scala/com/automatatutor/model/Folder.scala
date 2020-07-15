@@ -38,14 +38,15 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getPosed: Boolean = this.isPosed.is
   def setPosed(posed: Boolean) = this.isPosed(posed)
 
-  def getProblemsUnderFolder: List[Problem] = {
+  def getProblemsUnderFolder: List[ProblemLink] = {
     ProblemToFolder.findAllByFolder(this).map(_.getProblem)
   }
 
-  def getStartDate: Date = this.startDate.is
+  //TODO 7/15/2020 fix this
+  def getStartDate: Date = new Date(2001, 4, 1)
   def setStartDate(startDate: Date) = this.startDate(startDate)
 
-  def getEndDate: Date = this.endDate.is
+  def getEndDate: Date = new Date(2001, 4, 1)
   def setEndDate(endDate: Date) = this.endDate(endDate)
 
   def getTimeToExpirationInMs : Long = {

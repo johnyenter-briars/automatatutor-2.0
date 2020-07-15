@@ -66,6 +66,27 @@ class ProblemLink extends LongKeyedMapper[ProblemLink] with IdPK {
 //      grades.max
 //    }
   }
+
+  def getLongDescription: String = {
+    val matchingProblems = Problem.findAll().filter(p => p.getProblemID == this.getProblemID)
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+
+    matchingProblems.head.getLongDescription
+  }
+
+  def getShortDescription: String = {
+    val matchingProblems = Problem.findAll().filter(p => p.getProblemID == this.getProblemID)
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+
+    matchingProblems.head.getShortDescription
+  }
+
+  def getTypeName: String = {
+    val matchingProblems = Problem.findAll().filter(p => p.getProblemID == this.getProblemID)
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+
+    matchingProblems.head.getTypeName()
+  }
 }
 
 object ProblemLink extends ProblemLink with LongKeyedMetaMapper[ProblemLink] {
@@ -95,5 +116,6 @@ object ProblemLink extends ProblemLink with LongKeyedMetaMapper[ProblemLink] {
   //    if (!worked) { generalProblem.delete_! }
   //    return worked
   //  }
+
 }
 

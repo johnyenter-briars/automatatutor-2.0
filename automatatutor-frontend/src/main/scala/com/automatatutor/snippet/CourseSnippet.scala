@@ -302,6 +302,9 @@ class Coursesnippet {
     if (folders.isEmpty) return Text("There are no folders in this course") ++
       SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
 
+
+
+
     if (CurrentCourse.canBeSupervisedBy(user)) {
       (<div>
         {folders.map(folder => {
@@ -317,13 +320,13 @@ class Coursesnippet {
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(
               folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-              ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
-              ("Type", (problem: Problem) => Text(problem.getTypeName)),
-              ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
-              ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
-              ("Edit Problem", (problem: Problem) => editButton(problem)),
-              ("Edit Access Problem", (problem: Problem) => editAccessButton(problem)),
-              ("", (problem: Problem) => solveButton(problem))
+              ("Problem Description", (problem: ProblemLink) => Text(problem.getShortDescription)),
+              ("Type", (problem: ProblemLink) => Text(problem.getTypeName)),
+              ("Attempts", (problem: ProblemLink) => Text(problem.getAllowedAttemptsString)),
+              ("Max Grade", (problem: ProblemLink) => Text(problem.getMaxGrade.toString))
+//              ("Edit Problem", (problem: Problem) => editButton(problem)),
+//              ("Edit Access Problem", (problem: Problem) => editAccessButton(problem)),
+//              ("", (problem: Problem) => solveButton(problem))
             )
           )
         })}
@@ -346,11 +349,11 @@ class Coursesnippet {
           .theSeq.++(
           TableHelper.renderTableWithHeaderPlusAttributes(
             folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-            ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
-            ("Type", (problem: Problem) => Text(problem.getTypeName)),
-            ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
-            ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
-            ("", (problem: Problem) => solveButton(problem))
+            ("Problem Description", (problem: ProblemLink) => Text(problem.getShortDescription)),
+            ("Type", (problem: ProblemLink) => Text(problem.getTypeName)),
+            ("Attempts", (problem: ProblemLink) => Text(problem.getAllowedAttemptsString)),
+            ("Max Grade", (problem: ProblemLink) => Text(problem.getMaxGrade.toString))
+//            ("", (problem: Problem) => solveButton(problem))
           )
         )
       })}
