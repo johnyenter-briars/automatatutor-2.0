@@ -156,17 +156,14 @@ class Autogensnippet {
 
       val folder = Folder.findByID(folderID)
       val problem = CurrentPracticeProblem.is
-      val probToFol = new ProblemToFolder
-
-      //TODO 7/15/2020 fix this
-//      probToFol.setProblem(problem)
-
-      probToFol.setFolder(folder)
-      probToFol.save
-
-      problem.setCourse(folder.getCourse)
-      problem.save
-
+      val problemPointer = new ProblemPointer
+      problemPointer.setProblem(problem)
+                    .setFolder(folder)
+                    //TODO 7/5/2020 add a method by which the user can set these settings on first transfer
+//                    .setAllowedAttempts(10)
+//                    .setMaxGrade(10)
+                    .setCourse(folder.getCourse)
+                    .save
     }
 
     val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here";

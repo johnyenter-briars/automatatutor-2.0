@@ -15,10 +15,11 @@ import java.util.{Calendar, Date}
 class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getSingleton = Folder
 
-  // "posed" information
   protected object courseId extends MappedLongForeignKey(this, Course)
   protected object longDescription extends MappedText(this)
   protected object createdBy extends MappedLongForeignKey(this, User)
+
+  // "posed" information
   protected object isPosed extends MappedBoolean(this)
   protected object startDate extends MappedDateTime(this)
   protected object endDate extends MappedDateTime(this)
@@ -38,15 +39,14 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getPosed: Boolean = this.isPosed.is
   def setPosed(posed: Boolean) = this.isPosed(posed)
 
-  def getProblemsUnderFolder: List[ProblemLink] = {
-    ProblemToFolder.findAllByFolder(this).map(_.getProblem)
+  def getProblemPointersUnderFolder: List[ProblemPointer] = {
+    ProblemPointer.findAllByFolder(this)
   }
 
-  //TODO 7/15/2020 fix this
-  def getStartDate: Date = new Date(2001, 4, 1)
+  def getStartDate: Date = this.startDate.is
   def setStartDate(startDate: Date) = this.startDate(startDate)
 
-  def getEndDate: Date = new Date(2001, 4, 1)
+  def getEndDate: Date = this.endDate.is
   def setEndDate(endDate: Date) = this.endDate(endDate)
 
   def getTimeToExpirationInMs : Long = {
@@ -78,14 +78,15 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     if (!canBeDeleted) {
       false
     } else {
-      //before deleting the folder, we must send all the problems within the folder back to their original state
-      ProblemToFolder.deleteProblemsUnderFolder(this)
+      //before deleting the folder, we must delete all the problempointers that are under the folder
+      ProblemPointer.deleteProblemsUnderFolder(this)
       super.delete_!
     }
   }
 
 
   //TODO 7/15/2020 update this isOpen function and reference it in CourseSnippit
+  //itll make the code a lil cleaner
   /**
     * A problem is defined as closed if either the user has used all attempts
     * or if they have reached the maximal possible grade

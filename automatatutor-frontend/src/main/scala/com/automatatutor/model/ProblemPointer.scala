@@ -13,15 +13,20 @@ import java.util.{Calendar, Date}
 
 
 
-class ProblemLink extends LongKeyedMapper[ProblemLink] with IdPK {
+class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
-  def getSingleton = ProblemLink
+  def getSingleton = ProblemPointer
 
   protected object courseId extends MappedLongForeignKey(this, Course)
   protected object allowedAttempts extends MappedLong(this)
-  protected object referencedProblemID extends MappedLongForeignKey(this, Problem)
+  protected object folderId extends MappedLongForeignKey(this, Folder)
+  protected object referencedProblemId extends MappedLongForeignKey(this, Problem)
   protected object maxGrade extends MappedLong(this)
-  def getProblemID: Long = this.id.is
+  def getProblemPointerID: Long = this.id.is
+
+  def getProblem = this.referencedProblemId.obj openOrThrowException "Every ProblemToFolder must have a Problem"
+  //TODO 7/15/2020 fix this
+  def setProblem ( problem : Problem ) = this.referencedProblemId(problem)
 
   def getCourse : Box[Course] = this.courseId.obj
   def setCourse ( course : Course ) = this.courseId(course)
@@ -30,6 +35,10 @@ class ProblemLink extends LongKeyedMapper[ProblemLink] with IdPK {
   def getAllowedAttempts: Long = this.allowedAttempts.is
   def getAllowedAttemptsString: String = if (this.allowedAttempts.is == 0) "∞" else this.allowedAttempts.is.toString
   def setAllowedAttempts(attempts: Long) = this.allowedAttempts(attempts)
+
+  def getFolder: Folder = this.folderId.obj openOrThrowException "Every ProblemToFolder must have a Folder"
+  def setFolder(folder: Folder) = this.folderId(folder)
+  def setFolder(folder: Box[Folder]) = this.folderId(folder)
 
   def getMaxGrade: Long = this.maxGrade.is
   def setMaxGrade(maxGrade: Long) = this.maxGrade(maxGrade)
@@ -68,33 +77,35 @@ class ProblemLink extends LongKeyedMapper[ProblemLink] with IdPK {
   }
 
   def getLongDescription: String = {
-    val matchingProblems = Problem.findAll().filter(p => p.getProblemID == this.getProblemID)
+    val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
     if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
 
     matchingProblems.head.getLongDescription
   }
 
   def getShortDescription: String = {
-    val matchingProblems = Problem.findAll().filter(p => p.getProblemID == this.getProblemID)
+    val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
     if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
 
     matchingProblems.head.getShortDescription
   }
 
   def getTypeName: String = {
-    val matchingProblems = Problem.findAll().filter(p => p.getProblemID == this.getProblemID)
+    val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
     if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
 
     matchingProblems.head.getTypeName()
   }
 }
 
-object ProblemLink extends ProblemLink with LongKeyedMetaMapper[ProblemLink] {
+object ProblemPointer extends ProblemPointer with LongKeyedMetaMapper[ProblemPointer] {
 
   //TODO 7/15/2020 fix these commented out methods
   //  def deleteByCreator(creator: User) : Unit = this.bulkDelete_!!(By(Problem.createdBy, creator))
-  def findAllByCourse(course: Course): List[ProblemLink] = findAll(By(ProblemLink.courseId, course))
-//  def deleteByCourse(course: Course) : Unit = this.bulkDelete_!!(By(Problem.courseId, course))
+  def findAllByCourse(course: Course): List[ProblemPointer] = findAll(By(ProblemPointer.courseId, course))
+
+  def findAllByFolder(folder: Folder): List[ProblemPointer] = findAll(By(ProblemPointer.folderId, folder))
+  //  def deleteByCourse(course: Course) : Unit = this.bulkDelete_!!(By(Problem.courseId, course))
 
 //  def findAllOfType(problemType: ProblemType) : List[Problem] = findAll(By(Problem.problemType, problemType))
 
@@ -116,6 +127,12 @@ object ProblemLink extends ProblemLink with LongKeyedMetaMapper[ProblemLink] {
   //    if (!worked) { generalProblem.delete_! }
   //    return worked
   //  }
+
+    def deleteProblemsUnderFolder(folder: Folder): Unit = {
+      var x = this.findAllByFolder(folder)
+        .filter(problemPointer => problemPointer.getFolder == folder)
+          .foreach(_.delete_!)
+    }
 
 }
 

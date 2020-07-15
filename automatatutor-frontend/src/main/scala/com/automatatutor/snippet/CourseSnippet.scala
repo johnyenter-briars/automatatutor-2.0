@@ -38,6 +38,7 @@ import scala.collection.JavaConverters._
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
 object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // RequestVar as only needed in a single request
+object CurrentProblemPointerInCourse extends RequestVar[ProblemPointer](null)
 object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
@@ -172,12 +173,12 @@ class Coursesnippet {
   }
 
   def renderaccessedit(xhtml: NodeSeq): NodeSeq = {
-    if (CurrentProblemInCourse.is == null) {
+    if (CurrentProblemPointerInCourse.is == null) {
       S.warning("Please first choose a problem to solve")
       return S.redirectTo("/main/course/index")
     }
     val course: Course = CurrentCourse.is
-    val problem: Problem = CurrentProblemInCourse.is
+    val problem: ProblemPointer = CurrentProblemPointerInCourse.is
 
     var attempts = "0"
     var maxGrade = "10"
@@ -211,8 +212,7 @@ class Coursesnippet {
       if (!errors.isEmpty) {
         S.warning(errors.head)
       } else {
-        //TODO: 7/15/2020 fix this
-//        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
 
         S.redirectTo("/main/course/index", () => {})
       }
@@ -262,11 +262,11 @@ class Coursesnippet {
         <button type='button'>Edit Folder</button>)
     }
 
-    def editAccessButton(problem: Problem): NodeSeq = {
+    def editAccessButton(problem: ProblemPointer): NodeSeq = {
       SHtml.link(
         "/main/course/problems/editproblemaccess",
         () => {
-          CurrentProblemInCourse(problem)
+          CurrentProblemPointerInCourse(problem)
         },
         <button type='button'>Edit Access</button>)
     }
@@ -319,13 +319,12 @@ class Coursesnippet {
           )
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(
-              folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-              ("Problem Description", (problem: ProblemLink) => Text(problem.getShortDescription)),
-              ("Type", (problem: ProblemLink) => Text(problem.getTypeName)),
-              ("Attempts", (problem: ProblemLink) => Text(problem.getAllowedAttemptsString)),
-              ("Max Grade", (problem: ProblemLink) => Text(problem.getMaxGrade.toString))
-//              ("Edit Problem", (problem: Problem) => editButton(problem)),
-//              ("Edit Access Problem", (problem: Problem) => editAccessButton(problem)),
+              folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
+              ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+              ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+              ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
+              ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
+              ("Edit Problem", (problem: ProblemPointer) => editAccessButton(problem))
 //              ("", (problem: Problem) => solveButton(problem))
             )
           )
@@ -348,11 +347,11 @@ class Coursesnippet {
         )
           .theSeq.++(
           TableHelper.renderTableWithHeaderPlusAttributes(
-            folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-            ("Problem Description", (problem: ProblemLink) => Text(problem.getShortDescription)),
-            ("Type", (problem: ProblemLink) => Text(problem.getTypeName)),
-            ("Attempts", (problem: ProblemLink) => Text(problem.getAllowedAttemptsString)),
-            ("Max Grade", (problem: ProblemLink) => Text(problem.getMaxGrade.toString))
+            folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
+            ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+            ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+            ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
+            ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString))
 //            ("", (problem: Problem) => solveButton(problem))
           )
         )

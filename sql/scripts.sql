@@ -13,21 +13,6 @@ create table PROBLEM(
 
 insert into PROBLEM Values(1, 'Test Problem', 4, 1, 'idkman');
 
-drop table PROBLEMLINK;
-
-create table PROBLEMLINK(
-    ID BigInt PRIMARY KEY AUTO_INCREMENT,
-    REFERENCEDPROBLEMID BigInt,
-    COURSEID BigInt,
-    ALLOWEDATTEMPTS BigInt,
-    MAXGRADE BigInt,
-
-    FOREIGN KEY (REFERENCEDPROBLEMID) REFERENCES PROBLEM(ID),
-    FOREIGN KEY (COURSEID) REFERENCES COURSE(ID)
-);
-
-insert into PROBLEMLINK Values(1, 1, 1, 10, 10);
-
 drop table FOLDER;
 
 create table FOLDER(
@@ -51,19 +36,35 @@ insert into FOLDER Values(
     null
 );
 
+drop table PROBLEMPOINTER;
 
-drop table PROBLEMTOFOLDER;
-
-create table PROBLEMTOFOLDER(
+create table PROBLEMPOINTER(
     ID BigInt PRIMARY KEY AUTO_INCREMENT,
-    PROBLEMID BigInt,
+    REFERENCEDPROBLEMID BigInt,
+    COURSEID BigInt,
     FOLDERID BigInt,
-    FOREIGN KEY (PROBLEMID) REFERENCES PROBLEMLINK(ID),
+    ALLOWEDATTEMPTS BigInt,
+    MAXGRADE BigInt,
+
+    FOREIGN KEY (REFERENCEDPROBLEMID) REFERENCES PROBLEM(ID),
+    FOREIGN KEY (COURSEID) REFERENCES COURSE(ID),
     FOREIGN KEY (FOLDERID) REFERENCES FOLDER(ID)
 );
 
-insert into PROBLEMTOFOLDER Values(
-    1,
-    1, 
-    1
-);
+insert into PROBLEMPOINTER Values(1, 1, 1, 1, 10, 10);
+
+-- drop table PROBLEMTOFOLDER;
+
+-- create table PROBLEMTOFOLDER(
+--     ID BigInt PRIMARY KEY AUTO_INCREMENT,
+--     PROBLEMID BigInt,
+--     FOLDERID BigInt,
+--     FOREIGN KEY (PROBLEMID) REFERENCES PROBLEMPOINTER(ID),
+--     FOREIGN KEY (FOLDERID) REFERENCES FOLDER(ID)
+-- );
+
+-- insert into PROBLEMTOFOLDER Values(
+--     1,
+--     1, 
+--     1
+-- );
