@@ -43,6 +43,11 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     ProblemPointer.findAllByFolder(this)
   }
 
+  def getOpenProblemPointersUnderFolder(user: User): List[ProblemPointer] = {
+    if(user.isAdmin) return ProblemPointer.findAllByFolder(this)
+    ProblemPointer.findAllByFolder(this).filter(_.isOpen(user))
+  }
+
   def getStartDate: Date = this.startDate.is
   def setStartDate(startDate: Date) = this.startDate(startDate)
 
@@ -78,27 +83,18 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     if (!canBeDeleted) {
       false
     } else {
-      //before deleting the folder, we must delete all the problempointers that are under the folder
+      //before deleting the folder, we must delete all the ProblemPointers that are under the folder
       ProblemPointer.deleteProblemsUnderFolder(this)
       super.delete_!
     }
   }
 
-
-  //TODO 7/15/2020 update this isOpen function and reference it in CourseSnippit
-  //itll make the code a lil cleaner
   /**
-    * A problem is defined as closed if either the user has used all attempts
-    * or if they have reached the maximal possible grade
+    * A folder is defined as open if it's end date falls after the current date
     */
-//  def isOpen(user: User): Boolean = {
-//    val allowedAttempts = this.allowedAttempts.is
-//    val takenAttempts = this.getNumberAttempts(user)
-//    val maxGrade = this.maxGrade.is
-//    val userGrade = this.getGrade(user)
-//
-//    return takenAttempts < allowedAttempts && userGrade < maxGrade
-//  }
+  def isOpen: Boolean = {
+    this.getEndDate.compareTo(Calendar.getInstance().getTime) > 0
+  }
 }
 
 object Folder extends Folder with LongKeyedMetaMapper[Folder] {

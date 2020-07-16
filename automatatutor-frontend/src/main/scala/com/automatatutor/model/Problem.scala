@@ -284,11 +284,9 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
 
 object Problem extends Problem with LongKeyedMetaMapper[Problem] {
   def findAllByCreator(creator: User): List[Problem] = findAll(By(Problem.createdBy, creator))
-  //TODO 7/15/2020 update these methods
-  //  def deleteByCreator(creator: User) : Unit = this.bulkDelete_!!(By(Problem.createdBy, creator))
-//  def findAllByCourse(course: Course): List[Problem] = findAll(By(Problem.courseId, course), OrderBy(Problem.startDate, Descending), OrderBy(Problem.shortDescription, Ascending))
-//  def deleteByCourse(course: Course) : Unit = this.bulkDelete_!!(By(Problem.courseId, course))
-  
+
+  def deleteByCreator(creator: User) : Unit = this.bulkDelete_!!(By(Problem.createdBy, creator))
+
   def findAllOfType(problemType: ProblemType) : List[Problem] = findAll(By(Problem.problemType, problemType))
 
   def fromXML(xml: Node): Box[Problem] = {

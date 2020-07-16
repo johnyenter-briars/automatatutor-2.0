@@ -94,6 +94,19 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
     matchingProblems.head.getTypeName()
   }
+
+  /**
+    * A ProblemPointer is defined as closed if either the user has used all attempts
+    * or if they have reached the maximal possible grade
+    */
+  def isOpen(user: User): Boolean = {
+    val allowedAttempts = this.allowedAttempts.is
+    val takenAttempts = this.getNumberAttempts(user)
+    val maxGrade = this.maxGrade.is
+    val userGrade = this.getGrade(user)
+
+    takenAttempts < allowedAttempts && userGrade < maxGrade
+  }
 }
 
 object ProblemPointer extends ProblemPointer with LongKeyedMetaMapper[ProblemPointer] {
@@ -106,6 +119,7 @@ object ProblemPointer extends ProblemPointer with LongKeyedMetaMapper[ProblemPoi
 
   def deleteProblemsUnderFolder(folder: Folder): Unit = this.findAllByFolder(folder).foreach(_.delete_!)
 
+  //Given a Problem object, delete all the ProblemPointers that reference said problem
   def deleteByReferencedProblem(problem: Problem) : Unit = this.findAllByReferencedProblem(problem).foreach(_.delete_!)
 
 }

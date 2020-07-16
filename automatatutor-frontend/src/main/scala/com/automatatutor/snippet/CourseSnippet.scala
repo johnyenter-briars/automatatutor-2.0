@@ -182,6 +182,8 @@ class Coursesnippet {
     var attempts = "0"
     var maxGrade = "10"
 
+    //TODO 7/16/2020 update this so it shows the current values in the field boxes
+    //currently it defaults to 0 and 10
     def editProblem() = {
       var errors: List[String] = List()
       val numMaxGrade = try {
@@ -335,24 +337,30 @@ class Coursesnippet {
       //logged in user is a student
       <div>
         {folders.map(folder => {
-        TableHelper.renderTableWithHeader(
-          List(folder),
-          ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-          ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-          ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-          ("Expand", (folder: Folder) => expandButton(folder))
-        )
-          .theSeq.++(
-          TableHelper.renderTableWithHeaderPlusAttributes(
-            folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
-            ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
-            ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-            ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-            ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
-            ("", (problem: ProblemPointer) => solveButton(problem))
-          )
-        )
-      })}
+
+          if(!folder.isOpen) {
+            NodeSeq.Empty
+          }
+          else{
+            TableHelper.renderTableWithHeader(
+              List(folder),
+              ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+              ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+              ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+              ("Expand", (folder: Folder) => expandButton(folder))
+            )
+              .theSeq.++(
+              TableHelper.renderTableWithHeaderPlusAttributes(
+                folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
+                ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+                ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+                ("Attempts Remaining", (problem: ProblemPointer) => Text(problem.getNumberAttemptsRemaining(user).toString)),
+                ("Max Grade", (problem: ProblemPointer) => Text(problem.getGrade(user).toString)),
+                ("", (problem: ProblemPointer) => solveButton(problem))
+              )
+            )
+          }
+        })}
       </div>
     }
   }
