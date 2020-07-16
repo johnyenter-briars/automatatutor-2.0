@@ -82,9 +82,6 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	override def delete_! : Boolean = {
 		UserToCourse.deleteByCourse(this)
 		Folder.deleteByCourse(this)
-		//TODO: 7/15/2020 fix this
-//		ProblemLink.deleteByCourse(this)
-//		Problem.deleteByCourse(this)
 		return super.delete_!
 	}
 

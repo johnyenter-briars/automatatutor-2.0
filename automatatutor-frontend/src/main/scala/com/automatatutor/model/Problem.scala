@@ -173,26 +173,25 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     throw new NotImplementedError("Problems no longer have a enddate. ProblemLinks are the objects" +
       "which live under courses and reference problem objects")
 
-  //TODO 7/15/2020 figure out what to do with this
-//  def shareWithUserByEmail(email: String): Boolean = {
-//    val otherUser = User.findByEmail(email) match {
-//      case Full(user) => user
-//      case _          => return false
-//    }
-//
-//    val copiedGeneralProblem = new Problem
-//    copiedGeneralProblem.problemType(this.problemType.get)
-//    copiedGeneralProblem.createdBy(otherUser)
-//    copiedGeneralProblem.shortDescription(this.shortDescription.get)
-//    copiedGeneralProblem.longDescription(this.longDescription.get)
-//    copiedGeneralProblem.save()
-//
-//    val copiedSpecificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this).copy()
-//    copiedSpecificProblem.setGeneralProblem(copiedGeneralProblem)
-//    copiedSpecificProblem.save()
-//
-//    return true
-//  }
+  def shareWithUserByEmail(email: String): Boolean = {
+    val otherUser = User.findByEmail(email) match {
+      case Full(user) => user
+      case _          => return false
+    }
+
+    val copiedGeneralProblem = new Problem
+    copiedGeneralProblem.problemType(this.problemType.get)
+    copiedGeneralProblem.createdBy(otherUser)
+    copiedGeneralProblem.shortDescription(this.shortDescription.get)
+    copiedGeneralProblem.longDescription(this.longDescription.get)
+    copiedGeneralProblem.save()
+
+    val copiedSpecificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this).copy()
+    copiedSpecificProblem.setGeneralProblem(copiedGeneralProblem)
+    copiedSpecificProblem.save()
+
+    return true
+  }
 
   def toXML: Node = {
     val specificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this)
@@ -217,69 +216,6 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
       return specificDel & superDel
     }
   }
-  
-//  def getAttempts(user: User): Seq[SolutionAttempt] = {
-//    SolutionAttempt.findAll(
-//      By(SolutionAttempt.userId, user),
-//      By(SolutionAttempt.problemId, this))
-//  }
-//
-//  def getNumberAttempts(user: User): Int = {
-//    this.getAttempts(user).size
-//  }
-//
-//  def getNumberAttemptsRemaining(user: User): Long = {
-//    if (this.allowedAttempts == 0) return 99
-//    else return this.allowedAttempts.is - this.getNumberAttempts(user)
-//  }
-//  def getNumberAttemptsRemainingString(user: User): String = {
-//    if (this.allowedAttempts == 0) return "∞"
-//    else return this.getNumberAttemptsRemaining(user).toString
-//  }
-//
-//  def getGrade(user: User): Int = {
-//    val grades = this.getAttempts(user).map(_.grade.is)
-//    if (grades.isEmpty) {
-//      0
-//    } else {
-//      grades.max
-//    }
-//  }
-//
-//  def getTimeToExpirationInMs : Long = {
-//    val nowTimestamp = Calendar.getInstance().getTime().getTime()
-//    val endDateTimestamp = this.endDate.is.getTime()
-//    return endDateTimestamp - nowTimestamp
-//  }
-//  def getTimeToExpirationString : String = {
-//    val ms = this.getTimeToExpirationInMs
-//	if (ms < 0) return "ended"
-//
-//	val msPerSecond = 1000
-//    val msPerMinute = 60 * msPerSecond
-//    val msPerHour = 60 * msPerMinute
-//    val msPerDay = 24 * msPerHour
-//
-//    val days = ms / msPerDay
-//    val hours = (ms % msPerDay) / msPerHour
-//    val minutes = (ms % msPerHour) / msPerMinute
-//    val seconds = (ms % msPerMinute) / msPerSecond
-//
-//    return (days + " days, " + hours + ":" + minutes + ":" + seconds + " hours")
-//  }
-//
-//  /**
-//    * A problem is defined as closed if either the user has used all attempts
-//    * or if they have reached the maximal possible grade
-//    */
-//  def isOpen(user: User): Boolean = {
-//    val allowedAttempts = this.allowedAttempts.is
-//    val takenAttempts = this.getNumberAttempts(user)
-//    val maxGrade = this.maxGrade.is
-//    val userGrade = this.getGrade(user)
-//
-//    return takenAttempts < allowedAttempts && userGrade < maxGrade
-//  }
 }
 
 object Problem extends Problem with LongKeyedMetaMapper[Problem] {
