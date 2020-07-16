@@ -10,13 +10,13 @@ class SolutionAttempt extends LongKeyedMapper[SolutionAttempt] with IdPK {
 
 	object dateTime extends MappedDateTime(this)
 	object userId extends MappedLongForeignKey(this, User) // CARE: might have been deleted
-	object problemId extends MappedLongForeignKey(this, Problem) // CARE: might have been deleted
+	object problempointerId extends MappedLongForeignKey(this, ProblemPointer) // CARE: might have been deleted
 	object grade extends MappedInt(this)
 }
 
 object SolutionAttempt extends SolutionAttempt with LongKeyedMetaMapper[SolutionAttempt] {
-	def getLatestAttempt(user : User, problem : Problem) : Box[SolutionAttempt] = {
-	  val allAttempts = this.findAll(By(SolutionAttempt.userId, user), By(SolutionAttempt.problemId, problem))
+	def getLatestAttempt(user : User, problem : ProblemPointer) : Box[SolutionAttempt] = {
+	  val allAttempts = this.findAll(By(SolutionAttempt.userId, user), By(SolutionAttempt.problempointerId, problem))
 	  return if (allAttempts.isEmpty) { Empty } else { Full(allAttempts.maxBy(attempt => attempt.dateTime.is.getTime())) }
 	}
 }

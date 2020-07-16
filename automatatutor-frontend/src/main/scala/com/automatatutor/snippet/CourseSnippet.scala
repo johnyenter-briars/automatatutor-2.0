@@ -96,7 +96,7 @@ class Coursesnippet {
       currentFolder.delete_!
     }, Text("Delete Folder"), "onclick" -> JsRaw("return confirm('Are you sure you want to delete this folder?')").toJsCmd, "style" -> "color: red")
 
-    var folderNameField = SHtml.text(folderName, folderName = _)
+    val folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
 
@@ -121,7 +121,6 @@ class Coursesnippet {
     var folderName = ""
     var startDateString: String = dateFormat.format(now.getTime())
     var endDateString: String = dateFormat.format(oneWeekFromNow.getTime())
-    val from = S.referer openOr "/main/course/index"
 
     if (!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
@@ -159,7 +158,7 @@ class Coursesnippet {
       }
     }
 
-    var folderNameField = SHtml.text(folderName, folderName = _)
+    val folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
 
@@ -174,7 +173,7 @@ class Coursesnippet {
 
   def renderaccessedit(xhtml: NodeSeq): NodeSeq = {
     if (CurrentProblemPointerInCourse.is == null) {
-      S.warning("Please first choose a problem to solve")
+      S.warning("Please first choose a problem to edit")
       return S.redirectTo("/main/course/index")
     }
     val course: Course = CurrentCourse.is
@@ -286,11 +285,11 @@ class Coursesnippet {
         Text("No"), "title" -> "Pose this folder!")
     }
 
-    def solveButton(problem: Problem): NodeSeq = {
+    def solveButton(problem: ProblemPointer): NodeSeq = {
       SHtml.link(
         "/main/course/problems/solve",
         () => {
-          CurrentProblemInCourse(problem)
+          CurrentProblemPointerInCourse(problem)
         },
         <button type='button'>Solve</button>)
     }
@@ -324,8 +323,8 @@ class Coursesnippet {
               ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
               ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
               ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
-              ("Edit Problem", (problem: ProblemPointer) => editAccessButton(problem))
-//              ("", (problem: Problem) => solveButton(problem))
+              ("Edit Problem", (problem: ProblemPointer) => editAccessButton(problem)),
+              ("", (problem: ProblemPointer) => solveButton(problem))
             )
           )
         })}
@@ -351,8 +350,8 @@ class Coursesnippet {
             ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
             ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
             ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-            ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString))
-//            ("", (problem: Problem) => solveButton(problem))
+            ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
+            ("", (problem: ProblemPointer) => solveButton(problem))
           )
         )
       })}
@@ -487,25 +486,28 @@ class Coursesnippet {
 
   def rendersolve(ignored: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
-    if (CurrentProblemInCourse.is == null) {
+    if (CurrentProblemPointerInCourse.is == null) {
       S.warning("Please first choose a problem to solve")
       return S.redirectTo("/main/course/index")
     }
 
-    val problem: Problem = CurrentProblemInCourse.is
+    val problemPointer = CurrentProblemPointerInCourse.is
+    val problem: Problem = problemPointer.getProblem
     val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
 
-    val lastAttempt = SolutionAttempt.getLatestAttempt(user, problem)
+    val lastAttempt = SolutionAttempt.getLatestAttempt(user, problemPointer)
 
     var lastGrade = 0
 
     def recordSolutionAttempt(grade: Int, dateTime: Date): SolutionAttempt = {
       lastGrade = grade
-      // check that attempt is in allowed time frame
-      if (dateTime.compareTo(problem.getEndDate) > 0 || dateTime.compareTo(problem.getStartDate) < 0) return null
-      // otherwise: create SolulationAttempt
-      val solutionAttempt = SolutionAttempt.create.problemId(problem).userId(user)
-      solutionAttempt.dateTime(dateTime).grade(grade).save
+
+      if (dateTime.compareTo(problemPointer.getFolder.getEndDate) > 0 ||
+        dateTime.compareTo(problemPointer.getFolder.getStartDate) < 0) return null
+      // otherwise: create SolutionAttempt
+      val solutionAttempt = new SolutionAttempt
+      solutionAttempt.problempointerId(problemPointer).userId(user).dateTime(dateTime).grade(grade).save
+
       return solutionAttempt
     }
 
@@ -514,18 +516,13 @@ class Coursesnippet {
     }
 
     def remainingAttempts(): Int = {
-      //TODO: 7/15/2020 fix this
-//      problem.getNumberAttemptsRemaining(user).toInt
-      -1000
+      problemPointer.getNumberAttemptsRemaining(user).toInt
     }
 
     def bestGrade(): Int = {
-      //TODO: 7/15/2020 fix this
-//      problem.getGrade(user)
-      -1000
+      problemPointer.getGrade(user)
     }
-
-    problemSnippet.renderSolve(problem, CurrentProblemInCourse.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
+    problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
   }
 
 
@@ -543,6 +540,7 @@ class Coursesnippet {
       S.redirectTo("/main/course/index")
     }
 
+    //TODO 7/15/2020 i think this might need to be updated
     //var editLink = SHtml.link("/main/course/problems/edit", () => {CurrentProblemInCourse(problem)}, Text("Edit"))
     val editLink = SHtml.link("/main/course/problems/edit", () => {
       CurrentProblemInCourse(problem)

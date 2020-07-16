@@ -25,7 +25,6 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   def getProblemPointerID: Long = this.id.is
 
   def getProblem = this.referencedProblemId.obj openOrThrowException "Every ProblemToFolder must have a Problem"
-  //TODO 7/15/2020 fix this
   def setProblem ( problem : Problem ) = this.referencedProblemId(problem)
 
   def getCourse : Box[Course] = this.courseId.obj
@@ -45,36 +44,34 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
   def canBeDeleted : Boolean = true
 
-  //TODO 7/15/20 fix this
-//  def getAttempts(user: User): Seq[SolutionAttempt] = {
-//    SolutionAttempt.findAll(
-//      By(SolutionAttempt.userId, user),
-//      By(SolutionAttempt.problemId, this))
-//  }
+
+  def getAttempts(user: User): Seq[SolutionAttempt] = {
+    SolutionAttempt.findAll(
+      By(SolutionAttempt.userId, user),
+      By(SolutionAttempt.problempointerId, this))
+  }
 
   def getNumberAttempts(user: User): Int = {
-    0
-//    this.getAttempts(user).size
+    this.getAttempts(user).size
   }
 
   def getNumberAttemptsRemaining(user: User): Long = {
     if (this.allowedAttempts == 0) return 99
     else return this.allowedAttempts.is - this.getNumberAttempts(user)
   }
+
   def getNumberAttemptsRemainingString(user: User): String = {
     if (this.allowedAttempts == 0) return "∞"
     else return this.getNumberAttemptsRemaining(user).toString
   }
 
-  //TODO 7/15/20 fix this
   def getGrade(user: User): Int = {
-    0
-//    val grades = this.getAttempts(user).map(_.grade.is)
-//    if (grades.isEmpty) {
-//      0
-//    } else {
-//      grades.max
-//    }
+    val grades = this.getAttempts(user).map(_.grade.is)
+    if (grades.isEmpty) {
+      0
+    } else {
+      grades.max
+    }
   }
 
   def getLongDescription: String = {
