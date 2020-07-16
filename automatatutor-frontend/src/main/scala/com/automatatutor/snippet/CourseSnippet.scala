@@ -297,12 +297,10 @@ class Coursesnippet {
     def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" + folder.getFolderID), ("style", "display: none"))
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+
     val folders = CurrentCourse.getFoldersForUser(user)
     if (folders.isEmpty) return Text("There are no folders in this course") ++
       SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
-
-
-
 
     if (CurrentCourse.canBeSupervisedBy(user)) {
       (<div>
@@ -642,8 +640,8 @@ class Coursesnippet {
     //create export xml
     var xml = NodeSeq.Empty
     course.getProblems.foreach(
-      (problem) => {
-        xml = xml ++ problem.toXML
+      (problemPointer) => {
+        xml = xml ++ problemPointer.getProblem.toXML
       })
     xml = <exported>
       {xml}

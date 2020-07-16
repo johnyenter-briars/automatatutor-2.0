@@ -211,7 +211,7 @@ class CourseHierarchy(var topNodes : List[CourseHierarchyNode]) {
     case LeafNode(id,pt,_)
       => {
 	  val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
-	  LeafNode(id,pt,CurrentCourse.getProblemsForUser(user).filter(problem => problem.getProblemType == pt))
+	  LeafNode(id,pt,CurrentCourse.getProblemsForUser(user).filter(problemPointer => problemPointer.getProblem.getProblemType == pt).map(p=> p.getProblem))
     }
   }
 }

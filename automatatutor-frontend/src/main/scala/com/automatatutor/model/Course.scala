@@ -62,11 +62,12 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 
 	def isEnrolled(user : User) = !UserToCourse.findByUserAndCourse(user, this).isEmpty
 
-	//TODO 7/15/2020 fix this
-	def getProblems : List[Problem] = List()
-	def getPosedProblems : List[Problem] = getProblems.filter(_.getPosed)
-	def getSolvableProblems : List[Problem] = getPosedProblems.filter(problem => problem.getStartDate.compareTo(new Date()) < 0)
-	def getProblemsForUser(user : User) : List[Problem] = {
+	//5/16/2020 Updated to use ProblemPointers instead of raw Problems
+	def getProblems : List[ProblemPointer] = ProblemPointer.findAllByCourse(this)
+	def getPosedProblems : List[ProblemPointer] = getProblems.filter(p => p.getFolder.getPosed)
+	def getSolvableProblems : List[ProblemPointer] = getPosedProblems.filter(p => p.getFolder.getStartDate.compareTo(new Date()) < 0)
+
+	def getProblemsForUser(user : User) : List[ProblemPointer] = {
 	  if (!user.isAdmin && !this.isEnrolled(user)) return List()
 	  if (this.canBeSupervisedBy(user)) return this.getProblems
 	  return this.getSolvableProblems
