@@ -160,8 +160,8 @@ class Autogensnippet {
       problemPointer.setProblem(problem)
                     .setFolder(folder)
                     //TODO 7/5/2020 add a method by which the user can set these settings on first transfer
-//                    .setAllowedAttempts(10)
-//                    .setMaxGrade(10)
+                    .setAllowedAttempts(10)
+                    .setMaxGrade(10)
                     .setCourse(folder.getCourse)
                     .save
     }

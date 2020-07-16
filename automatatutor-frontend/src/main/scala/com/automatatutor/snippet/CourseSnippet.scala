@@ -179,11 +179,9 @@ class Coursesnippet {
     val course: Course = CurrentCourse.is
     val problem: ProblemPointer = CurrentProblemPointerInCourse.is
 
-    var attempts = "0"
-    var maxGrade = "10"
+    var attempts = problem.getAllowedAttemptsString
+    var maxGrade = problem.getMaxGrade.toString
 
-    //TODO 7/16/2020 update this so it shows the current values in the field boxes
-    //currently it defaults to 0 and 10
     def editProblem() = {
       var errors: List[String] = List()
       val numMaxGrade = try {
