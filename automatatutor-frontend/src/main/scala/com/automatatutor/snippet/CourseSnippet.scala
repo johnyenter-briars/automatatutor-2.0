@@ -39,6 +39,7 @@ object CurrentCourse extends SessionVar[Course](null) // SessionVar makes naviga
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
 object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // RequestVar as only needed in a single request
 object CurrentProblemPointerInCourse extends RequestVar[ProblemPointer](null)
+
 object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
@@ -336,29 +337,29 @@ class Coursesnippet {
       <div>
         {folders.map(folder => {
 
-          if(!folder.isOpen) {
-            NodeSeq.Empty
-          }
-          else{
-            TableHelper.renderTableWithHeader(
-              List(folder),
-              ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-              ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-              ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-              ("Expand", (folder: Folder) => expandButton(folder))
+        if (!folder.isOpen) {
+          NodeSeq.Empty
+        }
+        else {
+          TableHelper.renderTableWithHeader(
+            List(folder),
+            ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+            ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+            ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+            ("Expand", (folder: Folder) => expandButton(folder))
+          )
+            .theSeq.++(
+            TableHelper.renderTableWithHeaderPlusAttributes(
+              folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
+              ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+              ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+              ("Attempts Remaining", (problem: ProblemPointer) => Text(problem.getNumberAttemptsRemaining(user).toString)),
+              ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getGrade(user).toString)),
+              ("", (problem: ProblemPointer) => solveButton(problem))
             )
-              .theSeq.++(
-              TableHelper.renderTableWithHeaderPlusAttributes(
-                folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
-                ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
-                ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-                ("Attempts Remaining", (problem: ProblemPointer) => Text(problem.getNumberAttemptsRemaining(user).toString)),
-                ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getGrade(user).toString)),
-                ("", (problem: ProblemPointer) => solveButton(problem))
-              )
-            )
-          }
-        })}
+          )
+        }
+      })}
       </div>
     }
   }
@@ -399,7 +400,6 @@ class Coursesnippet {
     return downloadCsvLink
   }
 
-
   def userlist(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
 
@@ -425,9 +425,11 @@ class Coursesnippet {
         ("First Name", (user: User) => Text(user.firstName.is)),
         ("Last Name", (user: User) => Text(user.lastName.is)),
         ("Email", (user: User) => Text(user.email.is)),
-        //TODO: 7/15/2020 fix this
-//        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
-//        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
+        //NOTE: These following two lines assume that you only want to count the grades/attempts of questions
+        //which are CURRENTLY posed
+        //If a student solves a question, but then its containing folder is unposed, that grade will not be accounted for
+        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
+        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
         ("", (user: User) => dismissLink(user)))
     } else {
       <h2>Participants</h2> ++ Text("There are no paticipants yet.")
@@ -435,7 +437,6 @@ class Coursesnippet {
 
     return supervisorList ++ participantList
   }
-
 
   def rendercreate(ignored: NodeSeq): NodeSeq = {
     if (CurrentProblemTypeInCourse.is == null) {
@@ -528,7 +529,7 @@ class Coursesnippet {
     }
 
     //If the user is the admin, don't even bother recording an attempt
-    if(user.isAdmin)
+    if (user.isAdmin)
       return problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, Empty, (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0)
 
     problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)

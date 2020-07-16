@@ -46,7 +46,8 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	def hasSupervisors : Boolean = !this.getSupervisors.isEmpty
 
 	def enroll(user : User) = if(!this.isEnrolled(user)) { UserToCourse.create.setUser(user).setCourse(this).save }
-	def dismiss(user : User) =  { 
+	def dismiss(user : User) =  {
+		//NOTE: dismissing a user does not delete their history of attempts. So if they rejoined, that data is still present
 	  UserToCourse.deleteByUserAndCourse(user, this) 
 	  if (!this.hasUsers) this.delete_!
 	}
@@ -86,34 +87,31 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	}
 
 	def renderGradesCsv: String = {
-		//TODO: 7/15/2020 fix this
-		return "not working"
-//		val posedProblems = this.getPosedProblems
-//		val participantsWithGrades : Seq[(User, Seq[Int])] = this.getParticipants.map(participant => (participant, posedProblems.map(_.getGrade(participant))))
-//		val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";")
-//		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";")).mkString(";"))
-//		return firstLine + "\n" + csvLines.mkString("\n")
+		val posedProblems = this.getPosedProblems
+		val participantsWithGrades : Seq[(User, Seq[Int])] = this.getParticipants.map(participant => (participant, posedProblems.map(_.getGrade(participant))))
+		val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";")
+		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";")).mkString(";"))
+		return firstLine + "\n" + csvLines.mkString("\n")
 	}
 
 	def renderGradesXml: Node = {
-		//TODO: 7/15/2020 fix this
-//		val userGrades = this.getParticipants.map(participant => {
-//			val userEmailAttribute = new UnprefixedAttribute("email", participant.email.is, Null)
-//			val userLastNameAttribute = new UnprefixedAttribute("lastname", participant.lastName.is, userEmailAttribute)
-//			val userFirstNameAttribute = new UnprefixedAttribute("firstname", participant.firstName.is, userLastNameAttribute)
-//			val children: NodeSeq = this.getPosedProblems.map(problem => {
-//				val problemDescriptionAttribute = new UnprefixedAttribute("shortDescription", problem.getShortDescription, Null)
-//				val maxGradeAttribute = new UnprefixedAttribute("maxGrade", problem.getMaxGrade.toString, problemDescriptionAttribute)
-//				val problemTypeAttribute = new UnprefixedAttribute("problemType", problem.getTypeName, maxGradeAttribute)
-//				val attemptsByUserAttribute = new UnprefixedAttribute("attemptsByUser", problem.getNumberAttempts(participant).toString, problemTypeAttribute)
-//				val allowedAttemptsAttribute = new UnprefixedAttribute("allowedAttempts", problem.getAllowedAttempts.toString, attemptsByUserAttribute)
-//				Elem(null, "grade", allowedAttemptsAttribute, TopScope, true, Text(problem.getGrade(participant).toString))
-//			})
-//			new Elem(null, "usergrades", userFirstNameAttribute, TopScope, true, children: _*)
-//		})
+		val userGrades = this.getParticipants.map(participant => {
+			val userEmailAttribute = new UnprefixedAttribute("email", participant.email.is, Null)
+			val userLastNameAttribute = new UnprefixedAttribute("lastname", participant.lastName.is, userEmailAttribute)
+			val userFirstNameAttribute = new UnprefixedAttribute("firstname", participant.firstName.is, userLastNameAttribute)
+			val children: NodeSeq = this.getPosedProblems.map(problem => {
+				val problemDescriptionAttribute = new UnprefixedAttribute("shortDescription", problem.getShortDescription, Null)
+				val maxGradeAttribute = new UnprefixedAttribute("maxGrade", problem.getMaxGrade.toString, problemDescriptionAttribute)
+				val problemTypeAttribute = new UnprefixedAttribute("problemType", problem.getTypeName, maxGradeAttribute)
+				val attemptsByUserAttribute = new UnprefixedAttribute("attemptsByUser", problem.getNumberAttempts(participant).toString, problemTypeAttribute)
+				val allowedAttemptsAttribute = new UnprefixedAttribute("allowedAttempts", problem.getAllowedAttempts.toString, attemptsByUserAttribute)
+				Elem(null, "grade", allowedAttemptsAttribute, TopScope, true, Text(problem.getGrade(participant).toString))
+			})
+			new Elem(null, "usergrades", userFirstNameAttribute, TopScope, true, children: _*)
+		})
 			
 		return <coursegrades>
-			{"not working"}
+			{userGrades}
 		</coursegrades>
 	}
 }
