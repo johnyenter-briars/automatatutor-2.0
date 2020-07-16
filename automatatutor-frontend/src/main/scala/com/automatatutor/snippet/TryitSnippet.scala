@@ -20,53 +20,56 @@ import net.liftweb.util.Helpers.strToSuperArrowAssoc
 import net.liftweb.http.Templates
 import com.automatatutor.renderer.ProblemRenderer
 
-object CurrentTryitProblem extends SessionVar[Problem](null) 
+object CurrentTryitProblemPointer extends SessionVar[ProblemPointer](null)
 
 class Tryitsnippet {
 
   def showiftryitisenabled(content: NodeSeq): NodeSeq = {
-	if (Course.findTryitCourse() == Empty) NodeSeq.Empty else content
+    if (Course.findTryitCourse() == Empty) NodeSeq.Empty else content
   }
-  
+
   def tryitproblemlist(xhtml: NodeSeq): NodeSeq = {
     val tryitCourseBox = Course.findTryitCourse()
-	if (tryitCourseBox == Empty) {
+    if (tryitCourseBox == Empty) {
       S.warning("There is no try out section...")
       return S.redirectTo("/index")
-	}
-	  
-	val tryitCourse = tryitCourseBox openOrThrowException "tryitCourseBox should not be empty here..."
-	val tryitProblems = tryitCourse.getPosedProblems
-	
-	if (tryitProblems.isEmpty) return Text("There are currently no problems to try... Please ask the admin to add some!")
-	
-	return TableHelper.renderTableWithHeader(
-	        tryitProblems,
-		    ("Description", (problem: Problem) => Text(problem.getShortDescription)),
-            ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
-            ("", (problem: Problem) => SHtml.link(
-			  "/tryit/practice", 
-			  () => {CurrentTryitProblem(problem)}, 
-			  <button type='button'>Try it!</button>)))
+    }
+
+    val tryitCourse = tryitCourseBox openOrThrowException "tryitCourseBox should not be empty here..."
+    val tryitProblems: List[ProblemPointer] = tryitCourse.getPosedProblems
+
+    if (tryitProblems.isEmpty) return Text("There are currently no problems to try... Please ask the admin to add some!")
+
+    return TableHelper.renderTableWithHeader(
+      tryitProblems,
+      ("Description", (problemPointer: ProblemPointer) => Text(problemPointer.getProblem.getShortDescription)),
+      ("Problem Type", (problemPointer: ProblemPointer) => Text(problemPointer.getProblem.getTypeName)),
+      ("", (problem: ProblemPointer) => SHtml.link(
+        "/tryit/practice",
+        () => {
+          CurrentTryitProblemPointer(problem)
+        },
+        <button type='button'>Try it!</button>)))
   }
-  
-  
+
+
   def renderpractice(ignored: NodeSeq): NodeSeq = {
-    if (CurrentTryitProblem == null) {
+    if (CurrentTryitProblemPointer == null) {
       S.warning("Please first choose a problem")
       return S.redirectTo("/tryit/index")
     }
-	
-    val problem : Problem = CurrentTryitProblem.is
+
+    val problemPointer: ProblemPointer = CurrentTryitProblemPointer.is
+    val problem = problemPointer.getProblem
     val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
 
-    def returnFunc(problem : Problem) = {
-	  S.redirectTo("/tryit/index")
-	}
-	
-	val returnLink = SHtml.link("/tryit/index", () => {}, Text("Let me try a different problem!"))
+    def returnFunc(problem: Problem) = {
+      S.redirectTo("/tryit/index")
+    }
 
-	return problemSnippet.renderSolve(problem, problem.getMaxGrade, Empty,
+    val returnLink = SHtml.link("/tryit/index", () => {}, Text("Let me try a different problem!"))
+
+    return problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, Empty,
       (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0) ++ returnLink
   }
 }

@@ -1,3 +1,18 @@
+drop table PROBLEM;
+
+create table PROBLEM(
+    ID BigInt PRIMARY KEY AUTO_INCREMENT,
+    LONGDESCRIPTION varchar,
+    PROBLEMTYPE BigInt,
+    CREATEDBY BigInt,
+    SHORTDESCRIPTION varchar,
+
+    FOREIGN KEY (PROBLEMTYPE) REFERENCES PROBLEMTYPE(ID),
+    FOREIGN KEY (CREATEDBY) REFERENCES USER_T(ID)
+);
+
+insert into PROBLEM Values(1, 'Test Problem', 4, 1, 'idkman');
+
 drop table FOLDER;
 
 create table FOLDER(
@@ -21,28 +36,32 @@ insert into FOLDER Values(
     null
 );
 
-insert into FOLDER Values(
-    2,
-    'Homework 2',
-    1,
-    1,
-    false,
-    null,
-    null
-);
+drop table PROBLEMPOINTER;
 
-drop table PROBLEMTOFOLDER;
-
-create table PROBLEMTOFOLDER(
+create table PROBLEMPOINTER(
     ID BigInt PRIMARY KEY AUTO_INCREMENT,
-    PROBLEMID BigInt,
+    REFERENCEDPROBLEMID BigInt,
+    COURSEID BigInt,
     FOLDERID BigInt,
-    FOREIGN KEY (PROBLEMID) REFERENCES PROBLEM(ID),
+    ALLOWEDATTEMPTS BigInt,
+    MAXGRADE BigInt,
+
+    FOREIGN KEY (REFERENCEDPROBLEMID) REFERENCES PROBLEM(ID),
+    FOREIGN KEY (COURSEID) REFERENCES COURSE(ID),
     FOREIGN KEY (FOLDERID) REFERENCES FOLDER(ID)
 );
 
-insert into PROBLEMTOFOLDER Values(
-    1,
-    2, 
-    1
-);
+insert into PROBLEMPOINTER Values(1, 1, 1, 1, 10, 10);
+
+drop table SOLUTIONATTEMPT;
+
+create table SOLUTIONATTEMPT(
+    ID BigInt PRIMARY KEY AUTO_INCREMENT,
+    PROBLEMPOINTERID BigInt,
+    USERID BigInt,
+    GRADE Integer,
+    DATETIME TimeStamp,
+
+    FOREIGN KEY (PROBLEMPOINTERID) REFERENCES PROBLEMPOINTER(ID),
+    FOREIGN KEY (USERID) REFERENCES USER_T(ID)
+)

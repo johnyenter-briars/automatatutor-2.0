@@ -38,6 +38,7 @@ import scala.collection.JavaConverters._
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
 object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // RequestVar as only needed in a single request
+object CurrentProblemPointerInCourse extends RequestVar[ProblemPointer](null)
 object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
@@ -95,7 +96,7 @@ class Coursesnippet {
       currentFolder.delete_!
     }, Text("Delete Folder"), "onclick" -> JsRaw("return confirm('Are you sure you want to delete this folder?')").toJsCmd, "style" -> "color: red")
 
-    var folderNameField = SHtml.text(folderName, folderName = _)
+    val folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
 
@@ -120,7 +121,6 @@ class Coursesnippet {
     var folderName = ""
     var startDateString: String = dateFormat.format(now.getTime())
     var endDateString: String = dateFormat.format(oneWeekFromNow.getTime())
-    val from = S.referer openOr "/main/course/index"
 
     if (!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
@@ -158,7 +158,7 @@ class Coursesnippet {
       }
     }
 
-    var folderNameField = SHtml.text(folderName, folderName = _)
+    val folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
 
@@ -172,15 +172,15 @@ class Coursesnippet {
   }
 
   def renderaccessedit(xhtml: NodeSeq): NodeSeq = {
-    if (CurrentProblemInCourse.is == null) {
-      S.warning("Please first choose a problem to solve")
+    if (CurrentProblemPointerInCourse.is == null) {
+      S.warning("Please first choose a problem to edit")
       return S.redirectTo("/main/course/index")
     }
     val course: Course = CurrentCourse.is
-    val problem: Problem = CurrentProblemInCourse.is
+    val problem: ProblemPointer = CurrentProblemPointerInCourse.is
 
-    var attempts = "0"
-    var maxGrade = "10"
+    var attempts = problem.getAllowedAttemptsString
+    var maxGrade = problem.getMaxGrade.toString
 
     def editProblem() = {
       var errors: List[String] = List()
@@ -261,11 +261,11 @@ class Coursesnippet {
         <button type='button'>Edit Folder</button>)
     }
 
-    def editAccessButton(problem: Problem): NodeSeq = {
+    def editAccessButton(problem: ProblemPointer): NodeSeq = {
       SHtml.link(
         "/main/course/problems/editproblemaccess",
         () => {
-          CurrentProblemInCourse(problem)
+          CurrentProblemPointerInCourse(problem)
         },
         <button type='button'>Edit Access</button>)
     }
@@ -285,11 +285,11 @@ class Coursesnippet {
         Text("No"), "title" -> "Pose this folder!")
     }
 
-    def solveButton(problem: Problem): NodeSeq = {
+    def solveButton(problem: ProblemPointer): NodeSeq = {
       SHtml.link(
         "/main/course/problems/solve",
         () => {
-          CurrentProblemInCourse(problem)
+          CurrentProblemPointerInCourse(problem)
         },
         <button type='button'>Solve</button>)
     }
@@ -297,6 +297,7 @@ class Coursesnippet {
     def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" + folder.getFolderID), ("style", "display: none"))
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+
     val folders = CurrentCourse.getFoldersForUser(user)
     if (folders.isEmpty) return Text("There are no folders in this course") ++
       SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
@@ -315,14 +316,13 @@ class Coursesnippet {
           )
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(
-              folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-              ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
-              ("Type", (problem: Problem) => Text(problem.getTypeName)),
-              ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
-              ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
-              ("Edit Problem", (problem: Problem) => editButton(problem)),
-              ("Edit Access Problem", (problem: Problem) => editAccessButton(problem)),
-              ("", (problem: Problem) => solveButton(problem))
+              folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
+              ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+              ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+              ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
+              ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
+              ("Edit Access", (problem: ProblemPointer) => editAccessButton(problem)),
+              ("", (problem: ProblemPointer) => solveButton(problem))
             )
           )
         })}
@@ -335,90 +335,33 @@ class Coursesnippet {
       //logged in user is a student
       <div>
         {folders.map(folder => {
-        TableHelper.renderTableWithHeader(
-          List(folder),
-          ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-          ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-          ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-          ("Expand", (folder: Folder) => expandButton(folder))
-        )
-          .theSeq.++(
-          TableHelper.renderTableWithHeaderPlusAttributes(
-            folder.getProblemsUnderFolder, getCollapsibleElemAttributes(folder),
-            ("Problem Description", (problem: Problem) => Text(problem.getShortDescription)),
-            ("Type", (problem: Problem) => Text(problem.getTypeName)),
-            ("Attempts", (problem: Problem) => Text(problem.getAllowedAttemptsString)),
-            ("Max Grade", (problem: Problem) => Text(problem.getMaxGrade.toString)),
-            ("", (problem: Problem) => solveButton(problem))
-          )
-        )
-      })}
+
+          if(!folder.isOpen) {
+            NodeSeq.Empty
+          }
+          else{
+            TableHelper.renderTableWithHeader(
+              List(folder),
+              ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+              ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+              ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+              ("Expand", (folder: Folder) => expandButton(folder))
+            )
+              .theSeq.++(
+              TableHelper.renderTableWithHeaderPlusAttributes(
+                folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
+                ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+                ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+                ("Attempts Remaining", (problem: ProblemPointer) => Text(problem.getNumberAttemptsRemaining(user).toString)),
+                ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getGrade(user).toString)),
+                ("", (problem: ProblemPointer) => solveButton(problem))
+              )
+            )
+          }
+        })}
       </div>
     }
   }
-
-  def showproblems(ignored: NodeSeq): NodeSeq = {
-    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
-    var problems = CurrentCourse.getProblemsForUser(user)
-
-    if (problems.isEmpty) return Text("There are no problems in this course")
-
-    if (CurrentCourse.canBeSupervisedBy(user)) {
-      def poseUnposeLink(problem: Problem): NodeSeq = {
-        if (problem.getPosed) return SHtml.link(
-          "/main/course/index",
-          () => {
-            problem.setPosed(false).setStartDate(null).setEndDate(null).save
-          },
-          Text("Yes"), "title" -> "Click to unpose!")
-        else return SHtml.link(
-          "/main/course/problems/pose",
-          () => {
-            CurrentProblemInCourse(problem)
-          },
-          Text("No"), "title" -> "Pose this problem!")
-      }
-
-      def previewButton(problem: Problem): NodeSeq = {
-        SHtml.link(
-          "/main/course/problems/preview",
-          () => {
-            CurrentProblemInCourse(problem)
-          },
-          <button type='button'>Preview</button>)
-      }
-
-      return TableHelper.renderTableWithHeader(
-        problems,
-        ("Description", (problem: Problem) => Text(problem.getShortDescription)),
-        ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
-        ("Posed?", poseUnposeLink(_)),
-        ("Start", (problem: Problem) => if (problem.getPosed) Text(problem.getStartDate.toString) else Text("-")),
-        ("End", (problem: Problem) => if (problem.getPosed) Text(problem.getEndDate.toString) else Text("-")),
-        ("Attempts", (problem: Problem) => if (problem.getPosed) Text(problem.getAllowedAttemptsString) else Text("-")),
-        ("Max Grade", (problem: Problem) => if (problem.getPosed) Text(problem.getMaxGrade.toString) else Text("-")),
-        ("", previewButton(_)))
-    } else {
-      def solveButton(problem: Problem): NodeSeq = {
-        SHtml.link(
-          "/main/course/problems/solve",
-          () => {
-            CurrentProblemInCourse(problem)
-          },
-          <button type='button'>Solve</button>)
-      }
-
-      return TableHelper.renderTableWithHeader(
-        problems,
-        ("Description", (problem: Problem) => Text(problem.getShortDescription)),
-        ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
-        ("Grade / Max. Grade", (problem: Problem) => Text(problem.getGrade(user).toString + " / " + problem.getMaxGrade.toString)),
-        ("Remaining Attempts", (problem: Problem) => Text(problem.getNumberAttemptsRemainingString(user))),
-        ("Ends in", (problem: Problem) => Text(problem.getTimeToExpirationString)),
-        ("", solveButton(_)))
-    }
-  }
-
 
   def supervisorsection(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
@@ -482,8 +425,9 @@ class Coursesnippet {
         ("First Name", (user: User) => Text(user.firstName.is)),
         ("Last Name", (user: User) => Text(user.lastName.is)),
         ("Email", (user: User) => Text(user.email.is)),
-        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
-        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
+        //TODO: 7/15/2020 fix this
+//        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
+//        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
         ("", (user: User) => dismissLink(user)))
     } else {
       <h2>Participants</h2> ++ Text("There are no paticipants yet.")
@@ -546,26 +490,29 @@ class Coursesnippet {
 
   def rendersolve(ignored: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
-    if (CurrentProblemInCourse.is == null) {
+    if (CurrentProblemPointerInCourse.is == null) {
       S.warning("Please first choose a problem to solve")
       return S.redirectTo("/main/course/index")
     }
 
-    val problem: Problem = CurrentProblemInCourse.is
+    val problemPointer = CurrentProblemPointerInCourse.is
+    val problem: Problem = problemPointer.getProblem
     val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
 
-    val lastAttempt = SolutionAttempt.getLatestAttempt(user, problem)
+    val lastAttempt = SolutionAttempt.getLatestAttempt(user, problemPointer)
 
     var lastGrade = 0
 
     def recordSolutionAttempt(grade: Int, dateTime: Date): SolutionAttempt = {
       lastGrade = grade
-      // check that attempt is in allowed time frame
-      if (dateTime.compareTo(problem.getEndDate) > 0 || dateTime.compareTo(problem.getStartDate) < 0) return null
-      // otherwise: create SolulationAttempt
-      val solutionAttempt = SolutionAttempt.create.problemId(problem).userId(user)
-      solutionAttempt.dateTime(dateTime).grade(grade).save
-      return solutionAttempt
+
+      if (dateTime.compareTo(problemPointer.getFolder.getEndDate) > 0 ||
+        dateTime.compareTo(problemPointer.getFolder.getStartDate) < 0) return null
+      // otherwise: create SolutionAttempt
+      val solutionAttempt = new SolutionAttempt
+      solutionAttempt.problempointerId(problemPointer).userId(user).dateTime(dateTime).grade(grade).save
+
+      solutionAttempt
     }
 
     def returnFunc(problem: Problem) = {
@@ -573,133 +520,28 @@ class Coursesnippet {
     }
 
     def remainingAttempts(): Int = {
-      problem.getNumberAttemptsRemaining(user).toInt
+      problemPointer.getNumberAttemptsRemaining(user).toInt
     }
 
     def bestGrade(): Int = {
-      problem.getGrade(user)
+      problemPointer.getGrade(user)
     }
 
-    problemSnippet.renderSolve(problem, CurrentProblemInCourse.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
+    //If the user is the admin, don't even bother recording an attempt
+    if(user.isAdmin)
+      return problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, Empty, (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0)
+
+    problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
   }
 
-
-  def renderpreview(ignored: NodeSeq): NodeSeq = {
-    val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
-    if (CurrentProblemInCourse.is == null) {
-      S.warning("Please first choose a problem to preview")
-      return S.redirectTo("/main/course/index")
-    }
-
-    val problem: Problem = CurrentProblemInCourse.is
-    val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
-
-    def returnFunc(problem: Problem) = {
-      S.redirectTo("/main/course/index")
-    }
-
-    //var editLink = SHtml.link("/main/course/problems/edit", () => {CurrentProblemInCourse(problem)}, Text("Edit"))
-    val editLink = SHtml.link("/main/course/problems/edit", () => {
-      CurrentProblemInCourse(problem)
-    }, <button type='button'>Edit</button>)
-
-    return problemSnippet.renderSolve(problem, 10, Empty,
-      (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0) ++ editLink
-  }
-
-
-  def renderpose(xhtml: NodeSeq): NodeSeq = {
-    if (CurrentProblemInCourse.is == null) {
-      S.warning("Please first choose a problem to solve")
-      return S.redirectTo("/main/course/index")
-    }
-    val course: Course = CurrentCourse.is
-    val problem: Problem = CurrentProblemInCourse.is
-
-    val dateFormat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
-    val now: Calendar = Calendar.getInstance()
-    val oneWeekFromNow: Calendar = Calendar.getInstance();
-    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
-
-    var startDateString: String = dateFormat.format(now.getTime())
-    var endDateString: String = dateFormat.format(oneWeekFromNow.getTime())
-    var attempts = "0"
-    var maxGrade = "10"
-
-    def poseProblem() = {
-      var errors: List[String] = List()
-      val startDate: Date = try {
-        dateFormat.parse(startDateString)
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(e.getMessage())
-          null
-        }
-      }
-      val endDate: Date = try {
-        dateFormat.parse(endDateString)
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(e.getMessage())
-          null
-        }
-      }
-      if (endDate.compareTo(startDate) < 0) errors = errors ++ List("The end date must not be before the start date")
-      val numMaxGrade = try {
-        if (maxGrade.toInt < 1) {
-          errors = errors ++ List("Best grade must be positive")
-          10
-        }
-        else maxGrade.toInt
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(maxGrade + " is not an integer")
-          10
-        }
-      }
-      val numAttempts = try {
-        if (attempts.toInt < 0) {
-          errors = errors ++ List("Nr of attempts must not be negative")
-          3
-        }
-        else attempts.toInt
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(attempts + " is not an integer")
-          3
-        }
-      }
-      if (!errors.isEmpty) {
-        S.warning(errors.head)
-      } else {
-        problem.setPosed(true).setStartDate(startDate).setEndDate(endDate).setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
-        S.redirectTo("/main/course/index", () => {})
-      }
-    }
-
-    val startDateField = SHtml.text(startDateString, startDateString = _)
-    val endDateField = SHtml.text(endDateString, endDateString = _)
-    val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
-    val attemptsField = SHtml.text(attempts, attempts = _)
-
-    val poseButton = SHtml.submit("Pose Problem", poseProblem)
-
-    Helpers.bind("poseproblemform", xhtml,
-      "startdatefield" -> startDateField,
-      "enddatefield" -> endDateField,
-      "maxgradefield" -> maxGradeField,
-      "attemptsfield" -> attemptsField,
-      "posebutton" -> poseButton)
-  }
-
-  def renderexport(ignored: NodeSeq): NodeSeq = {
+  def renderexportforcourse(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
 
     //create export xml
     var xml = NodeSeq.Empty
     course.getProblems.foreach(
-      (problem) => {
-        xml = xml ++ problem.toXML
+      (problemPointer) => {
+        xml = xml ++ problemPointer.getProblem.toXML
       })
     xml = <exported>
       {xml}
@@ -724,7 +566,6 @@ class Coursesnippet {
         (problemXML) => {
           val problem = Problem.fromXML(problemXML)
           if (problem != Empty) {
-            (problem openOrThrowException "problem should never be empty").setCourse(course).save
             imported += 1
           }
           else {

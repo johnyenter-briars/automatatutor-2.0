@@ -75,7 +75,7 @@ class User extends MegaProtoUser[User] with ProtoUser[User] {
 	    return false
 	  } else {
 	    this.getCourses.map(_.dismiss(this))
-		Problem.deleteByCreator(this)
+			Problem.deleteByCreator(this)
 	    return super.delete_!
 	  }
 	}

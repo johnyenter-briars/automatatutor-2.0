@@ -15,10 +15,11 @@ import java.util.{Calendar, Date}
 class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getSingleton = Folder
 
-  // "posed" information
   protected object courseId extends MappedLongForeignKey(this, Course)
   protected object longDescription extends MappedText(this)
   protected object createdBy extends MappedLongForeignKey(this, User)
+
+  // "posed" information
   protected object isPosed extends MappedBoolean(this)
   protected object startDate extends MappedDateTime(this)
   protected object endDate extends MappedDateTime(this)
@@ -38,8 +39,13 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getPosed: Boolean = this.isPosed.is
   def setPosed(posed: Boolean) = this.isPosed(posed)
 
-  def getProblemsUnderFolder: List[Problem] = {
-    ProblemToFolder.findAllByFolder(this).map(_.getProblem)
+  def getProblemPointersUnderFolder: List[ProblemPointer] = {
+    ProblemPointer.findAllByFolder(this)
+  }
+
+  def getOpenProblemPointersUnderFolder(user: User): List[ProblemPointer] = {
+    if(user.isAdmin) return ProblemPointer.findAllByFolder(this)
+    ProblemPointer.findAllByFolder(this).filter(_.isOpen(user))
   }
 
   def getStartDate: Date = this.startDate.is
@@ -77,10 +83,17 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     if (!canBeDeleted) {
       false
     } else {
-      //before deleting the folder, we must send all the problems within the folder back to their original state
-      ProblemToFolder.deleteProblemsUnderFolder(this)
+      //before deleting the folder, we must delete all the ProblemPointers that are under the folder
+      ProblemPointer.deleteProblemsUnderFolder(this)
       super.delete_!
     }
+  }
+
+  /**
+    * A folder is defined as open if it's end date falls after the current date
+    */
+  def isOpen: Boolean = {
+    this.getEndDate.compareTo(Calendar.getInstance().getTime) > 0
   }
 }
 
