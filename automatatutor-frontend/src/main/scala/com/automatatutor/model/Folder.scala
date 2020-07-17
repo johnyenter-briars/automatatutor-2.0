@@ -44,7 +44,7 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   }
 
   def getOpenProblemPointersUnderFolder(user: User): List[ProblemPointer] = {
-    if(user.isAdmin) return ProblemPointer.findAllByFolder(this)
+    if(user.isAdmin || user.isInstructor) return ProblemPointer.findAllByFolder(this)
     ProblemPointer.findAllByFolder(this).filter(_.isOpen(user))
   }
 

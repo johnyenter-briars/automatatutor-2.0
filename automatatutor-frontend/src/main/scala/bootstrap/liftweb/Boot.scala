@@ -31,7 +31,7 @@ class Boot {
       override def getPasswordAuthentication =
         new PasswordAuthentication(Config.mail.user.get, Config.mail.password.get)
     } )
-  
+
     // where to search snippet
 	LiftRules.addToPackages("com.automatatutor")
 
@@ -40,12 +40,12 @@ class Boot {
 		LiftRules.unloadHooks.append(Config.db.get.closeAllConnections_!)
 	}
 
-	Schemifier.schemify(true, Schemifier.infoF _, 
+	Schemifier.schemify(true, Schemifier.infoF _,
 	  User, Course, Problem, ProblemType,
 	  SolutionAttempt, UserToCourse,
 	  DFAConstructionProblem, DFAConstructionSolutionAttempt,			// NFA/DFA/RE problems
-	  NFAConstructionProblem, NFAConstructionSolutionAttempt, 
-	  NFAToDFAProblem, NFAToDFASolutionAttempt, 
+	  NFAConstructionProblem, NFAConstructionSolutionAttempt,
+	  NFAToDFAProblem, NFAToDFASolutionAttempt,
       RegExConstructionProblem, RegexConstructionSolutionAttempt,
 	  WordsInRegExProblem, WordsInRegexSolutionAttempt,
       RegExToNFAProblem, RegExToNFASolutionAttempt,
@@ -67,39 +67,48 @@ class Boot {
 	val courseChosenPredicate = If(() => CurrentCourse.is != null, () => {RedirectResponse("/main/index")})
 	val canSuperviseCoursePredicate = If(() => User.loggedIn_? && CurrentCourse.is != null && (User.currentUser.map(CurrentCourse.is.canBeSupervisedBy(_)) openOr false), () => {RedirectResponse("/main/course/index")})
 	val isAdminPredicate = If(() => User.currentUser.map(_.isAdmin) openOr false, () => {RedirectResponse("/index") })
+	val hasAccessToProblemPoolPredicate = If(() => User.currentUser.map(u => u.isAdmin || u.isInstructor) openOr false, () => {RedirectResponse("/index") })
 
     // Build SiteMap
-    val entries = List(
-      Menu.i("Home") / "index" >> notLoggedInPredicate,
-			Menu.i("Try it out") / "tryit" / "index" submenus(
-				Menu.i("Solve Example Problem") / "tryit" / "practice" >> Hidden),
-	  Menu.i("Main") / "main" / "index" >> loggedInPredicate submenus(
-	    Menu.i("Become Instructor") / "main" / "become_instructor" >> Hidden,
-	    Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus(
-		  Menu.i("User List") / "main" / "course" / "users" >> canSuperviseCoursePredicate,
-		  Menu.i("Grade Download XML") / "main" / "course" / "downloadXML" >> canSuperviseCoursePredicate,
-		  Menu.i("Grade Download CSV") / "main" / "course" / "downloadCSV" >> canSuperviseCoursePredicate,
-			Menu.i("Export Problems") / "main" / "course" / "export" >> canSuperviseCoursePredicate,
-			Menu.i("Import Problems") / "main" / "course" / "import" >> canSuperviseCoursePredicate,
-		  Menu.i("Create Problem") / "main" / "course" / "problems" / "create" >> Hidden,
-		  Menu.i("Pose Problem") / "main" / "course" / "problems" / "pose" >> Hidden,
-		  Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
-		  Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
-		  Menu.i("Edit Problem") / "main" / "course" / "problems" / "edit" >> Hidden,
-      Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden,
-			Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
-			Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden
-		)
+	val entries = List(
+		Menu.i("Home") / "index" >> notLoggedInPredicate,
+		Menu.i("Try it out") / "tryit" / "index" submenus(
+		Menu.i("Solve Example Problem") / "tryit" / "practice" >> Hidden),
+		Menu.i("Main") / "main" / "index" >> loggedInPredicate submenus
+			(
+				Menu.i("Become Instructor") / "main" / "become_instructor" >> Hidden,
+				Menu.i("View Problem Pool") / "main" / "problempool" / "index" >> hasAccessToProblemPoolPredicate submenus
+					(
+						Menu.i("Edit Problem") / "main" / "problempool" / "edit" >> Hidden,
+						Menu.i("Practice Problem") / "main" / "problempool" / "practice" >> Hidden,
+						Menu.i("Send Problem") / "main" / "problempool" / "send" >> Hidden
+					),
+				Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus
+					(
+						Menu.i("User List") / "main" / "course" / "users" >> canSuperviseCoursePredicate,
+						Menu.i("Grade Download XML") / "main" / "course" / "downloadXML" >> canSuperviseCoursePredicate,
+						Menu.i("Grade Download CSV") / "main" / "course" / "downloadCSV" >> canSuperviseCoursePredicate,
+						Menu.i("Export Problems") / "main" / "course" / "export" >> canSuperviseCoursePredicate,
+						Menu.i("Import Problems") / "main" / "course" / "import" >> canSuperviseCoursePredicate,
+						Menu.i("Create Problem") / "main" / "course" / "problems" / "create" >> Hidden,
+						Menu.i("Pose Problem") / "main" / "course" / "problems" / "pose" >> Hidden,
+						Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
+						Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
+//						Menu.i("Edit Problem") / "main" / "course" / "problems" / "edit" >> Hidden,
+						Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden,
+						Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
+						Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden
+					)
 	  ),
-	  
+
 	  Menu.i("Autogen") / "autogen" / "index" >> loggedInPredicate submenus(
 		  Menu.i("Move Autogen Problem To Course") / "autogen" / "move" >> Hidden,
     	  Menu.i("Solve Autogen Problem") / "autogen" / "practice" >> Hidden),
-	  
+
 	  Menu.i("Users") / "users" / "index" >> isAdminPredicate submenus(
     	  Menu.i("Edit User") / "users" / "edit" >> Hidden,
     	  Menu.i("Make Instructor") / "users" / "make_instructor" >> Hidden),
-		  
+
       Menu.i("Getting Started") / "getting_started" >> Hidden,
       Menu.i("Privacy") / "privacy" >> Hidden
 
@@ -112,7 +121,7 @@ class Boot {
     //Show the spinny image when an Ajax call starts
     LiftRules.ajaxStart =
       Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
-    
+
     // Make the spinny image go away when it ends
     LiftRules.ajaxEnd =
       Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)

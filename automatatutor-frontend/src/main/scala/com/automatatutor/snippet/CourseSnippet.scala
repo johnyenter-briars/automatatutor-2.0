@@ -244,15 +244,6 @@ class Coursesnippet {
         <button type='button'>Preview</button>)
     }
 
-    def editButton(problem: Problem): NodeSeq = {
-      SHtml.link(
-        "/main/course/problems/edit",
-        () => {
-          CurrentProblemInCourse(problem)
-        },
-        <button type='button'>Edit problem</button>)
-    }
-
     def editFolderButton(folder: Folder): NodeSeq = {
       SHtml.link(
         "/main/course/folders/edit",
@@ -528,8 +519,8 @@ class Coursesnippet {
       problemPointer.getGrade(user)
     }
 
-    //If the user is the admin, don't even bother recording an attempt
-    if (user.isAdmin)
+    //If the user is the admin or instructor, don't even bother recording an attempt
+    if (user.isAdmin || user.isInstructor)
       return problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, Empty, (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0)
 
     problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)

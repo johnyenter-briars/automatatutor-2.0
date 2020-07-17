@@ -100,7 +100,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     * or if they have reached the maximal possible grade
     */
   def isOpen(user: User): Boolean = {
-    if(user.isAdmin) true
+    if(user.isAdmin || user.isInstructor) return true
 
     val allowedAttempts = this.allowedAttempts.is
     val takenAttempts = this.getNumberAttempts(user)
