@@ -286,6 +286,15 @@ class Coursesnippet {
         <button type='button'>Solve</button>)
     }
 
+    def addProblemButton(folder: Folder): NodeSeq = {
+      SHtml.link(
+        "/main/problempool/select",
+        () => {
+          CurrentFolderInCourse(folder)
+        },
+        <button type='button'>Add Problems</button>)
+    }
+
     def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" + folder.getFolderID), ("style", "display: none"))
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
@@ -304,7 +313,8 @@ class Coursesnippet {
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
             ("Expand", (folder: Folder) => expandButton(folder)),
-            ("Edit", (folder: Folder) => editFolderButton(folder))
+            ("Edit", (folder: Folder) => editFolderButton(folder)),
+            ("Add Problems", (folder: Folder) => addProblemButton(folder))
           )
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(

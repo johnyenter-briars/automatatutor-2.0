@@ -9,6 +9,9 @@
 - Allow for problems to be shared across courses
 
 ## TODO
+- Fix All TODOS
+- Have ProblemPointers delete their referenced SolutionAttempts/better error handling
+- Figure out what to do with duplicates (folder having the same problem pointer or folders having the problem pointers that reference the same problem)
 - Problem Pools
 - Better and more comprehensive UI features to control the flow of problems
 - Allow admins or teachers to edit grades directly instead of having to open the database
