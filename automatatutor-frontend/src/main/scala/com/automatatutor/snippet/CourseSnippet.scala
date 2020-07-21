@@ -294,6 +294,19 @@ class Coursesnippet {
         <button type='button'>Add Problems</button>)
     }
 
+    def deleteProblemButton(problem: ProblemPointer): NodeSeq = {
+      val onClick: JsCmd = JsRaw(
+        "return confirm('Are you sure you want to delete this problem from the folder? " +
+          "If you do, all student grades on this problem will be lost!')")
+
+      SHtml.link(
+        "/main/course/index",
+        () => {
+          problem.delete_!
+        },
+        <button type='button' onclick={onClick.toJsCmd}>Delete Problem</button>)
+    }
+
     def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" + folder.getFolderID), ("style", "display: none"))
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
@@ -323,7 +336,8 @@ class Coursesnippet {
               ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
               ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
               ("Edit Access", (problem: ProblemPointer) => editAccessButton(problem)),
-              ("", (problem: ProblemPointer) => solveButton(problem))
+              ("", (problem: ProblemPointer) => solveButton(problem)),
+              ("", (problem: ProblemPointer) => deleteProblemButton(problem))
             )
           )
         })}
