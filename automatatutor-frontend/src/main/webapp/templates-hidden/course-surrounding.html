@@ -77,66 +77,108 @@
           return "";
         }
 
-        function openRowsBasedOnCookies(){
+        function getOpenFolders(){
             var cookie = getCookie('openfolders')
 
-            if(cookie == "") return;
-            folderIDs = cookie.split(',')
+            if(cookie == "") return [];
 
-            for (fID of folderIDs){
+            var folderIDS = cookie.split(',');
+
+            return folderIDS;
+        }
+
+        function openRowsBasedOnCookies(){
+            for (fID of getOpenFolders()){
                 if(fID == "") continue;
 
                 Array.from(document.getElementsByClassName('collapsible_'+fID)).forEach(row =>{
-                    row.style.display = 'table-row'
+                    row.style.display = 'table-row';
                 })
             }
-            /*folderIDs.forEach(id => {
-                if(id == "") continue;
-                document.getElementsByClassName('collapsible_'+id).style.display = 'table-row'
-            })*/
         }
 
         function setCookiesFromClick(folderID){
-            var value = getCookie('openfolders').split(',')
+            var value = getCookie('openfolders').split(',');
             if(value.includes(folderID)) return;
-            value.push(folderID)
+            value.push(folderID);
             document.cookie = 'openfolders=' + value.join(',');
         }
 
         function removeCookiesFromClick(folderID){
-            var arr = getCookie('openfolders').split(',')
-            arr.splice(arr.indexOf(folderID),1)
+            var arr = getCookie('openfolders').split(',');
+            arr.splice(arr.indexOf(folderID),1);
             document.cookie = 'openfolders=' + arr.join(',');
         }
 
+        function closeProblems(folderID){
+            var targetClass = "collapsible_" + folderID;
+
+            var targetElems = Array.from(document.getElementsByClassName(targetClass));
+            for(var row of targetElems){
+                if(row.style.display == 'table-row'){
+                    //the row is already expanded, close it and remove the cookie
+                    removeCookiesFromClick(folderID);
+                    row.style.display = 'none';
+                }else if(row.style.display == 'none'){
+                    //row is collapsed, expand it and add the cookie
+                    setCookiesFromClick(folderID);
+
+                   row.style.display = 'table-row';
+                }
+            }
+        }
+
+        function setButtonValuesBasedOnCookies(){
+            for (fID of getOpenFolders()){
+                if(fID == "") continue;
+
+                var buttons = document.getElementsByTagName("button");
+                var buttons_arr = Array.from(buttons);
+                var filtered_buttons_arr = buttons_arr.filter(button => {
+                    return button.className.includes("btn_collapse");
+                });
+
+                for(var button of filtered_buttons_arr){
+                    if(button.id.charAt(button.id.length-1) === fID){
+                        button.innerHTML = "-";
+                    }
+
+                }
+
+            }
+        }
+
         window.addEventListener('load', () => {
-            openRowsBasedOnCookies()
+            openRowsBasedOnCookies();
+            setButtonValuesBasedOnCookies();
 
             var buttons = document.getElementsByTagName("button");
             var buttons_arr = Array.from(buttons);
             var filtered_buttons_arr = buttons_arr.filter(button => {
-                return button.className.includes("btn_collapse")
+                return button.className.includes("btn_collapse");
             })
             for(var button of filtered_buttons_arr){
-                button.onclick = (e) => {
-                    var targetButton = e.target;
-                    var folderID = targetButton.id.slice(-1)
-                    var targetClass = "collapsible_" + targetButton.id.slice(-1);
+                button.onclick = (event) => {
+                    console.log(getOpenFolders());
+                    var targetButton = event.target;
+                    //console.log(targetButton.value);
+                    //console.log(targetButton.id.charAt(targetButton.id.length-1))
+                    //console.log(getOpenFolders().includes(targetButton.id.charAt(targetButton.id.length-1)));
 
-                    var targetElems = Array.from(document.getElementsByClassName(targetClass));
-                    for(var row of targetElems){
-                        if(row.style.display == 'table-row'){
-                            //the row is already expanded, close it and remove the cookie
-                            removeCookiesFromClick(folderID)
-                            row.style.display = 'none'
-                        }else if(row.style.display == 'none'){
-                            //row is collapsed, expand it and add the cookie
-                            setCookiesFromClick(folderID)
-
-                           row.style.display = 'table-row'
-                        }
-
+                    //targetButton.innerHTML = getOpenFolders().includes(targetButton.id.charAt(targetButton.id.length-1)) ? "+" : "-"
+                    if(getOpenFolders().includes(targetButton.id.charAt(targetButton.id.length-1)))
+                    {
+                        console.log("That folder is still in the list of ");
+                        targetButton.innerHTML = "+"
                     }
+                    else{
+                        console.log("That folder is no longer in the list of ")
+                        targetButton.innerHTML = "-"
+                    }
+
+                    var folderID = targetButton.id.slice(-1);
+
+                    closeProblems(folderID);
                 }
             }
         }, false);

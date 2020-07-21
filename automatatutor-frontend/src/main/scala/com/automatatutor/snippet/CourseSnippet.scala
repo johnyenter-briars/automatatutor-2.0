@@ -232,7 +232,7 @@ class Coursesnippet {
 
   def showfolders(ignored: NodeSeq): NodeSeq = {
     def expandButton(folder: Folder): NodeSeq = {
-      SHtml.button("expand/collapse", null, "class" -> "btn_collapse", "id" -> ("btn_collapse" + folder.getFolderID))
+      SHtml.button("+", null, "class" -> "btn_collapse", "id" -> ("btn_collapse" + folder.getFolderID))
     }
 
     def previewButton(problem: Problem): NodeSeq = {
@@ -312,9 +312,9 @@ class Coursesnippet {
             ("Posed", (folder: Folder) => poseUnposeLink(folder)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-            ("Expand", (folder: Folder) => expandButton(folder)),
             ("Edit", (folder: Folder) => editFolderButton(folder)),
-            ("Add Problems", (folder: Folder) => addProblemButton(folder))
+            ("Add Problems", (folder: Folder) => addProblemButton(folder)),
+            ("", (folder: Folder) => expandButton(folder))
           )
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(
