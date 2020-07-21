@@ -7,13 +7,13 @@
 - Add "statefulness" to course front end
 - Fix grammar words bug in backend
 - Allow for problems to be shared across courses
+- "Course overview" button shouldn't appear in pool.
 
 ## TODO
 - Selecting problems from within the folder itself
 - I'd like to see, in the pool, in which course/folder the exercise appears.
 - Sorting in the pool.  Sorting everywhere.
 - Batch operations in the pool (that's basically just for delete, but still, batch operations everywhere.)
-- "Course overview" button shouldn't appear in pool.
 - Expand collapse should be a [+] or [-] on the left of the folder,
 - Edit folder shouldn't be a page, should be done on this page
 - It should be possible to remove exercises from a folder.

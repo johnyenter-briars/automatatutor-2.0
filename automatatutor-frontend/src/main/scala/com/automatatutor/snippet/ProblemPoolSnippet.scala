@@ -11,6 +11,7 @@ import net.liftweb.http.{S, _}
 import net.liftweb.http.SHtml.ElemAttr.pairToBasic
 import net.liftweb.http.SHtml.ElemAttr
 import net.liftweb.http.js.JE.JsRaw
+import net.liftweb.http.js.JsCmds
 import net.liftweb.mapper.By
 import net.liftweb.util.AnyVar.whatVarIs
 import net.liftweb.util.Helpers
@@ -189,22 +190,37 @@ class Problempoolsnippet {
       S.warning("Please first choose a problem to send")
       return S.redirectTo("/main/course/index")
     }
+
+    def problemsAreIdentical(problem1: Problem, problem2: Problem): Boolean = {
+      problem1.getProblemID == problem2.getProblemID
+    }
+
     val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here";
     val folder = CurrentFolderInCourse.is
-    val problems = Problem.findAllByCreator(user)
+    //Only show the problems which are not in the current folder
+    val problems = Problem.findAllByCreator(user).filterNot(folder.getProblemsUnderFolder.contains(_))
 
-    def checkBoxForProblem(problem: Problem): NodeSeq = {
+    def checkBoxForProblem(potentionalProblem: Problem): NodeSeq = {
 
       SHtml.checkbox(false, (chosen: Boolean) => {
         if(chosen){
-          val problemPointer = new ProblemPointer
-          problemPointer.setProblem(problem)
-            .setFolder(folder)
-            //TODO 7/17/2020 add a method by which the user can set these settings on first transfer
-            .setAllowedAttempts(10)
-            .setMaxGrade(10)
-            .setCourse(folder.getCourse)
-            .save
+          //TODO 7/21/2020 refactor this to make less ugly and more responsive. Something like returning a JSCmd to alert the user
+          //If a ProblemPointer with the same problem already exists with the folder don't add it
+          var isDuplicate: Boolean = false
+          ProblemPointer.findAllByFolder(folder).map(_.getProblem).foreach(problem =>{
+            if(problemsAreIdentical(problem, potentionalProblem)) isDuplicate = true
+          })
+
+          if(!isDuplicate){
+            val problemPointer = new ProblemPointer
+            problemPointer.setProblem(potentionalProblem)
+              .setFolder(folder)
+              //TODO 7/17/2020 add a method by which the user can set these settings on first transfer
+              .setAllowedAttempts(10)
+              .setMaxGrade(10)
+              .setCourse(folder.getCourse)
+              .save
+          }
         }
       })
     }

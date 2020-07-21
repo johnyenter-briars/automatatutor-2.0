@@ -50,7 +50,6 @@ class Coursesnippet {
     val now: Calendar = Calendar.getInstance()
     val oneWeekFromNow: Calendar = Calendar.getInstance();
     oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
-
     val currentFolder = CurrentFolderInCourse.is
 
     var folderName = if (currentFolder.getLongDescription == null) "" else currentFolder.getLongDescription

@@ -48,6 +48,10 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     ProblemPointer.findAllByFolder(this).filter(_.isOpen(user))
   }
 
+  def getProblemsUnderFolder: List[Problem] = {
+    ProblemPointer.findAllByFolder(this).map(_.getProblem)
+  }
+
   def getStartDate: Date = this.startDate.is
   def setStartDate(startDate: Date) = this.startDate(startDate)
 
