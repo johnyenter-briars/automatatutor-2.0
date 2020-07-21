@@ -191,6 +191,7 @@ class Usersnippet extends SortedPaginatorSnippet[User, BaseOwnedMappedField[User
   def resetlink(ignored : NodeSeq) : NodeSeq = {
     def resetDatabase() = {
       List(Course, UserToCourse, Problem, SolutionAttempt,
+        ProblemPointer, Folder,
 	  DFAConstructionProblem, DFAConstructionSolutionAttempt,			// NFA/DFA/RE problems
 	  NFAConstructionProblem, NFAConstructionSolutionAttempt, 
 	  NFAToDFAProblem, NFAToDFASolutionAttempt, 

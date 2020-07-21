@@ -50,7 +50,6 @@ class Coursesnippet {
     val now: Calendar = Calendar.getInstance()
     val oneWeekFromNow: Calendar = Calendar.getInstance();
     oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
-
     val currentFolder = CurrentFolderInCourse.is
 
     var folderName = if (currentFolder.getLongDescription == null) "" else currentFolder.getLongDescription
@@ -232,7 +231,7 @@ class Coursesnippet {
 
   def showfolders(ignored: NodeSeq): NodeSeq = {
     def expandButton(folder: Folder): NodeSeq = {
-      SHtml.button("expand/collapse", null, "class" -> "btn_collapse", "id" -> ("btn_collapse" + folder.getFolderID))
+      SHtml.button("+", null, "class" -> "btn_collapse", "id" -> ("btn_collapse" + folder.getFolderID))
     }
 
     def previewButton(problem: Problem): NodeSeq = {
@@ -242,15 +241,6 @@ class Coursesnippet {
           CurrentProblemInCourse(problem)
         },
         <button type='button'>Preview</button>)
-    }
-
-    def editButton(problem: Problem): NodeSeq = {
-      SHtml.link(
-        "/main/course/problems/edit",
-        () => {
-          CurrentProblemInCourse(problem)
-        },
-        <button type='button'>Edit problem</button>)
     }
 
     def editFolderButton(folder: Folder): NodeSeq = {
@@ -295,6 +285,15 @@ class Coursesnippet {
         <button type='button'>Solve</button>)
     }
 
+    def addProblemButton(folder: Folder): NodeSeq = {
+      SHtml.link(
+        "/main/problempool/select",
+        () => {
+          CurrentFolderInCourse(folder)
+        },
+        <button type='button'>Add Problems</button>)
+    }
+
     def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" + folder.getFolderID), ("style", "display: none"))
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
@@ -312,8 +311,9 @@ class Coursesnippet {
             ("Posed", (folder: Folder) => poseUnposeLink(folder)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-            ("Expand", (folder: Folder) => expandButton(folder)),
-            ("Edit", (folder: Folder) => editFolderButton(folder))
+            ("Edit", (folder: Folder) => editFolderButton(folder)),
+            ("Add Problems", (folder: Folder) => addProblemButton(folder)),
+            ("", (folder: Folder) => expandButton(folder))
           )
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(
@@ -528,8 +528,8 @@ class Coursesnippet {
       problemPointer.getGrade(user)
     }
 
-    //If the user is the admin, don't even bother recording an attempt
-    if (user.isAdmin)
+    //If the user is the admin or instructor, don't even bother recording an attempt
+    if (user.isAdmin || user.isInstructor)
       return problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, Empty, (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0)
 
     problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
