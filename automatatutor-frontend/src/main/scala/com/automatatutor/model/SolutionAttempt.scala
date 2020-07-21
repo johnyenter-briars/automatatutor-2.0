@@ -19,6 +19,10 @@ object SolutionAttempt extends SolutionAttempt with LongKeyedMetaMapper[Solution
 	  val allAttempts = this.findAll(By(SolutionAttempt.userId, user), By(SolutionAttempt.problempointerId, problem))
 	  return if (allAttempts.isEmpty) { Empty } else { Full(allAttempts.maxBy(attempt => attempt.dateTime.is.getTime())) }
 	}
+
+	def deleteAllByProblem(problem: ProblemPointer): Unit = {
+		this.findAll(By(SolutionAttempt.problempointerId, problem)).foreach(_.delete_!)
+	}
 }
 
 

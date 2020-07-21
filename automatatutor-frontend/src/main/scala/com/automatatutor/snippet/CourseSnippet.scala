@@ -231,7 +231,9 @@ class Coursesnippet {
 
   def showfolders(ignored: NodeSeq): NodeSeq = {
     def expandButton(folder: Folder): NodeSeq = {
-      SHtml.button("+", null, "class" -> "btn_collapse", "id" -> ("btn_collapse" + folder.getFolderID))
+      SHtml.button("+", null,
+        "class" -> "btn_collapse",
+        "id" -> ("btn_collapse" + folder.getFolderID))
     }
 
     def previewButton(problem: Problem): NodeSeq = {
@@ -294,6 +296,19 @@ class Coursesnippet {
         <button type='button'>Add Problems</button>)
     }
 
+    def deleteProblemButton(problem: ProblemPointer): NodeSeq = {
+      val onClick: JsCmd = JsRaw(
+        "return confirm('Are you sure you want to delete this problem from the folder? " +
+          "If you do, all student grades on this problem will be lost!')")
+
+      SHtml.link(
+        "/main/course/index",
+        () => {
+          problem.delete_!
+        },
+        <button type='button' onclick={onClick.toJsCmd}>Delete Problem</button>)
+    }
+
     def getCollapsibleElemAttributes(folder: Folder) = List(("class", "collapsible_tr collapsible_" + folder.getFolderID), ("style", "display: none"))
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
@@ -307,13 +322,13 @@ class Coursesnippet {
         {folders.map(folder => {
           TableHelper.renderTableWithHeader(
             List(folder),
+            ("", (folder: Folder) => expandButton(folder)),
             ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
             ("Posed", (folder: Folder) => poseUnposeLink(folder)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
             ("Edit", (folder: Folder) => editFolderButton(folder)),
-            ("Add Problems", (folder: Folder) => addProblemButton(folder)),
-            ("", (folder: Folder) => expandButton(folder))
+            ("Add Problems", (folder: Folder) => addProblemButton(folder))
           )
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(
@@ -323,7 +338,8 @@ class Coursesnippet {
               ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
               ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
               ("Edit Access", (problem: ProblemPointer) => editAccessButton(problem)),
-              ("", (problem: ProblemPointer) => solveButton(problem))
+              ("", (problem: ProblemPointer) => solveButton(problem)),
+              ("", (problem: ProblemPointer) => deleteProblemButton(problem))
             )
           )
         })}

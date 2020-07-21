@@ -42,9 +42,6 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   def getMaxGrade: Long = this.maxGrade.is
   def setMaxGrade(maxGrade: Long) = this.maxGrade(maxGrade)
 
-  def canBeDeleted : Boolean = true
-
-
   def getAttempts(user: User): Seq[SolutionAttempt] = {
     SolutionAttempt.findAll(
       By(SolutionAttempt.userId, user),
@@ -93,6 +90,17 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
 
     matchingProblems.head.getTypeName()
+  }
+
+  def canBeDeleted : Boolean = true
+
+  override def delete_! : Boolean = {
+    if (!canBeDeleted) {
+      false
+    } else {
+      SolutionAttempt.deleteAllByProblem(this)
+      super.delete_!
+    }
   }
 
   /**
