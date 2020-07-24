@@ -31,44 +31,6 @@ class Problempoolsnippet extends{
 
   if(BatchProblems.is == null) BatchProblems(new ListBuffer[Problem])
 
-//  def headers = List[(String, BaseOwnedMappedField[Problem])](
-//    ("description", Problem.shortDescription),
-//    ("problemtype", Problem.problemType))
-//
-//  var searchParams = List[QueryParam[Problem]]()
-//  if ((S.param("description") openOr "").length > 0) {
-//    searchParams = Cmp(Problem.shortDescription, OprEnum.Like, Full("%" + (S.param("description") openOr "").toLowerCase() + "%"), None, Full("LOWER")) :: searchParams
-//  }
-//  if ((S.param("problemtype") openOr "").length > 0) {
-//    searchParams = Cmp(Problem.problemType, OprEnum.Like, Full("%" + (S.param("problemtype") openOr "").toLowerCase() + "%"), None, Full("LOWER")) :: searchParams
-//  }
-//
-//  def sortQueryPara: QueryParam[Problem] = {
-//    val dir = if (sort._2) Ascending else Descending
-//    val name = headers(sort._1)._1
-//    if (name == "description") return OrderBy(Problem.shortDescription, dir, Empty)
-//    if (name == "problemtype") return OrderBy(Problem.problemType, dir, Empty)
-//    OrderBy(Problem.shortDescription, dir, Empty)
-//  }
-//
-//  def addFilterParams(url: String): String = {
-//    val paramsAll = List("description", "problemtype")
-//    val paramsDefined = paramsAll.filter(x => (S.param(x) openOr "").length > 0)
-//    val params = paramsDefined.map(x => x -> (S.param(x) openOr ""))
-//
-//    Helpers.appendParams(url, params)
-//  }
-//
-//  override def count = Problem.count(searchParams: _*)
-//
-//  val searchParamsForPage: Seq[QueryParam[Problem]] = sortQueryPara :: (MaxRows[Problem](itemsPerPage) :: (StartAt[Problem](curPage * itemsPerPage) :: searchParams))
-//
-//  override def page = Problem.findAll(searchParamsForPage: _*)
-//
-//  override def sortedPageUrl(offset: Long, sort: (Int, Boolean)): String = addFilterParams(super.sortedPageUrl(offset, sort))
-//
-//  override def pageUrl(offset: Long): String = sortedPageUrl(offset, sort)
-
   def renderbatchsend(xhtml: NodeSeq): NodeSeq = {
     if (BatchProblems.is == null) {
       S.warning("Please first select multiple pronblems to edit!")
