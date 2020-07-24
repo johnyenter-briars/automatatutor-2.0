@@ -13,7 +13,7 @@ import net.liftweb.db.{DB, DefaultConnectionIdentifier, StandardDBVendor}
 import net.liftweb.mapper.Schemifier
 import com.automatatutor.model._
 import com.automatatutor.model.problems._
-import com.automatatutor.snippet.CurrentCourse
+import com.automatatutor.snippet.{CurrentCourse, CurrentFolderInCourse}
 import java.io.FileInputStream
 
 import net.liftweb.util.Mailer
@@ -68,7 +68,7 @@ class Boot {
 	val canSuperviseCoursePredicate = If(() => User.loggedIn_? && CurrentCourse.is != null && (User.currentUser.map(CurrentCourse.is.canBeSupervisedBy(_)) openOr false), () => {RedirectResponse("/main/course/index")})
 	val isAdminPredicate = If(() => User.currentUser.map(_.isAdmin) openOr false, () => {RedirectResponse("/index") })
 	val hasAccessToProblemPoolPredicate = If(() => User.currentUser.map(u => u.isAdmin || u.isInstructor) openOr false, () => {RedirectResponse("/index") })
-
+	val chosenFolderPredicate = If(() => CurrentFolderInCourse.is != null, () => {RedirectResponse("/main/course/index")})
     // Build SiteMap
 	val entries = List(
 		Menu.i("Home") / "index" >> notLoggedInPredicate,
@@ -87,6 +87,11 @@ class Boot {
 					),
 				Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus
 					(
+						Menu.i("View Folder") / "main" / "course" / "folders" / "index" >> chosenFolderPredicate submenus
+						(
+							Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
+							Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden
+						),
 						Menu.i("User List") / "main" / "course" / "users" >> canSuperviseCoursePredicate,
 						Menu.i("Grade Download XML") / "main" / "course" / "downloadXML" >> canSuperviseCoursePredicate,
 						Menu.i("Grade Download CSV") / "main" / "course" / "downloadCSV" >> canSuperviseCoursePredicate,
@@ -97,11 +102,9 @@ class Boot {
 						Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
 						Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
 //						Menu.i("Edit Problem") / "main" / "course" / "problems" / "edit" >> Hidden,
-						Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden,
-						Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
-						Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden
+						Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden
 					)
-	  ),
+	  	),
 
 	  Menu.i("Autogen") / "autogen" / "index" >> loggedInPredicate submenus(
 		  Menu.i("Move Autogen Problem To Course") / "autogen" / "move" >> Hidden,
