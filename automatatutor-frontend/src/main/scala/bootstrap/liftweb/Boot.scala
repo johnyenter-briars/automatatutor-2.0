@@ -82,7 +82,8 @@ class Boot {
 						Menu.i("Edit Problem") / "main" / "problempool" / "edit" >> Hidden,
 						Menu.i("Practice Problem") / "main" / "problempool" / "practice" >> Hidden,
 						Menu.i("Send Problem") / "main" / "problempool" / "send" >> Hidden,
-						Menu.i("Add Problems") / "main" / "problempool" / "select" >> Hidden
+						Menu.i("Add Problems") / "main" / "problempool" / "select" >> Hidden,
+						Menu.i("Batch Send Problems") / "main" / "problempool" / "batchsend" >> Hidden
 					),
 				Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus
 					(

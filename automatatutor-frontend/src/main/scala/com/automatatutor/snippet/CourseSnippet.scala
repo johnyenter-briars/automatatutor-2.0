@@ -94,7 +94,9 @@ class Coursesnippet {
       val currentFolder = CurrentFolderInCourse.is
 
       currentFolder.delete_!
-    }, Text("Delete Folder"), "onclick" -> JsRaw("return confirm('Are you sure you want to delete this folder?')").toJsCmd, "style" -> "color: red")
+    }, Text("Delete Folder"), "onclick" -> JsRaw(
+      "return confirm('Are you sure you want to delete this folder? If you do, all student grades will be lost!')")
+      .toJsCmd, "style" -> "color: red")
 
     val folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
@@ -287,15 +289,6 @@ class Coursesnippet {
         <button type='button'>Solve</button>)
     }
 
-    def addProblemButton(folder: Folder): NodeSeq = {
-      SHtml.link(
-        "/main/problempool/select",
-        () => {
-          CurrentFolderInCourse(folder)
-        },
-        <button type='button'>Add Problems</button>)
-    }
-
     def deleteProblemButton(problem: ProblemPointer): NodeSeq = {
       val onClick: JsCmd = JsRaw(
         "return confirm('Are you sure you want to delete this problem from the folder? " +
@@ -327,13 +320,12 @@ class Coursesnippet {
             ("Posed", (folder: Folder) => poseUnposeLink(folder)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-            ("Edit", (folder: Folder) => editFolderButton(folder)),
-            ("Add Problems", (folder: Folder) => addProblemButton(folder))
+            ("Edit", (folder: Folder) => editFolderButton(folder))
           )
             .theSeq.++(
             TableHelper.renderTableWithHeaderPlusAttributes(
               folder.getProblemPointersUnderFolder, getCollapsibleElemAttributes(folder),
-              ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+              ("Problem Descriptiouserlistn", (problem: ProblemPointer) => Text(problem.getShortDescription)),
               ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
               ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
               ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
