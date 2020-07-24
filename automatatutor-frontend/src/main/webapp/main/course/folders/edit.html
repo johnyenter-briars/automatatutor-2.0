@@ -28,6 +28,23 @@
             </tr>
         </table>
     </lift:Coursesnippet.rendereditfolderform>
+    <lift:Problempoolsnippet.searchform>
+        <form method="get">
+            <h3>Search / Filter:</h3>
+            <div style="display: flex;">
+                <div style="margin: 5px;">
+                    <label class="description" for="input_description">Description</label>
+                    <filter:description></filter:description>
+                </div>
+                <div style="margin: 5px;">
+                    <label class="description" for="input_problemtype">Problem Type</label>
+                    <filter:problemtype></filter:problemtype>
+                </div>
+            </div>
+            <input type="submit" value="Search" /><a href="?"><input type='button' value="Clear"></a>
+        </form>
+    </lift:Problempoolsnippet.searchform>
+    <br/>
     <lift:Problempoolsnippet.renderproblemoptions>
     </lift:Problempoolsnippet.renderproblemoptions>
 </div>

@@ -100,14 +100,6 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
   protected object createdBy extends MappedLongForeignKey(this, User)
   protected object shortDescription extends MappedText(this)
   protected object longDescription extends MappedText(this)
-  
-  // "posed" information
-//  protected object courseId extends MappedLongForeignKey(this, Course)
-//  protected object isPosed extends MappedBoolean(this)
-//  protected object allowedAttempts extends MappedLong(this)
-//  protected object maxGrade extends MappedLong(this)
-//  protected object startDate extends MappedDateTime(this)
-//  protected object endDate extends MappedDateTime(this)
 
   def getProblemID: Long = this.id.is
 

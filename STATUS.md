@@ -20,7 +20,11 @@
 - I'd like to see, in the pool, in which course/folder the exercise appears.
 - Sorting in the pool.  Sorting everywhere.
 - Batch operations in the pool (that's basically just for delete, but still, batch operations everywhere.)
+
+- Batch operations would be: delete, change points, change # attempts, move to folder/copy to folder.
+
 - Edit folder shouldn't be a page, should be done on this page
+- Add a "clear all problems" button
 - Fix All TODOS
 - Better and more comprehensive UI features to control the flow of problems
 - Allow admins or teachers to edit grades directly instead of having to open the database
