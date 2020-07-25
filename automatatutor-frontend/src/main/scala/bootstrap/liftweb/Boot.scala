@@ -89,7 +89,7 @@ class Boot {
 					(
 						Menu.i("View Folder") / "main" / "course" / "folders" / "index" >> courseChosenPredicate submenus
 						(
-							Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
+							Menu.i("Create Folder") / "main" / "course" / "folders" / "addproblems" >> Hidden,
 							Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden
 						),
 						Menu.i("User List") / "main" / "course" / "users" >> canSuperviseCoursePredicate,

@@ -237,6 +237,10 @@ class Coursesnippet {
       "editbutton" -> editButton)
   }
 
+  def renderaddproblems(xhtml: NodeSeq): NodeSeq = {
+    <br></br> ++ {new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton}
+  }
+
   def renderproblems(ignored: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder")

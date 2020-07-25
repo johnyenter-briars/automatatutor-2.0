@@ -301,7 +301,7 @@ class Problempoolsnippet extends{
   def renderproblemoptions(ignored: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder to send problems to")
-      return S.redirectTo("/main/problempool/index")
+      return S.redirectTo("/main/course/folders/index")
     }
 
     def problemsAreIdentical(problem1: Problem, problem2: Problem): Boolean = {
@@ -337,7 +337,6 @@ class Problempoolsnippet extends{
         }
       })
     }
-
     <form>
       {
         TableHelper.renderTableWithHeader(
@@ -349,7 +348,7 @@ class Problempoolsnippet extends{
       }
       {
         SHtml.button("Add Problems", () => {
-          S.redirectTo("/main/course/index")
+          S.redirectTo("/main/course/folders/index")
         })
       }
     </form>

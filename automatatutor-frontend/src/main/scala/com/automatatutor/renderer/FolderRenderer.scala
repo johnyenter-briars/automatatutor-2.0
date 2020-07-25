@@ -42,4 +42,21 @@ class FolderRenderer(folder : Folder) {
   def renderDeleteLink : NodeSeq = renderDelete("/main/course/index", true)
   def renderDeleteButton : NodeSeq = renderDelete("/main/course/index", false)
 
+  def renderAddProblems(target : String, asLink : Boolean): NodeSeq = {
+    if(asLink) return SHtml.link(
+      target,
+      () => { CurrentFolderInCourse(folder) },
+      Text("Add Problems"))
+
+    SHtml.link(
+      target,
+      () => { CurrentFolderInCourse(folder) },
+      <button type='button'>Add Problems</button>)
+  }
+
+  def renderAddProblemsLink: NodeSeq = renderAddProblems("/main/course/folders/addproblems", true)
+  def renderAddProblemsButton: NodeSeq = renderAddProblems("/main/course/folders/addproblems", false)
+
+
+
 }
