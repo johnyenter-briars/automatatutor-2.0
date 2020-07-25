@@ -4,6 +4,30 @@
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=course-surrounding;at=content">
     <h2>Add Problems</h2>
+    <lift:Coursesnippet.rendereditfolderform form="POST">
+        <table>
+            <tr>
+                <td> Folder Name</td>
+                <td> <editfolderform:foldernamefield> </editfolderform:foldernamefield> </td>
+            </tr>
+            <tr>
+                <td> Start date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <editfolderform:startdatefield> </editfolderform:startdatefield> </td>
+            </tr>
+            <tr>
+                <td> End date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <editfolderform:enddatefield> </editfolderform:enddatefield> </td>
+            </tr>
+            <tr>
+                <td> </td>
+                <td> <editfolderform:editbutton> </editfolderform:editbutton> </td>
+            </tr>
+            <tr>
+                <td> </td>
+                <td> <editfolderform:deletebutton> </editfolderform:deletebutton> </td>
+            </tr>
+        </table>
+    </lift:Coursesnippet.rendereditfolderform>
     <lift:Problempoolsnippet.searchform>
         <form method="get">
             <h3>Search / Filter:</h3>

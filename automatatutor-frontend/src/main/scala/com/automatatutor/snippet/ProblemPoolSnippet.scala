@@ -7,7 +7,8 @@ import com.automatatutor.model._
 import com.automatatutor.renderer.{CourseRenderer, ProblemRenderer}
 import com.sun.tracing.Probe
 import net.liftweb.common.{Box, Empty, Full}
-import net.liftweb.http.{S, _}
+import net.liftweb.http
+import net.liftweb.http.{S, SHtml, _}
 import net.liftweb.http.SHtml.ElemAttr.pairToBasic
 import net.liftweb.http.SHtml.ElemAttr
 import net.liftweb.http.js.JE.JsRaw
@@ -32,10 +33,20 @@ class Problempoolsnippet extends{
   if(BatchProblems.is == null) BatchProblems(new ListBuffer[Problem])
 
   def renderbatchlist(xhtml: NodeSeq): NodeSeq = {
-    <h2>Currently Sending problems:</h2>++
-    TableHelper.renderTableWithHeader(
-      BatchProblems.is.toList,
-      ("", (problem: Problem) => Text(problem.getShortDescription)))
+    <h2>Currently Sending problems:</h2> ++
+    <form>
+      {
+        TableHelper.renderTableWithHeader(
+        BatchProblems.is.toList,
+        ("", (problem: Problem) => Text(problem.getShortDescription)))
+      }
+      {
+        //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
+        //and then which which ever ones are clicked are
+        SHtml.button("Delete Selected Problems", ()=>{BatchProblems.is.clear()})
+      }
+    </form>
+
   }
 
   def renderbatchsend(xhtml: NodeSeq): NodeSeq = {
