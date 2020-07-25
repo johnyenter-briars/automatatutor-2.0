@@ -68,7 +68,7 @@ class Boot {
 	val canSuperviseCoursePredicate = If(() => User.loggedIn_? && CurrentCourse.is != null && (User.currentUser.map(CurrentCourse.is.canBeSupervisedBy(_)) openOr false), () => {RedirectResponse("/main/course/index")})
 	val isAdminPredicate = If(() => User.currentUser.map(_.isAdmin) openOr false, () => {RedirectResponse("/index") })
 	val hasAccessToProblemPoolPredicate = If(() => User.currentUser.map(u => u.isAdmin || u.isInstructor) openOr false, () => {RedirectResponse("/index") })
-	val chosenFolderPredicate = If(() => CurrentFolderInCourse.is != null, () => {RedirectResponse("/main/course/index")})
+
     // Build SiteMap
 	val entries = List(
 		Menu.i("Home") / "index" >> notLoggedInPredicate,
@@ -87,7 +87,7 @@ class Boot {
 					),
 				Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus
 					(
-						Menu.i("View Folder") / "main" / "course" / "folders" / "index" >> chosenFolderPredicate submenus
+						Menu.i("View Folder") / "main" / "course" / "folders" / "index" >> courseChosenPredicate submenus
 						(
 							Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
 							Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden

@@ -48,13 +48,13 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
 
 
 
-  def renderDeleteLink: NodeSeq = {
+  def renderDelete(target: String): NodeSeq = {
     val onClick: JsCmd = JsRaw(
       "return confirm('Are you sure you want to delete this problem from the folder? " +
         "If you do, all student grades on this problem will be lost!')")
 
     SHtml.link(
-      "/main/course/folders/index",
+      target,
       () => {
         problemPointer.delete_!
       },
@@ -62,4 +62,6 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
       "onclick" -> onClick.toJsCmd,
     "style" -> "color: red")
   }
+
+  def renderDeleteLink: NodeSeq = renderDelete("/main/course/folders/index")
 }

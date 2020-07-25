@@ -291,7 +291,8 @@ class Coursesnippet {
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
             ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
-            ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton)
+            ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton),
+            ("", (folder: Folder) => new FolderRenderer(folder).renderDeleteLink)
           )
         }
       </div>
