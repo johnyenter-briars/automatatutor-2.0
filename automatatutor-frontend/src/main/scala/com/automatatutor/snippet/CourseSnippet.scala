@@ -34,15 +34,19 @@ import Helpers._
 import net.liftweb.http.provider.HTTPCookie
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
 object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // RequestVar as only needed in a single request
 object CurrentProblemPointerInCourse extends RequestVar[ProblemPointer](null)
-
+object CurrentBatchProblemPointersInCourse extends SessionVar[ListBuffer[ProblemPointer]](null)
 object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
+
+  if(CurrentBatchProblemPointersInCourse.is == null) CurrentBatchProblemPointersInCourse(new ListBuffer[ProblemPointer])
+
   def rendereditfolderform(xhtml: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
@@ -185,7 +189,7 @@ class Coursesnippet {
       S.warning("Please first choose a problem to edit")
       return S.redirectTo("/main/course/index")
     }
-    val course: Course = CurrentCourse.is
+
     val problem: ProblemPointer = CurrentProblemPointerInCourse.is
 
     var attempts = problem.getAllowedAttemptsString
@@ -238,7 +242,7 @@ class Coursesnippet {
   }
 
   def renderaddproblems(xhtml: NodeSeq): NodeSeq = {
-    <br></br> ++ {new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton}
+    new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton
   }
 
   def renderproblems(ignored: NodeSeq): NodeSeq = {
@@ -250,20 +254,33 @@ class Coursesnippet {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     val folder = CurrentFolderInCourse.is
     val problems = folder.getProblemPointersUnderFolder
-    if(CurrentCourse.canBeSupervisedBy(user)){
 
-      TableHelper.renderTableWithHeader(
-        problems,
-        ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
-        ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-        ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-        ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
-        ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccessButton),
-        ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
-          new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
-        ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
-        ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
-      )
+    def checkBoxForProblem(p: ProblemPointer): NodeSeq = {
+      SHtml.checkbox(false, (chosen: Boolean) => {
+        if(chosen) CurrentBatchProblemPointersInCourse.is += p
+      })
+    }
+
+    if(CurrentCourse.canBeSupervisedBy(user)){
+      <form>
+      {
+        TableHelper.renderTableWithHeader(
+          problems,
+          ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+          ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+          ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
+          ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
+          ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccessButton),
+          ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
+            new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
+          ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
+          ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
+          ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
+        ).theSeq ++ SHtml.button(
+          "Batch Edit",
+          () => {S.redirectTo("/main/course/problems/batchedit")})
+      }
+      </form>
     }
     else{
       //logged in user is a student
@@ -278,6 +295,115 @@ class Coursesnippet {
         ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton)
       )
     }
+  }
+
+  def renderbatchedit(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentBatchProblemPointersInCourse.is == null) {
+      S.warning("Please first choose problems to batch edit")
+      return S.redirectTo("/main/course/folders/index")
+    }
+
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    val supervisedCourses = user.getSupervisedCourses
+    val currentProblems = CurrentBatchProblemPointersInCourse.is.toList
+    //Keep a list of all the problem pointers we are going to send over to the multiple courses/folders
+    //This is done because two different components need to be able to change attributes of the PPs at different times
+    var problemPointersToMove = new ListBuffer[ProblemPointer]
+
+    //set to default cause we're working with multiple problems
+    var attempts = "10"
+    var maxGrade = "10"
+
+    def editProblem() = {
+      var errors: List[String] = List()
+      val numMaxGrade = try {
+        if (maxGrade.toInt < 1) {
+          errors = errors ++ List("Best grade must be positive")
+          10
+        }
+        else maxGrade.toInt
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(maxGrade + " is not an integer")
+          10
+        }
+      }
+      val numAttempts = try {
+        if (attempts.toInt < 0) {
+          errors = errors ++ List("Nr of attempts must not be negative")
+          3
+        }
+        else attempts.toInt
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(attempts + " is not an integer")
+          3
+        }
+      }
+      if (!errors.isEmpty) {
+        S.warning(errors.head)
+      } else {
+        problemPointersToMove.foreach((problemPointer: ProblemPointer) => {
+          problemPointer.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        })
+
+        //Clear out BatchProblems for reuse
+        CurrentBatchProblemPointersInCourse.is.clear()
+        S.redirectTo("/main/course/folder/index", () => {})
+      }
+    }
+
+    def selectionCallback(folderIDS: List[String], course: Course): Unit = {
+      folderIDS.foreach((folderID: String) =>{
+        val folder = Folder.findByID(folderID)
+
+        currentProblems.foreach((problemPointer: ProblemPointer) => {
+          problemPointer.setCourse(course).setFolder(folder)
+          problemPointersToMove += problemPointer
+        })
+      })
+    }
+
+    val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
+    val attemptsField = SHtml.text(attempts, attempts = _)
+    val editButton = SHtml.submit("Edit Problems", editProblem)
+
+    val courseTable = TableHelper.renderTableWithHeader(
+      supervisedCourses,
+      ("Course Name", (course: Course) => Text(course.getName)),
+      ("Folder Select", (course: Course) => {
+
+        val folderOptions = Folder.findAllByCourse(course)
+          .map(f => (f.getFolderID.toString -> f.getLongDescription.toString))
+
+        SHtml.multiSelect(folderOptions, List(), selectionCallback(_, course))
+      }))
+
+    Helpers.bind("renderbatcheditform", xhtml,
+      "maxgradefield" -> maxGradeField,
+      "attemptsfield" -> attemptsField,
+      "editbutton" -> editButton,
+      "courseselecttable" -> courseTable)
+
+  }
+
+  def renderbatchlist(xhtml: NodeSeq): NodeSeq = {
+    <h2>Currently Sending problems:</h2> ++
+      <form>
+        {
+          TableHelper.renderTableWithHeader(
+            CurrentBatchProblemPointersInCourse.is.toList,
+            ("", (problem: ProblemPointer) => Text(problem.getShortDescription)))
+        }
+        {
+          //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
+          //and then which which ever ones are clicked are
+          SHtml.button("Delete Selected Problems", ()=>{
+            CurrentBatchProblemPointersInCourse.is.clear()
+            S.redirectTo("/main/course/folders/index")
+          })
+        }
+      </form>
   }
 
   def renderfolders(ignored: NodeSeq): NodeSeq = {

@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Pose</title></head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=course-surrounding;at=content">
+    <h2>Batch Edit Problems</h2>
+    <lift:Coursesnippet.renderbatchlist></lift:Coursesnippet.renderbatchlist>
+    <lift:Coursesnippet.renderbatchedit form="POST">
+        <table>
+            <tr>
+                <td> Max Grade: </td>
+                <td> <renderbatcheditform:maxgradefield> </renderbatcheditform:maxgradefield> </td>
+            </tr>
+            <tr>
+                <td> Number of attempts allowed (0 --> unlimited): </td>
+                <td> <renderbatcheditform:attemptsfield> </renderbatcheditform:attemptsfield>
+            </tr>
+        </table>
+        <h4>Choose a course/folder to move the selected problems to</h4>
+        <renderbatcheditform:courseselecttable></renderbatcheditform:courseselecttable>
+        <renderbatcheditform:editbutton></renderbatcheditform:editbutton>
+    </lift:Coursesnippet.renderbatchedit>
+<!--    <h2>Edit a problem's access</h2>-->
+<!--    <lift:Coursesnippet.renderaccessedit form="POST">-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <td> Max Grade: </td>-->
+<!--                <td> <renderaccesseditform:maxgradefield> </renderaccesseditform:maxgradefield> </td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td> Number of attempts allowed (0 &ndash;&gt; unlimited): </td>-->
+<!--                <td> <renderaccesseditform:attemptsfield> </renderaccesseditform:attemptsfield>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td> </td>-->
+<!--                <td> <renderaccesseditform:editbutton> </renderaccesseditform:editbutton> </td>-->
+<!--            </tr>-->
+<!--        </table>-->
+<!--    </lift:Coursesnippet.renderaccessedit>-->
+</div>
+</body>
+</html>

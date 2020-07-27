@@ -106,9 +106,6 @@ class Problempoolsnippet extends{
     }
 
     def selectionCallback(folderIDS: List[String], course: Course): Unit = {
-      val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here";
-      val courses = user.getSupervisedCourses
-
       folderIDS.foreach((folderID: String) =>{
         val folder = Folder.findByID(folderID)
 
@@ -126,8 +123,8 @@ class Problempoolsnippet extends{
 
     val courseTable = TableHelper.renderTableWithHeader(
       supervisedCourses,
-      ("Name", (course: Course) => Text(course.getName)),
-      ("", (course: Course) => {
+      ("Course Name", (course: Course) => Text(course.getName)),
+      ("Folder Select", (course: Course) => {
 
         val folderOptions = Folder.findAllByCourse(course)
           .map(f => (f.getFolderID.toString -> f.getLongDescription.toString))
