@@ -12,7 +12,7 @@ import net.liftweb.http.{S, SHtml, _}
 import net.liftweb.http.SHtml.ElemAttr.pairToBasic
 import net.liftweb.http.SHtml.ElemAttr
 import net.liftweb.http.js.JE.JsRaw
-import net.liftweb.http.js.JsCmds
+import net.liftweb.http.js.{JsCmd, JsCmds}
 import net.liftweb.mapper.{Ascending, BaseOwnedMappedField, By, Cmp, Descending, MaxRows, OprEnum, OrderBy, QueryParam, StartAt}
 import net.liftweb.util.AnyVar.whatVarIs
 import net.liftweb.util.Helpers
@@ -244,6 +244,7 @@ class Problempoolsnippet extends{
 
 
   //TODO 7/27/2020 better reporting table - so that the folder somehow match up with their courses
+  //also adding things like average grade, number of attempts yada yada
   def renderproblemstatistics(ignored: NodeSeq): NodeSeq = {
     if (CurrentEditableProblem.is == null) {
       S.warning("Please first choose a problem to edit")
@@ -286,6 +287,31 @@ class Problempoolsnippet extends{
         }
       </tr>
     </table>
+  }
+
+  def renderdeletegrades(ignored: NodeSeq): NodeSeq = {
+    if (CurrentEditableProblem.is == null) {
+      S.warning("Please first choose a problem to edit")
+      return S.redirectTo("/main/problempool/index")
+    }
+
+    <div>
+      <h4><strong>Delete ALL User Grades</strong></h4>
+      <form>
+        {
+          val onClick = JsRaw("return confirm('Are you sure you want to delete all the user grades for this problem?')")
+
+          SHtml.link(
+            "/main/problempool/index",
+            () => {
+              SolutionAttempt.deleteAllByProblem(CurrentEditableProblem.is)
+            },
+            Text("Delete"),
+            "onclick" -> onClick.toJsCmd,
+            "style" -> "color: red")
+        }
+      </form>
+    </div>
   }
 
   def renderpractice(ignored: NodeSeq): NodeSeq = {

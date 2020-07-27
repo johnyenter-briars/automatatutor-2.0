@@ -20,9 +20,17 @@ object SolutionAttempt extends SolutionAttempt with LongKeyedMetaMapper[Solution
 	  return if (allAttempts.isEmpty) { Empty } else { Full(allAttempts.maxBy(attempt => attempt.dateTime.is.getTime())) }
 	}
 
-	def deleteAllByProblem(problem: ProblemPointer): Unit = {
+	def deleteAllByProblemPointer(problem: ProblemPointer): Unit = {
 		this.findAll(By(SolutionAttempt.problempointerId, problem)).foreach(_.delete_!)
 	}
+
+	def deleteAllByProblem(problem: Problem): Unit = {
+
+		ProblemPointer.findAllByReferencedProblem(problem).foreach((problemPointer: ProblemPointer) => {
+			this.findAll(By(SolutionAttempt.problempointerId, problemPointer)).foreach(_.delete_!)
+		})
+	}
+
 }
 
 

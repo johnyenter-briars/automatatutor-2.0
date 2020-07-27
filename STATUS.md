@@ -26,6 +26,7 @@
 - Edit folder shouldn't be a page, should be done on this page
 - Add a "clear all problems" button
 - Fix All TODOS
+- Better individual problem reporting, like average grade, average number of attempts for each student. Maybe its own separate section?
 - Better and more comprehensive UI features to control the flow of problems
 - Allow admins or teachers to edit grades directly instead of having to open the database
 - Sorting folders
@@ -38,6 +39,6 @@
 
 
 # Current task as of 7/17/2020:
-
+--> Batch Operations
 
 
