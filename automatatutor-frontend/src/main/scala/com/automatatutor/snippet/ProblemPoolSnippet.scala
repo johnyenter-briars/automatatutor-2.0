@@ -6,7 +6,7 @@ import com.automatatutor.lib._
 import com.automatatutor.model._
 import com.automatatutor.renderer.{CourseRenderer, ProblemRenderer}
 import com.sun.tracing.Probe
-import net.liftweb.common.{Box, Empty, Full}
+import net.liftweb.common.{Box, Empty, EmptyBox, Full}
 import net.liftweb.http
 import net.liftweb.http.{S, SHtml, _}
 import net.liftweb.http.SHtml.ElemAttr.pairToBasic
@@ -27,6 +27,7 @@ import scala.collection.mutable.ListBuffer
 //TODO 7/17/2020 don't need to use this sessionvar, there's another one that lives in AutogenSnippet that does something similar
 object CurrentEditableProblem extends SessionVar[Problem](null)
 object BatchProblems extends SessionVar[ListBuffer[Problem]](null)
+object PreviousPage extends SessionVar[String](null)
 
 class Problempoolsnippet extends{
 
@@ -227,8 +228,10 @@ class Problempoolsnippet extends{
     val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
 
     def returnFunc(ignored : Problem) = {
-      CurrentProblemInCourse(problem)
-      S.redirectTo("/main/problempool/index")
+      //TODO 7/27/2020 need a better way of conditional setting the redirect page based on previous page
+      val redirectTarget = if(PreviousPage.is == null) "/main/problempool/index" else PreviousPage.is
+      PreviousPage(null)
+      S.redirectTo(redirectTarget)
     }
 
     problemSnippet.renderEdit match {
@@ -237,6 +240,52 @@ class Problempoolsnippet extends{
         S.error("Editing not implemented for this problem type"); S.redirectTo("/main/course/index")
       case _                => S.error("Error when retrieving editing function"); S.redirectTo("/main/course/index")
     }
+  }
+
+
+  //TODO 7/27/2020 better reporting table - so that the folder somehow match up with their courses
+  def renderproblemstatistics(ignored: NodeSeq): NodeSeq = {
+    if (CurrentEditableProblem.is == null) {
+      S.warning("Please first choose a problem to edit")
+      return S.redirectTo("/main/problempool/index")
+    }
+    val problem : Problem = CurrentEditableProblem.is
+
+    def getType[T: Manifest](t: T): Manifest[T] = manifest[T]
+
+    val problemPointerInstances = ProblemPointer.findAll().filter(_.getProblem == problem)
+    val folderInstances = problemPointerInstances.map(_.getFolder)
+    val courseInstances = folderInstances.map(_.getCourse).distinct.map((a: Box[Course]) => {
+      a match {
+        case Full(course) => course
+        case Empty => throw new IllegalStateException("Error while opening a box while rendering problem statistics")
+      }
+    })
+
+    <h4>Problem Statistics</h4> ++
+    <table>
+      <tr>
+        <td>Number of Instances in Courses</td>
+        <td>{courseInstances.length}</td>
+        {
+          courseInstances.map((c: Course) => {<td>{c.getName}</td>})
+        }
+      </tr>
+      <tr>
+        <td>Number of Instances in Folders</td>
+        <td>{folderInstances.length}</td>
+        {
+          folderInstances.map((f: Folder) => {<td>{f.getLongDescription}</td>})
+        }
+      </tr>
+      <tr>
+        <td>Number of Raw Instances</td>
+        <td>{problemPointerInstances.length}</td>
+        {
+        problemPointerInstances.map((p: ProblemPointer) => {<td>{p.getLongDescription}</td>})
+        }
+      </tr>
+    </table>
   }
 
   def renderpractice(ignored: NodeSeq): NodeSeq = {

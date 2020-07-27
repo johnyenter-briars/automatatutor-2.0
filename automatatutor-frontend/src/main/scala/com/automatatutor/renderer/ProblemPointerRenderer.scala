@@ -33,7 +33,6 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
   def renderSolveLink: NodeSeq = renderSolve("/main/course/problems/solve", true)
   def renderSolveButton: NodeSeq = renderSolve("/main/course/problems/solve", false)
 
-
   def renderAccess(target : String, asLink : Boolean) : NodeSeq = {
     if (asLink) return SHtml.link(target, () => {
       CurrentProblemPointerInCourse(problemPointer)}, Text("Edit"))
@@ -45,8 +44,6 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
 
   def renderAccessLink: NodeSeq = renderAccess("/main/course/problems/editproblemaccess", true)
   def renderAccessButton: NodeSeq = renderAccess("/main/course/problems/editproblemaccess", false)
-
-
 
   def renderDelete(target: String): NodeSeq = {
     val onClick: JsCmd = JsRaw(
@@ -64,4 +61,18 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
   }
 
   def renderDeleteLink: NodeSeq = renderDelete("/main/course/folders/index")
+
+  def renderReferencedProblem(target : String, asLink : Boolean, previousPage: String) : NodeSeq = {
+    if (asLink) return SHtml.link(target, () => {
+      PreviousPage(previousPage)
+      CurrentEditableProblem(problemPointer.getProblem)}, Text("Edit"))
+
+    SHtml.link(target, () => {
+      PreviousPage(previousPage)
+      CurrentEditableProblem(problemPointer.getProblem)}, <button type='button'>Edit</button>)
+  }
+
+  def renderReferencedProblemLink(previousPage: String): NodeSeq = renderReferencedProblem("/main/problempool/edit", true, previousPage)
+  def renderReferencedProblemButton(previousPage: String): NodeSeq = renderReferencedProblem("/main/problempool/edit", false, previousPage)
+
 }

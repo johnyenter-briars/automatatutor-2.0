@@ -259,6 +259,8 @@ class Coursesnippet {
         ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
         ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
         ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccessButton),
+        ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
+          new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
         ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
         ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
       )
