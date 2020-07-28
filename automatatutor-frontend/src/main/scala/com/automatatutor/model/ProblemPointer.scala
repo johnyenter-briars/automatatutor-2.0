@@ -98,7 +98,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     if (!canBeDeleted) {
       false
     } else {
-      SolutionAttempt.deleteAllByProblem(this)
+      SolutionAttempt.deleteAllByProblemPointer(this)
       super.delete_!
     }
   }

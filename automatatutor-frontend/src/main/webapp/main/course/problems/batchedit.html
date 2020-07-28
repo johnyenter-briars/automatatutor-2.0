@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Pose</title></head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=course-surrounding;at=content">
+    <h2>Batch Edit Problems</h2>
+    <lift:Coursesnippet.renderbatchlist></lift:Coursesnippet.renderbatchlist>
+    <br>
+    <br>
+    <lift:Coursesnippet.renderbatchedit form="POST">
+        <h4>Edit Data of Problems</h4>
+        <table>
+            <tr>
+                <td> Max Grade: </td>
+                <td> <renderbatcheditform:maxgradefield> </renderbatcheditform:maxgradefield> </td>
+            </tr>
+            <tr>
+                <td> Number of attempts allowed (0 --> unlimited): </td>
+                <td> <renderbatcheditform:attemptsfield> </renderbatcheditform:attemptsfield>
+            </tr>
+        </table>
+        <renderbatcheditform:deletebutton></renderbatcheditform:deletebutton>
+        <renderbatcheditform:editbutton></renderbatcheditform:editbutton>
+    </lift:Coursesnippet.renderbatchedit>
+    <br>
+    <br>
+    <lift:Coursesnippet.renderbatchmove form="POST">
+        <h4>Move Problems</h4>
+        <renderbatchmoveform:courseselecttable></renderbatchmoveform:courseselecttable>
+        <renderbatchmoveform:movebutton></renderbatchmoveform:movebutton>
+    </lift:Coursesnippet.renderbatchmove>
+</div>
+</body>
+</html>

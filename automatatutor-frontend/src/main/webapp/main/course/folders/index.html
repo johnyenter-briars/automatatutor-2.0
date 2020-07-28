@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Home</title></head>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=course-surrounding;at=content">
+    <lift:Coursesnippet.rendereditfolderform form="POST">
+        <table>
+            <tr>
+                <td> Folder Name</td>
+                <td> <editfolderform:foldernamefield> </editfolderform:foldernamefield> </td>
+            </tr>
+            <tr>
+                <td> Start date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <editfolderform:startdatefield> </editfolderform:startdatefield> </td>
+            </tr>
+            <tr>
+                <td> End date (must be parsable by java.util.DateFormat#parse): </td>
+                <td> <editfolderform:enddatefield> </editfolderform:enddatefield> </td>
+            </tr>
+            <tr>
+                <td> Is Posed </td>
+                <td> <editfolderform:poselabel> </editfolderform:poselabel> </td>
+            </tr>
+        </table>
+        <editfolderform:editbutton></editfolderform:editbutton>
+        <br>
+        <editfolderform:posebutton></editfolderform:posebutton>
+        <br>
+        <editfolderform:deletebutton></editfolderform:deletebutton>
+    </lift:Coursesnippet.rendereditfolderform>
+    <br>
+    <br>
+    <lift:Coursesnippet:renderaddproblems></lift:Coursesnippet:renderaddproblems>
+
+    <h2>Problems</h2>
+    <!--TODO 7/25/2020 add searching functionality here    -->
+    <!--    <lift:Problempoolsnippet.searchform>-->
+    <!--        <form method="get">-->
+    <!--            <h3>Search / Filter:</h3>-->
+    <!--            <div style="display: flex;">-->
+    <!--                <div style="margin: 5px;">-->
+    <!--                    <label class="description" for="input_description">Description</label>-->
+    <!--                    <filter:description></filter:description>-->
+    <!--                </div>-->
+    <!--                <div style="margin: 5px;">-->
+    <!--                    <label class="description" for="input_problemtype">Problem Type</label>-->
+    <!--                    <filter:problemtype></filter:problemtype>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <input type="submit" value="Search" /><a href="?"><input type='button' value="Clear"></a>-->
+    <!--        </form>-->
+    <!--    </lift:Problempoolsnippet.searchform>-->
+
+    <lift:Coursesnippet.renderproblems></lift:Coursesnippet.renderproblems>
+</div>
+</body>
+</html>
