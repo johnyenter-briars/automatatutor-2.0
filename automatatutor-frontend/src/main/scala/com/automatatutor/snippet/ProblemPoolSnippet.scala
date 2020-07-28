@@ -44,7 +44,7 @@ class Problempoolsnippet extends{
       {
         //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
         //and then which which ever ones are clicked are
-        SHtml.button("Delete Selected Problems", ()=>{BatchProblems.is.clear()})
+        SHtml.button("Deselect Problems", ()=>{BatchProblems.is.clear()})
       }
     </form>
 

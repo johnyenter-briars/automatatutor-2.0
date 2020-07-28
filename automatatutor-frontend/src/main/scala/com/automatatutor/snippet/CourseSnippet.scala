@@ -345,16 +345,30 @@ class Coursesnippet {
         })
       }
     }
-
-
+    
     val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
     val attemptsField = SHtml.text(attempts, attempts = _)
     val editButton = SHtml.submit("Edit Problems", editProblem)
 
+    val onClick: JsCmd = JsRaw(
+      "return confirm('Are you sure you want to delete these problems from the folder? " +
+        "If you do, all student grades on these problems will be lost!')")
+    val deleteButton = SHtml.link(
+      "/main/course/folders/index",
+      () => {
+        currentProblems.foreach((problemPointer: ProblemPointer) => {
+          problemPointer.delete_!
+        })
+      },
+      Text("Delete"),
+      "onclick" -> onClick.toJsCmd,
+      "style" -> "color: red")
+
     Helpers.bind("renderbatcheditform", xhtml,
       "maxgradefield" -> maxGradeField,
       "attemptsfield" -> attemptsField,
-      "editbutton" -> editButton
+      "editbutton" -> editButton,
+      "deletebutton" -> deleteButton
       )
 
   }
@@ -413,7 +427,7 @@ class Coursesnippet {
         {
           //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
           //and then which which ever ones are clicked are
-          SHtml.button("Delete Selected Problems", ()=>{
+          SHtml.button("Deselect Problems", ()=>{
             CurrentBatchProblemPointersInCourse.is.clear()
             S.redirectTo("/main/course/folders/index")
           })
