@@ -5,7 +5,10 @@
 <div id="main" class="lift:surround?with=course-surrounding;at=content">
     <h2>Batch Edit Problems</h2>
     <lift:Coursesnippet.renderbatchlist></lift:Coursesnippet.renderbatchlist>
+    <br>
+    <br>
     <lift:Coursesnippet.renderbatchedit form="POST">
+        <h4>Edit Data of Problems</h4>
         <table>
             <tr>
                 <td> Max Grade: </td>
@@ -16,11 +19,18 @@
                 <td> <renderbatcheditform:attemptsfield> </renderbatcheditform:attemptsfield>
             </tr>
         </table>
-        <h4>Choose a course/folder to move the selected problems to</h4>
-        <renderbatcheditform:courseselecttable></renderbatcheditform:courseselecttable>
         <renderbatcheditform:editbutton></renderbatcheditform:editbutton>
     </lift:Coursesnippet.renderbatchedit>
-<!--    <h2>Edit a problem's access</h2>-->
+    <br>
+    <br>
+    <lift:Coursesnippet.renderbatchmove form="POST">
+        <h4>Move Problems</h4>
+        <renderbatchmoveform:courseselecttable></renderbatchmoveform:courseselecttable>
+        <renderbatchmoveform:movebutton></renderbatchmoveform:movebutton>
+    </lift:Coursesnippet.renderbatchmove>
+
+
+    <!--    <h2>Edit a problem's access</h2>-->
 <!--    <lift:Coursesnippet.renderaccessedit form="POST">-->
 <!--        <table>-->
 <!--            <tr>-->

@@ -304,11 +304,8 @@ class Coursesnippet {
     }
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
-    val supervisedCourses = user.getSupervisedCourses
+
     val currentProblems = CurrentBatchProblemPointersInCourse.is.toList
-    //Keep a list of all the problem pointers we are going to send over to the multiple courses/folders
-    //This is done because two different components need to be able to change attributes of the PPs at different times
-    var problemPointersToMove = new ListBuffer[ProblemPointer]
 
     //set to default cause we're working with multiple problems
     var attempts = "10"
@@ -343,14 +340,38 @@ class Coursesnippet {
       if (!errors.isEmpty) {
         S.warning(errors.head)
       } else {
-        problemPointersToMove.foreach((problemPointer: ProblemPointer) => {
+        currentProblems.foreach((problemPointer: ProblemPointer) => {
           problemPointer.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
         })
-
-        //Clear out BatchProblems for reuse
-        CurrentBatchProblemPointersInCourse.is.clear()
-        S.redirectTo("/main/course/folder/index", () => {})
       }
+    }
+
+
+    val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
+    val attemptsField = SHtml.text(attempts, attempts = _)
+    val editButton = SHtml.submit("Edit Problems", editProblem)
+
+    Helpers.bind("renderbatcheditform", xhtml,
+      "maxgradefield" -> maxGradeField,
+      "attemptsfield" -> attemptsField,
+      "editbutton" -> editButton
+      )
+
+  }
+
+  def renderbatchmove(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentBatchProblemPointersInCourse.is == null) {
+      S.warning("Please first choose problems to batch edit")
+      return S.redirectTo("/main/course/folders/index")
+    }
+
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    val supervisedCourses = user.getSupervisedCourses
+    val currentProblems = CurrentBatchProblemPointersInCourse.is.toList
+
+    def moveProblems() = {
+      CurrentBatchProblemPointersInCourse.is.clear()
+      S.redirectTo("/main/course/folders/index", () => {})
     }
 
     def selectionCallback(folderIDS: List[String], course: Course): Unit = {
@@ -358,15 +379,12 @@ class Coursesnippet {
         val folder = Folder.findByID(folderID)
 
         currentProblems.foreach((problemPointer: ProblemPointer) => {
-          problemPointer.setCourse(course).setFolder(folder)
-          problemPointersToMove += problemPointer
+          problemPointer.setFolder(folder).setCourse(course).save
         })
       })
     }
 
-    val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
-    val attemptsField = SHtml.text(attempts, attempts = _)
-    val editButton = SHtml.submit("Edit Problems", editProblem)
+    val moveButton = SHtml.submit("Move Problems", moveProblems)
 
     val courseTable = TableHelper.renderTableWithHeader(
       supervisedCourses,
@@ -379,16 +397,13 @@ class Coursesnippet {
         SHtml.multiSelect(folderOptions, List(), selectionCallback(_, course))
       }))
 
-    Helpers.bind("renderbatcheditform", xhtml,
-      "maxgradefield" -> maxGradeField,
-      "attemptsfield" -> attemptsField,
-      "editbutton" -> editButton,
+    Helpers.bind("renderbatchmoveform", xhtml,
+      "movebutton" -> moveButton,
       "courseselecttable" -> courseTable)
-
   }
 
   def renderbatchlist(xhtml: NodeSeq): NodeSeq = {
-    <h2>Currently Sending problems:</h2> ++
+    <h3>Currently Editing problems:</h3> ++
       <form>
         {
           TableHelper.renderTableWithHeader(
