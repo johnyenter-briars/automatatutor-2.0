@@ -26,6 +26,6 @@ class ProblemRenderer(problem : Problem) {
         JsCmds.Alert("Cannot delete this problem:\n" + problem.getDeletePreventers.mkString("\n")) & JsRaw("return false")
       }
 
-    return SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd)
+    return SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd, "style" -> "color: red")
   }
 }

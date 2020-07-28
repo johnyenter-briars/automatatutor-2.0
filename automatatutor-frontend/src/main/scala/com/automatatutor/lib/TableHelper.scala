@@ -1,5 +1,6 @@
 package com.automatatutor.lib
 
+import net.liftweb.http.SHtml
 import net.liftweb.util.Helpers.TheStrBindParam
 
 import scala.xml.{Elem, Node, NodeSeq, Null, Text, TopScope}
@@ -34,55 +35,32 @@ object TableHelper {
 	  return <table> { headerRow ++ dataRows } </table>
 	}
 
-	private def renderTableHeaderWithAttributes(headings: Seq[Text], attributes: List[(String, String)]): Node = {
-		val headingsXml : NodeSeq = headings.map(heading => {
-			<th>{ heading } </th>
-		})
+	private def renderTableHeaderWithAttributes(tableID: String, headings: Seq[Text], attributes: List[(String, (Int, String) => String)]): Node = {
+		//In order to get a custom classString or styleString you need to pass in a function that generates the string dynamically
+		//You can then use code similar to below to generate the string calling:
+		/*
+			val classFunc = attributes.filter(_._1.equals("onClick")).head._2
+			val classString = classFunc([parameters])
+		 */
+		val classString = ""
+		val styleString = ""
 
-		var classString = ""
-		var styleString = ""
-
-		//NOTE: This assumes that the only two attributes you want to set are "class" and "style"
-		attributes.foreach(attr =>{
-			if (attr._1.equals("class")) classString = attr._2
-			else if(attr._1.equals("style")) styleString = attr._2
+		val headingsXml: NodeSeq = headings.zipWithIndex.map(heading_index => {
+			val onClickFunc = attributes.filter(_._1.equals("onClick")).head._2
+			<th style="cursor: pointer;" onClick={onClickFunc(heading_index._2, tableID)}>{ heading_index._1 } </th>
 		})
 
 		<tr class={classString} style={styleString}> { headingsXml } </tr>
 	}
 
-	private def renderSingleRowWithAttributes[T] (ele: T, displayFuncs: Seq[T => NodeSeq], attributes: List[(String, String)]): Node = {
-
-		var classString = ""
-		var styleString = ""
-
-		//NOTE: This assumes that the only two attributes you want to set are "class" and "style"
-		attributes.foreach(attr =>{
-			if (attr._1.equals("class")) classString = attr._2
-			else if(attr._1.equals("style")) styleString = attr._2
-		})
-
-		<tr class={classString} style={styleString}>
-			{
-				displayFuncs.map(func => {
-					<td>{func(ele)}</td>
-				})
-			}
-		</tr>
-	}
-
-	private def renderTableBodyWithAttributes[T](data : Seq[T], displayFuncsPlusAttr : Seq[T => NodeSeq], attributes: List[(String, String)]) : NodeSeq = {
-		data.map(ele => renderSingleRowWithAttributes(ele, displayFuncsPlusAttr, attributes))
-	}
-
-	def renderTableWithHeaderPlusAttributes[T](data : Seq[T], attributes: List[(String, String)], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
+	def renderTableWithHeaderPlusAttributes[T](tableID: String, data : Seq[T], attributes: List[(String, (Int, String) => String)], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
 		val headings = colSpec.map(x => Text(x._1))
-		val headerRow = renderTableHeaderWithAttributes(headings, attributes)
+		val headerRow = renderTableHeaderWithAttributes(tableID, headings, attributes)
 
 		val displayFuncs = colSpec.map(x => x._2)
-		val dataRows = renderTableBodyWithAttributes(data, displayFuncs, attributes)
+		val dataRows = renderTableBody(data, displayFuncs)
 
-		<table> { headerRow ++ dataRows} </table>
+		<table id={tableID}> { headerRow ++ dataRows} </table>
 	}
 	
 	def renderTableWithComplexHeader[T] (data : Seq[T], colSpec : (NodeSeq, (T => NodeSeq))*) : NodeSeq = {
