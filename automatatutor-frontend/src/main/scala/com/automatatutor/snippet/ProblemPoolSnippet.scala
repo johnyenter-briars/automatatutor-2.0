@@ -141,7 +141,7 @@ class Problempoolsnippet extends{
     )
   }
 
-  def renderproblempool(ignored: NodeSeq): NodeSeq ={
+  def renderproblempool(xhtml: NodeSeq): NodeSeq ={
     val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here";
     val usersProblems = Problem.findAllByCreator(user)
 
@@ -193,8 +193,7 @@ class Problempoolsnippet extends{
     val tableID = "problemPoolTable"
 
     def generateOnClick(columnNo: Int, tableID: String): String = s"sortTable($columnNo,'$tableID')"
-
-    <form>
+    val table = <form>
       {
         (TableHelper.renderTableWithHeaderPlusAttributes(
           tableID,
@@ -221,6 +220,25 @@ class Problempoolsnippet extends{
         ++ deleteAllLink)
       }
     </form>
+
+    val descriptionFilterID = "input_desc"
+    val descriptionFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Description', '$descriptionFilterID');", "id"->descriptionFilterID)
+
+    val problemTypeFilterID = "input_pt"
+    val problemTypeFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Problem Type', '$problemTypeFilterID');", "id"->problemTypeFilterID)
+
+    val longdescriptionFilterID = "input_long_desc"
+    val longdescriptionFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Long Description', '$longdescriptionFilterID');", "id"->longdescriptionFilterID)
+
+    Helpers.bind("problempool", xhtml,
+      "problemlist" -> table,
+      "descriptionfilter" -> descriptionFilter,
+      "problemtypefilter" -> problemTypeFilter,
+      "longdescriptionfilter" -> longdescriptionFilter
+    )
   }
 
   def renderproblemedit(ignored: NodeSeq): NodeSeq ={
