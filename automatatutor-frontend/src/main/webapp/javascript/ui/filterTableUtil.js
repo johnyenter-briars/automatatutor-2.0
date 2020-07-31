@@ -8,12 +8,7 @@ function filterTableRows(tableId, columnName, inputId){
     
     var columnIndex = -1;
 
-    Array.from(rows[0].cells).forEach((header, index) => {
-        console.log(header.textContent.trim().length)
-        console.log(header.textContent.trim())
-        console.log(columnName.length)
-        console.log(columnName)
-    
+    Array.from(rows[0].cells).forEach((header, index) => {    
         if(header.innerText.includes(columnName)){
             columnIndex = index
         }
