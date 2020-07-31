@@ -25,6 +25,6 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover {
     outline: thin solid black;
 }
 
-table > tr{
-    style="cursor: pointer;"
+th{
+   cursor: pointer;
 }

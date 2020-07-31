@@ -191,8 +191,7 @@ class Problempoolsnippet extends{
     BatchProblems.is.clear()
 
     val tableID = "problemPoolTable"
-
-    def generateOnClick(columnNo: Int, tableID: String): String = s"sortTable($columnNo,'$tableID')"
+    
     val table = <form>
       {
         (TableHelper.renderTableWithHeaderPlusID(
@@ -450,7 +449,6 @@ class Problempoolsnippet extends{
     }
     val tableID = "problemOptionsTable"
 
-    def generateOnClick(columnNo: Int, tableID: String): String = s"sortTable($columnNo,'$tableID')"
     val table = <form>
       {
         TableHelper.renderTableWithHeaderPlusID(

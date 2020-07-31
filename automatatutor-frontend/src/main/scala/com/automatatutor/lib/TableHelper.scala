@@ -32,7 +32,7 @@ object TableHelper {
 	  val displayFuncs = colSpec.map(_._2)
 	  val dataRows = renderTableBody(data, displayFuncs)
 
-	  return <table> { headerRow ++ dataRows } </table>
+		<table> <thead> {headerRow} </thead> <tbody> {dataRows} </tbody> </table>
 	}
 
 	private def renderTableHeaderWithAttributes(tableID: String, headings: Seq[Text], attributes: List[(String, (Int, String) => String)]): Node = {
