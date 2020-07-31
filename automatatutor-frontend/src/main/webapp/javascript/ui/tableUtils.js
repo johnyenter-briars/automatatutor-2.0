@@ -75,5 +75,9 @@ function sortTable(columnNumber, tableId) {
 
 // $('problemPoolTable').tablesort();
 
-var x = new Tablesort(document.getElementById('problemPoolTable'));
-console.log(x);
+var tables = Array.from(document.getElementsByTagName('table'));
+for(var table of tables){
+    console.log(table)
+    var x = new Tablesort(table);
+}
+

@@ -453,10 +453,9 @@ class Problempoolsnippet extends{
     def generateOnClick(columnNo: Int, tableID: String): String = s"sortTable($columnNo,'$tableID')"
     val table = <form>
       {
-        TableHelper.renderTableWithHeaderPlusAttributes(
+        TableHelper.renderTableWithHeaderPlusID(
           tableID,
           problems,
-          List(("onClick", generateOnClick _)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
           ("Click to add problem", (problem: Problem) => checkBoxForProblem(problem))
