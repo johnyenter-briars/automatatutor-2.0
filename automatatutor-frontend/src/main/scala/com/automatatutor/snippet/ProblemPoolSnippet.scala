@@ -192,13 +192,12 @@ class Problempoolsnippet extends{
 
     val tableID = "problemPoolTable"
 
-    def generateOnClick(columnNo: Int, tableID: String): String = s"sortTable($columnNo,'$tableID')"
     val table = <form>
       {
         (TableHelper.renderTableWithHeaderPlusAttributes(
+          "sortable",
           tableID,
           usersProblems,
-          List(("onClick", generateOnClick)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
           ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
@@ -410,7 +409,7 @@ class Problempoolsnippet extends{
     </form>
   }
 
-  def renderproblemoptions(ignored: NodeSeq): NodeSeq = {
+  def renderproblemoptions(xhtml: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder to send problems to")
       return S.redirectTo("/main/course/folders/index")
@@ -449,11 +448,17 @@ class Problempoolsnippet extends{
         }
       })
     }
-    <form>
+
+    val tableID = "problemOptionsTable"
+
+    val table = <form>
       {
-        TableHelper.renderTableWithHeader(
+        TableHelper.renderTableWithHeaderPlusAttributes(
+          "sortable",
+          tableID,
           problems,
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
+          ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
           ("Click to add problem", (problem: Problem) => checkBoxForProblem(problem))
         )
@@ -464,12 +469,25 @@ class Problempoolsnippet extends{
         })
       }
     </form>
-  }
 
-  def searchform(form: NodeSeq): NodeSeq = {
-    return Helpers.bind("filter", form,
-      "description" -> SHtml.text((S.param("description") openOr ""), x => {}, "name" -> "description", "id" -> "input_description"),
-      "problemtype" -> SHtml.text((S.param("problemtype") openOr ""), x => {}, "name" -> "problemtype", "id" -> "input_problemtype")
+    val descriptionFilterID = "input_desc"
+    val descriptionFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Description', '$descriptionFilterID');", "id"->descriptionFilterID)
+
+    val problemTypeFilterID = "input_pt"
+    val problemTypeFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Problem Type', '$problemTypeFilterID');", "id"->problemTypeFilterID)
+
+    val longdescriptionFilterID = "input_long_desc"
+    val longdescriptionFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Long Description', '$longdescriptionFilterID');", "id"->longdescriptionFilterID)
+
+
+    Helpers.bind("problemoptions", xhtml,
+      "problemlist" -> table,
+      "descriptionfilter" -> descriptionFilter,
+      "problemtypefilter" -> problemTypeFilter,
+      "longdescriptionfilter" -> longdescriptionFilter
     )
   }
 }

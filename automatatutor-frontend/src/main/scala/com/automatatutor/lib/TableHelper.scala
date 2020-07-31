@@ -63,6 +63,16 @@ object TableHelper {
 
 		<table id={tableID}> { headerRow ++ dataRows} </table>
 	}
+
+	def renderTableWithHeaderPlusAttributes[T](className: String, tableID: String, data : Seq[T], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
+		val headings = colSpec.map(x => Text(x._1))
+		val headerRow = renderTableHeader(headings)
+
+		val displayFuncs = colSpec.map(x => x._2)
+		val dataRows = renderTableBody(data, displayFuncs)
+
+		<table class={className} id={tableID}> { headerRow ++ dataRows} </table>
+	}
 	
 	def renderTableWithComplexHeader[T] (data : Seq[T], colSpec : (NodeSeq, (T => NodeSeq))*) : NodeSeq = {
 	  val headings = colSpec.map(_._1)
