@@ -192,10 +192,10 @@ class Problempoolsnippet extends{
 
     val tableID = "problemPoolTable"
 
+    def generateOnClick(columnNo: Int, tableID: String): String = s"sortTable($columnNo,'$tableID')"
     val table = <form>
       {
-        (TableHelper.renderTableWithHeaderPlusAttributes(
-          "sortable",
+        (TableHelper.renderTableWithHeaderPlusID(
           tableID,
           usersProblems,
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
@@ -448,17 +448,16 @@ class Problempoolsnippet extends{
         }
       })
     }
-
     val tableID = "problemOptionsTable"
 
+    def generateOnClick(columnNo: Int, tableID: String): String = s"sortTable($columnNo,'$tableID')"
     val table = <form>
       {
         TableHelper.renderTableWithHeaderPlusAttributes(
-          "sortable",
           tableID,
           problems,
+          List(("onClick", generateOnClick _)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
-          ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
           ("Click to add problem", (problem: Problem) => checkBoxForProblem(problem))
         )
@@ -481,7 +480,6 @@ class Problempoolsnippet extends{
     val longdescriptionFilterID = "input_long_desc"
     val longdescriptionFilter = SHtml.text("", (x: String)=>{},
       "onkeyup"->s"filterTableRows('$tableID', 'Long Description', '$longdescriptionFilterID');", "id"->longdescriptionFilterID)
-
 
     Helpers.bind("problemoptions", xhtml,
       "problemlist" -> table,
