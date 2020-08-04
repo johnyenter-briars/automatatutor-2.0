@@ -24,3 +24,7 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover {
 .collapsible_tr{
     outline: thin solid black;
 }
+
+th{
+   cursor: pointer;
+}
