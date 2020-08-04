@@ -465,21 +465,14 @@ class Coursesnippet {
       //logged in user is a student
       <div>
         {
-          folders.map(folder => {
-            if (!folder.isOpen) {
-              NodeSeq.Empty
-            }
-            else {
-              TableHelper.renderTableWithHeader(
-                folders,
-                ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-                ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-                ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-                ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
-                ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton)
-              )
-            }
-          })
+          TableHelper.renderTableWithHeader(
+            folders,
+            ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+            ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+            ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+            ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
+            ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton)
+          )
         }
       </div>
     }

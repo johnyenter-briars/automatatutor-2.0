@@ -77,7 +77,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		if (!user.isAdmin && !this.isEnrolled(user)) return List()
 		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
 		//otherwise, this is a student, show them all posted foldrs
-		return Folder.findAllByCourse(this).filter(_.getPosed)
+		return Folder.findAllByCourse(this).filter(f => f.getPosed && f.isOpen)
 	}
 
 	override def delete_! : Boolean = {
