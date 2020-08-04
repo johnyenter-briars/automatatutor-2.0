@@ -12,7 +12,7 @@ object TableHelper {
 	}
 	 
 	private def renderSingleRow[T] ( datum : T , displayFuncs : Seq[T => NodeSeq]) : Node = {
-	  return <tr> { displayFuncs.map(func => <td> { func(datum) } </td>) } </tr>
+	  return <tr> { displayFuncs.map(func => <td>{ func(datum) }</td>) } </tr>
 	}
 
 	private def renderTableBody[T] ( data : Seq[T], displayFuncs : Seq[T => NodeSeq]) : NodeSeq = {

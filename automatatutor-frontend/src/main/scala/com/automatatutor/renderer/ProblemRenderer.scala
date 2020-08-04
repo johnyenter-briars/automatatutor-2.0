@@ -2,13 +2,9 @@ package com.automatatutor.renderer
 
 import scala.xml.NodeSeq
 import scala.xml.Text
-
-import com.automatatutor.model.Problem
-import com.automatatutor.model.User
+import com.automatatutor.model.{Course, Problem, ProblemPointer, User}
 import com.automatatutor.snippet._
-
-import net.liftweb.common.Empty
-import net.liftweb.common.Full
+import net.liftweb.common.{Box, Empty, Full}
 import net.liftweb.http.S
 import net.liftweb.http.SHtml
 import net.liftweb.http.js.JE.JsRaw
@@ -27,5 +23,18 @@ class ProblemRenderer(problem : Problem) {
       }
 
     return SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd, "style" -> "color: red")
+  }
+
+  def renderProblemInstances: NodeSeq = {
+    val problemPointerInstances = ProblemPointer.findAll().filter(_.getProblem == problem)
+
+    val problemLocations: List[String] = problemPointerInstances.map(problemPointer => {
+
+      val course: Course = problemPointer.getFolder.getCourse.get
+
+      course.getName + "/" + problemPointer.getFolder.getLongDescription
+    })
+
+    Text(problemLocations.mkString("\n"))
   }
 }

@@ -34,7 +34,7 @@ function expandOrCollapseHiddenText(tableCell){
                                 tableCell.style.overflow === "" ? "visible" : "hidden";
 
     tableCell.style.whiteSpace = tableCell.style.whiteSpace === "nowrap" || 
-                                    tableCell.style.whiteSpace === "" ? "normal" : "nowrap";
+                                    tableCell.style.whiteSpace === "" ? "pre-wrap" : "nowrap";
 }
 
 var tables = Array.from(document.getElementsByTagName('table'));
