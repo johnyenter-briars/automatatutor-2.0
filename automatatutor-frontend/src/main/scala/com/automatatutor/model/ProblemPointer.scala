@@ -24,7 +24,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   protected object maxGrade extends MappedLong(this)
   def getProblemPointerID: Long = this.id.is
 
-  def getProblem = this.referencedProblemId.obj openOrThrowException "Every ProblemToFolder must have a Problem"
+  def getProblem = this.referencedProblemId.obj openOrThrowException "Every ProblemPointer must have a Problem"
   def setProblem ( problem : Problem ) = this.referencedProblemId(problem)
 
   def getCourse : Box[Course] = this.courseId.obj
@@ -35,7 +35,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   def getAllowedAttemptsString: String = if (this.allowedAttempts.is == 0) "∞" else this.allowedAttempts.is.toString
   def setAllowedAttempts(attempts: Long) = this.allowedAttempts(attempts)
 
-  def getFolder: Folder = this.folderId.obj openOrThrowException "Every ProblemToFolder must have a Folder"
+  def getFolder: Folder = this.folderId.obj openOrThrowException "Every ProblemPointer must have a Folder"
   def setFolder(folder: Folder) = this.folderId(folder)
   def setFolder(folder: Box[Folder]) = this.folderId(folder)
 
@@ -73,21 +73,21 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
   def getLongDescription: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
 
     matchingProblems.head.getLongDescription
   }
 
   def getShortDescription: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
 
     matchingProblems.head.getShortDescription
   }
 
   def getTypeName: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
 
     matchingProblems.head.getTypeName()
   }

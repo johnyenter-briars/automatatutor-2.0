@@ -29,8 +29,23 @@ function filterTableRows(tableId, columnName, inputId){
     }
 }
 
+function expandOrCollapseHiddenText(tableCell){
+    tableCell.style.overflow = tableCell.style.overflow === "hidden" || 
+                                tableCell.style.overflow === "" ? "visible" : "hidden";
+
+    tableCell.style.whiteSpace = tableCell.style.whiteSpace === "nowrap" || 
+                                    tableCell.style.whiteSpace === "" ? "normal" : "nowrap";
+}
+
 var tables = Array.from(document.getElementsByTagName('table'));
+
 for(var table of tables){
     var x = new Tablesort(table);
 }
+
+Array.from(document.getElementsByTagName("td")).forEach(td => {
+    td.onclick = (e) => {
+        expandOrCollapseHiddenText(e.target);
+    }
+})
 

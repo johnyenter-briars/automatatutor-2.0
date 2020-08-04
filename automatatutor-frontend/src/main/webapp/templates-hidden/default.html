@@ -11,7 +11,7 @@
     <style class="lift:CSS.fancyType"></style>
 
     <link rel="stylesheet" type="text/css" href="/stylesheets/AT.css" />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/mobile.css" />
+<!--    <link rel="stylesheet" type="text/css" href="/stylesheets/mobile.css" />-->
     <link rel="stylesheet" type="text/css" href="/stylesheets/sidebar.css" />
 
     <script id="jquery" src="/classpath/jquery.js" type="text/javascript"></script>
@@ -20,6 +20,34 @@
     <!-- For sorting of tables   -->
     <script src="/javascript/ui/tablesort.js" type="text/javascript"></script>
     <script defer src="/javascript/ui/tableUtils.js" type="text/javascript"></script>
+
+    <script defer>
+
+    document.onreadystatechange = () => {
+      if (document.readyState === 'complete') {
+        var modal = document.getElementById("statistic-modal");
+
+        var btn = document.getElementById("statistic-modal-button");
+
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+      }
+    };
+
+    </script>
 
 </head>
 <body>
