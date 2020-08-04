@@ -194,9 +194,10 @@ class Problempoolsnippet extends{
     
     val table = <form>
       {
-        (TableHelper.renderTableWithHeaderPlusID(
+        (TableHelper.renderTableWithHeaderColumnWidths(
           tableID,
           usersProblems,
+          List(3, 12.5, 20, 15, 5, 5.3, 10, 4),
           ("", (problem: Problem) => checkBoxForProblem(problem)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
           ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
