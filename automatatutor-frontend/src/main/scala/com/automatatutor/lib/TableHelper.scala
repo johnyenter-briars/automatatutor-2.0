@@ -35,7 +35,7 @@ object TableHelper {
 		<table> <thead> {headerRow} </thead> <tbody> {dataRows} </tbody> </table>
 	}
 
-	private def renderTableHeaderWithAttributes(tableID: String, headings: Seq[Text], attributes: List[(String, (Int, String) => String)]): Node = {
+	private def renderTableHeaderWithOnClick(tableID: String, headings: Seq[Text], attributes: List[(String, (Int, String) => String)]): Node = {
 		//In order to get a custom classString or styleString you need to pass in a function that generates the string dynamically
 		//You can then use code similar to below to generate the string calling:
 		/*
@@ -54,9 +54,9 @@ object TableHelper {
 		<tr class={classString} style={styleString}> { headingsXml } </tr>
 	}
 
-	def renderTableWithHeaderPlusAttributes[T](tableID: String, data : Seq[T], attributes: List[(String, (Int, String) => String)], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
+	def renderTableWithHeaderPlusOnClick[T](tableID: String, data : Seq[T], attributes: List[(String, (Int, String) => String)], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
 		val headings = colSpec.map(x => Text(x._1))
-		val headerRow = renderTableHeaderWithAttributes(tableID, headings, attributes)
+		val headerRow = renderTableHeaderWithOnClick(tableID, headings, attributes)
 
 		val displayFuncs = colSpec.map(x => x._2)
 		val dataRows = renderTableBody(data, displayFuncs)

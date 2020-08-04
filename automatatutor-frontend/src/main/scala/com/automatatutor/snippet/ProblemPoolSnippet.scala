@@ -149,27 +149,27 @@ class Problempoolsnippet extends{
 
     def editProblemButton(problem: Problem): NodeSeq = {
       if (user.hasSupervisedCourses) {
-        return SHtml.link(
+        SHtml.link(
           "/main/problempool/edit",
           () => {
             CurrentEditableProblem(problem)
           },
           <button type='button'>Edit</button>)
       } else {
-        return NodeSeq.Empty
+        NodeSeq.Empty
       }
     }
 
     def sendButton(problem: Problem): NodeSeq = {
       if (user.hasSupervisedCourses) {
-        return SHtml.link(
+        SHtml.link(
           "/main/problempool/send",
           () => {
             CurrentEditableProblem(problem)
           },
           <button type='button'>Send To Course</button>)
       } else {
-        return NodeSeq.Empty
+        NodeSeq.Empty
       }
     }
 
