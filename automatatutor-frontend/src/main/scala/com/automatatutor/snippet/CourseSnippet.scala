@@ -478,6 +478,47 @@ class Coursesnippet {
     }
   }
 
+  def foldersupervisorsection(ignored: NodeSeq): NodeSeq = {
+    val course = CurrentCourse.is
+
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
+
+//    val gradesCsvLink = SHtml.link("/main/course/downloadCSV", () => {}, Text("Grades (as .csv)"))
+//    val gradesXmlLink = SHtml.link("/main/course/downloadXML", () => {}, Text("Grades (as .xml)"))
+    val userLink = SHtml.link("/main/course/folders/users", () => {}, Text("Users"))
+//    val exportLink = SHtml.link("/main/course/export", () => {}, Text("Export Problems"))
+//    val importLink = SHtml.link("/main/course/import", () => {}, Text("Import Problems"))
+
+
+    <h2>Manage Users</h2> ++
+      //gradesCsvLink ++
+//      Unparsed("&emsp;") ++ gradesXmlLink ++
+      Unparsed("&emsp;") ++ userLink
+//      Unparsed("&emsp;") ++ exportLink ++
+//      Unparsed("&emsp;") ++ importLink
+  }
+
+  def folderuserlist(ignored: NodeSeq): NodeSeq = {
+    val course = CurrentCourse.is
+    val folder = CurrentFolderInCourse.is
+
+    val participantList = if (course.hasParticipants) {
+      TableHelper.renderTableWithHeader(course.getParticipants,
+        ("First Name", (user: User) => Text(user.firstName.is)),
+        ("Last Name", (user: User) => Text(user.lastName.is)),
+        ("Email", (user: User) => Text(user.email.is)),
+        ("Possible Points", (user: User) => Text(folder.getPossiblePoints.toString)),
+        ("Achieved Points", (user: User) => Text(folder.getAchievedPoints(user).toString)),
+        ("Overall Grade", (user: User) => Text(folder.getOverallGrade(user).toString + "%")),
+        ("Attempts Across all Problems", (user: User) => Text(folder.getNumAttemptsAcrossAllProblems(user).toString)))
+    } else {
+      Text("There are no participants yet.")
+    }
+
+    <h3>Users of Folder: </h3> ++ participantList
+  }
+
   def supervisorsection(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
 

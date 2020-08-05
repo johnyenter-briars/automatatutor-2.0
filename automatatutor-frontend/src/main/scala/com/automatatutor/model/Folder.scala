@@ -52,6 +52,28 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     ProblemPointer.findAllByFolder(this).map(_.getProblem)
   }
 
+  def getPossiblePoints: Long = {
+    this.getProblemPointersUnderFolder.map(_.getMaxGrade).sum
+  }
+
+  def getAchievedPoints(user: User): Int = {
+    this.getProblemPointersUnderFolder.map(_.getHighestAttempt(user)).sum
+  }
+
+  def getOverallGrade(user: User): Float = {
+    val grade = this.getAchievedPoints(user).toFloat / this.getPossiblePoints
+
+    (grade * 100).round
+  }
+
+  def getNumAttemptsAcrossAllProblems(user: User): Int = {
+    val solutionAttempts =
+      SolutionAttempt
+        .findAll(By(SolutionAttempt.userId, user))
+        .filter(_.getProblemPointer.getFolder == this)
+    solutionAttempts.length
+  }
+
   def getStartDate: Date = this.startDate.is
   def setStartDate(startDate: Date) = this.startDate(startDate)
 
