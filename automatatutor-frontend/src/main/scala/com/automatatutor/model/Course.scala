@@ -76,7 +76,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	def getFoldersForUser(user: User) : List[Folder] = {
 		if (!user.isAdmin && !this.isEnrolled(user)) return List()
 		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
-		//otherwise, this is a student, show them all posted foldrs
+		//otherwise, this is a student, show them all posed and open folders
 		return Folder.findAllByCourse(this).filter(f => f.getPosed && f.isOpen)
 	}
 
@@ -88,7 +88,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 
 	def renderGradesCsv: String = {
 		val posedProblems = this.getPosedProblems
-		val participantsWithGrades : Seq[(User, Seq[Int])] = this.getParticipants.map(participant => (participant, posedProblems.map(_.getGrade(participant))))
+		val participantsWithGrades : Seq[(User, Seq[Int])] = this.getParticipants.map(participant => (participant, posedProblems.map(_.getHighestAttempt(participant))))
 		val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";")
 		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";")).mkString(";"))
 		return firstLine + "\n" + csvLines.mkString("\n")
@@ -105,7 +105,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 				val problemTypeAttribute = new UnprefixedAttribute("problemType", problem.getTypeName, maxGradeAttribute)
 				val attemptsByUserAttribute = new UnprefixedAttribute("attemptsByUser", problem.getNumberAttempts(participant).toString, problemTypeAttribute)
 				val allowedAttemptsAttribute = new UnprefixedAttribute("allowedAttempts", problem.getAllowedAttempts.toString, attemptsByUserAttribute)
-				Elem(null, "grade", allowedAttemptsAttribute, TopScope, true, Text(problem.getGrade(participant).toString))
+				Elem(null, "grade", allowedAttemptsAttribute, TopScope, true, Text(problem.getHighestAttempt(participant).toString))
 			})
 			new Elem(null, "usergrades", userFirstNameAttribute, TopScope, true, children: _*)
 		})

@@ -2,13 +2,14 @@ package com.automatatutor.renderer
 
 import scala.xml.NodeSeq
 import scala.xml.Text
-import com.automatatutor.model.{Course, Problem, User}
+import com.automatatutor.model.{Course, Problem, ProblemPointer, SolutionAttempt, User}
 import com.automatatutor.snippet._
 import net.liftweb.http._
 import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JsCmds
 import net.liftweb.http.js.JsCmds.jsExpToJsCmd
+import net.liftweb.mapper.By
 
 class CourseRenderer(course : Course) {
   def renderSelect(target : String, asLink : Boolean) : NodeSeq = {
@@ -30,5 +31,19 @@ class CourseRenderer(course : Course) {
     val label = Text("Delete") 
     val onclick : JsCmd = JsRaw("return confirm('Are you sure you want to delete this course?')") 
     return SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd)
+  }
+
+  def renderAverageGrade(user: User): NodeSeq = {
+    //get all problems in the course
+    val problems = ProblemPointer.findAllByCourse(course)
+
+    //map each problem to the students grade on said problem
+    val gradesPerProblem: List[Float] = problems.map(_.getGrade(user))
+
+    //take the average across all problems
+    var averageGrade: Float = gradesPerProblem.sum / gradesPerProblem.length
+    averageGrade = (averageGrade * 100).toInt
+
+    Text(averageGrade + "%")
   }
 }

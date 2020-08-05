@@ -290,7 +290,7 @@ class Coursesnippet {
         ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
         ("Your Attempts", (problem: ProblemPointer) => Text(problem.getAttempts(user).length.toString)),
         ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-        ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getGrade(user).toString)),
+        ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getHighestAttempt(user).toString)),
         ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
         ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton)
       )
@@ -542,8 +542,9 @@ class Coursesnippet {
         //NOTE: These following two lines assume that you only want to count the grades/attempts of questions
         //which are CURRENTLY posed
         //If a student solves a question, but then its containing folder is unposed, that grade will not be accounted for
-        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
-        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
+        ("Total Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
+        ("Total Points", (user: User) => Text(course.getPosedProblems.map(_.getHighestAttempt(user)).sum.toString)),
+        ("Average Grade", (user: User) => new CourseRenderer(course).renderAverageGrade(user)),
         ("", (user: User) => dismissLink(user)))
     } else {
       <h2>Participants</h2> ++ Text("There are no paticipants yet.")
@@ -639,7 +640,7 @@ class Coursesnippet {
     }
 
     def bestGrade(): Int = {
-      problemPointer.getGrade(user)
+      problemPointer.getHighestAttempt(user)
     }
 
     //If the user is the admin or instructor, don't even bother recording an attempt

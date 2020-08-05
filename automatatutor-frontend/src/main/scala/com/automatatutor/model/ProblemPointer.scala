@@ -62,13 +62,17 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     else return this.getNumberAttemptsRemaining(user).toString
   }
 
-  def getGrade(user: User): Int = {
+  def getHighestAttempt(user: User): Int = {
     val grades = this.getAttempts(user).map(_.grade.is)
     if (grades.isEmpty) {
       0
     } else {
       grades.max
     }
+  }
+
+  def getGrade(user: User): Float = {
+    this.getHighestAttempt(user).toFloat / this.getAllowedAttempts
   }
 
   def getLongDescription: String = {
@@ -113,7 +117,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     val allowedAttempts = this.allowedAttempts.is
     val takenAttempts = this.getNumberAttempts(user)
     val maxGrade = this.maxGrade.is
-    val userGrade = this.getGrade(user)
+    val userGrade = this.getHighestAttempt(user)
 
     takenAttempts < allowedAttempts && userGrade < maxGrade
   }

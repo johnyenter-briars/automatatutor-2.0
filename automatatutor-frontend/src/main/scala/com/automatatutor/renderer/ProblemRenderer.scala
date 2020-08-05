@@ -49,8 +49,9 @@ class ProblemRenderer(problem : Problem) {
 
     //map each student to the number of attempts they have on this problem
     val attemptsPerStudent: List[Int] = students.map(student => {
-      val solutionAttempts = SolutionAttempt.findAll(By(SolutionAttempt.userId, student))
-      solutionAttempts.length
+      SolutionAttempt
+        .findAll(By(SolutionAttempt.userId, student))
+        .count(_.getProblemPointer.getProblem == problem)
     })
 
     //compute average number of attempts
@@ -68,8 +69,9 @@ class ProblemRenderer(problem : Problem) {
       }).max
     })
 
-    val averageGrade: Float = highestGradesPerUser.sum / highestGradesPerUser.length
+    var averageGrade: Float = highestGradesPerUser.sum / highestGradesPerUser.length
+    averageGrade = (averageGrade * 100).round
 
-    Text(averageGrade+ "%/" + averageAttempts.round)
+    Text(averageGrade + "%/" + averageAttempts.round)
   }
 }
