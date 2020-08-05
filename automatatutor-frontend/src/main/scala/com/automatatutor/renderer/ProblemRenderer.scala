@@ -2,7 +2,7 @@ package com.automatatutor.renderer
 
 import scala.xml.NodeSeq
 import scala.xml.Text
-import com.automatatutor.model.{Course, Problem, ProblemPointer, User}
+import com.automatatutor.model.{Course, Problem, ProblemPointer, SolutionAttempt, User}
 import com.automatatutor.snippet._
 import net.liftweb.common.{Box, Empty, Full}
 import net.liftweb.http.S
@@ -11,6 +11,7 @@ import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JsCmds
 import net.liftweb.http.js.JsCmds._
+import net.liftweb.mapper.By
 
 class ProblemRenderer(problem : Problem) {
   def renderDeleteLink(target: String) : NodeSeq = {
@@ -22,7 +23,7 @@ class ProblemRenderer(problem : Problem) {
         JsCmds.Alert("Cannot delete this problem:\n" + problem.getDeletePreventers.mkString("\n")) & JsRaw("return false")
       }
 
-    return SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd, "style" -> "color: red")
+    SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd, "style" -> "color: red")
   }
 
   def renderProblemInstances: NodeSeq = {
@@ -36,5 +37,39 @@ class ProblemRenderer(problem : Problem) {
     })
 
     Text(problemLocations.mkString("\n"))
+  }
+
+  def renderProblemStats: NodeSeq = {
+    //get all students who tried the problem
+    val students = SolutionAttempt
+      .findAll()
+      .filter(_.getProblemPointer.getProblem == problem)
+      .map(_.getUser)
+      .distinct
+
+    //map each student to the number of attempts they have on this problem
+    val attemptsPerStudent: List[Int] = students.map(student => {
+      val solutionAttempts = SolutionAttempt.findAll(By(SolutionAttempt.userId, student))
+      solutionAttempts.length
+    })
+
+    //compute average number of attempts
+    val averageAttempts: Float = attemptsPerStudent.sum.toFloat / attemptsPerStudent.length
+
+    val highestGradesPerUser = students.map(student => {
+      //Get all attempts for each user, and filter based on the current problem
+      val attempts = SolutionAttempt.findAll(
+        By(SolutionAttempt.userId, student))
+        .filter(_.getProblemPointer.getProblem == problem)
+
+      //map each attempt at the problem to its grade (points/maxgrade), and take the max
+      attempts.map(sa => {
+        sa.grade.is.toFloat / sa.getProblemPointer.getMaxGrade
+      }).max
+    })
+
+    val averageGrade: Float = highestGradesPerUser.sum / highestGradesPerUser.length
+
+    Text(averageGrade+ "%/" + averageAttempts.round)
   }
 }

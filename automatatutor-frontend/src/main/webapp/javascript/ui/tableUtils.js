@@ -40,7 +40,7 @@ function expandOrCollapseHiddenText(tableCell){
 var tables = Array.from(document.getElementsByTagName('table'));
 
 for(var table of tables){
-    var x = new Tablesort(table);
+    var _ = new Tablesort(table);
 }
 
 Array.from(document.getElementsByTagName("td")).forEach(td => {

@@ -197,12 +197,13 @@ class Problempoolsnippet extends{
         (TableHelper.renderTableWithHeaderColumnWidths(
           tableID,
           usersProblems,
-          List(3, 12.5, 21, 13, 13.5, 5, 5.3, 10, 4),
+          List(3, 10.5, 21, 5, 13, 13.5, 5, 5.3, 10, 4),
           ("", (problem: Problem) => checkBoxForProblem(problem)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
           ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
+          ("Problem Stats", (problem: Problem) => new ProblemRenderer(problem).renderProblemStats),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
-          ("", (problem: Problem) => new ProblemRenderer(problem).renderProblemInstances),
+          ("Instances", (problem: Problem) => new ProblemRenderer(problem).renderProblemInstances),
           ("", (problem: Problem) => editProblemButton(problem)),
           ("", (problem: Problem) => SHtml.link(
             "/main/problempool/practice",

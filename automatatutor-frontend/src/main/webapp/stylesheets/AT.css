@@ -34,12 +34,8 @@ table {
 }
 
 table td {
-    background:#e8edff;
     border-bottom:1px solid #fff;
     border-left:1px solid #fff;
-    color:#336699;
-    /* border-top:1px solid transparent;
-    padding:8px; */
     text-overflow:ellipsis;
     overflow:hidden;
     white-space:nowrap;

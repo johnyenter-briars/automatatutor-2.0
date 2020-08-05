@@ -30,6 +30,10 @@
 - extending syntax for CFG
 - more uniform feedback for students
 - adding exercises
+- Edit/solve/send: Using small pictograms E.g.,
+https://fontawesome.com/icons/edit
+https://fontawesome.com/icons/brain
+https://fontawesome.com/icons/share
 
 
 # Current task as of 8/4/2020:
