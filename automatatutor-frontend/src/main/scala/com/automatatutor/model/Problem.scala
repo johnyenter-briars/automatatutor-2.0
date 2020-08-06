@@ -165,6 +165,19 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     throw new NotImplementedError("Problems no longer have a enddate. ProblemLinks are the objects" +
       "which live under courses and reference problem objects")
 
+  def getProblemInstances: List[ProblemPointer] = {
+    ProblemPointer.findAllByReferencedProblem(this)
+  }
+
+  def getStudentsWhoAttempted: List[User] = {
+    SolutionAttempt
+      .findAll()
+      .filter(_.getProblemPointer.getProblem == this)
+      .map(_.getUser)
+      .filter(_.isStudent)
+      .distinct
+  }
+
   def shareWithUserByEmail(email: String): Boolean = {
     val otherUser = User.findByEmail(email) match {
       case Full(user) => user

@@ -27,10 +27,9 @@ class ProblemRenderer(problem : Problem) {
   }
 
   def renderProblemInstances: NodeSeq = {
-    val problemPointerInstances = ProblemPointer.findAll().filter(_.getProblem == problem)
+    val problemPointerInstances = problem.getProblemInstances
 
     val problemLocations: List[String] = problemPointerInstances.map(problemPointer => {
-
       val course: Course = problemPointer.getFolder.getCourse.get
 
       course.getName + "/" + problemPointer.getFolder.getLongDescription
@@ -41,11 +40,7 @@ class ProblemRenderer(problem : Problem) {
 
   def renderProblemStats: NodeSeq = {
     //get all students who tried the problem
-    val students = SolutionAttempt
-      .findAll()
-      .filter(_.getProblemPointer.getProblem == problem)
-      .map(_.getUser)
-      .distinct
+    val students = problem.getStudentsWhoAttempted
 
     //map each student to the number of attempts they have on this problem
     val attemptsPerStudent: List[Int] = students.map(student => {
