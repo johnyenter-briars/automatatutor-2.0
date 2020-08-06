@@ -89,8 +89,10 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	def renderGradesCsv: String = {
 		val posedProblems = this.getPosedProblems
 		val participantsWithGrades : Seq[(User, Seq[Int])] = this.getParticipants.map(participant => (participant, posedProblems.map(_.getHighestAttempt(participant))))
-		val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";")
+		val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";") + "Total;"
 		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";")).mkString(";"))
+		println(csvLines)
+		println(firstLine)
 		return firstLine + "\n" + csvLines.mkString("\n")
 	}
 

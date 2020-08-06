@@ -510,8 +510,9 @@ class Coursesnippet {
         ("Email", (user: User) => Text(user.email.is)),
         ("Possible Points", (user: User) => Text(folder.getPossiblePoints.toString)),
         ("Achieved Points", (user: User) => Text(folder.getAchievedPoints(user).toString)),
-        ("Overall Grade", (user: User) => Text(folder.getOverallGrade(user).toString + "%")),
-        ("Attempts Across all Problems", (user: User) => Text(folder.getNumAttemptsAcrossAllProblems(user).toString)))
+        ("Average Grade/Num Attempts", (user: User) =>
+          Text(folder.getOverallGrade(user).toString + "%/" + folder.getNumAttemptsAcrossAllProblems(user)))
+      )
     } else {
       Text("There are no participants yet.")
     }
