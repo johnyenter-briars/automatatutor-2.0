@@ -268,8 +268,9 @@ class Coursesnippet {
           problems,
           ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
           ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-          ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
+          ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
           ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
+          ("Avg Grade/Avg Attempts", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderProblemStats),
           ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccessButton),
           ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
             new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
@@ -499,7 +500,7 @@ class Coursesnippet {
 //      Unparsed("&emsp;") ++ gradesXmlLink ++
       DownloadHelper.renderCsvDownloadLink(
         folder.renderGradesCsv,
-        s"FolderGrades_${folder.getLongDescription}",
+        s"${folder.getLongDescription}_Grades",
         Text(s"FolderGrades_${folder.getLongDescription}.csv")) ++
       Unparsed("&emsp;") ++ userLink
 //      Unparsed("&emsp;") ++ exportLink ++

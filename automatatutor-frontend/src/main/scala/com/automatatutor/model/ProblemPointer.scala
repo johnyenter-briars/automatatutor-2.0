@@ -121,6 +121,14 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
     takenAttempts < allowedAttempts && userGrade < maxGrade
   }
+
+  def getStudentsWhoAttempted: List[User] = {
+    SolutionAttempt
+      .findAll(By(SolutionAttempt.problempointerId, this))
+      .map(_.getUser)
+      .filter(_.isStudent)
+      .distinct
+  }
 }
 
 object ProblemPointer extends ProblemPointer with LongKeyedMetaMapper[ProblemPointer] {
