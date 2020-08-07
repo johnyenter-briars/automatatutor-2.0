@@ -36,7 +36,7 @@ class Tryitsnippet {
     }
 
     val tryitCourse = tryitCourseBox openOrThrowException "tryitCourseBox should not be empty here..."
-    val tryitProblems: List[ProblemPointer] = tryitCourse.getPosedProblems
+    val tryitProblems: List[ProblemPointer] = tryitCourse.getVisibleProblems
 
     if (tryitProblems.isEmpty) return Text("There are currently no problems to try... Please ask the admin to add some!")
 

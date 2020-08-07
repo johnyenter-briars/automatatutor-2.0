@@ -329,24 +329,21 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
 
     def grade(): Unit =
     {
-      if (generalProblem.getPosed)
-        {
-          val solutionAttempt = getLastAttempt().get
-          if (solutionAttempt.win.is == "true")
-          {
-            val generalAttempt = recordSolutionAttempt(10, Calendar.getInstance.getTime())
-//            generalAttempt.save
-            solutionAttempt.solutionAttemptId(generalAttempt.id.get)
-            solutionAttempt.save
-          }
-          else
-          {
-            val generalAttempt = recordSolutionAttempt(0, Calendar.getInstance.getTime())
-//            generalAttempt.save
-            solutionAttempt.solutionAttemptId(generalAttempt.id.get)
-            solutionAttempt.save
-          }
-        }
+      val solutionAttempt = getLastAttempt().get
+      if (solutionAttempt.win.is == "true")
+      {
+        val generalAttempt = recordSolutionAttempt(10, Calendar.getInstance.getTime())
+        //            generalAttempt.save
+        solutionAttempt.solutionAttemptId(generalAttempt.id.get)
+        solutionAttempt.save
+      }
+      else
+      {
+        val generalAttempt = recordSolutionAttempt(0, Calendar.getInstance.getTime())
+        //            generalAttempt.save
+        solutionAttempt.solutionAttemptId(generalAttempt.id.get)
+        solutionAttempt.save
+      }
     }
 
     def getLastAttempt(): Box[PumpingLemmaGameSolutionAttempt] =

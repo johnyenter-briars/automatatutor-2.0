@@ -105,11 +105,11 @@ class Coursesnippet {
     val folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
-    val poseLabel = <strong>{currentFolder.getPosed.toString}</strong>
+    val visibleLabel = <strong>{currentFolder.getVisible.toString}</strong>
 
     val postFolderButton = SHtml.button(
-      if(currentFolder.getPosed) "Unpose" else "Pose",
-      () => {currentFolder.setPosed(!currentFolder.getPosed).save})
+      if(currentFolder.getVisible) "Remove Visibility" else "Make Visible",
+      () => {currentFolder.setVisible(!currentFolder.getVisible).save})
 
     val editFolderButton = SHtml.submit("Save changes to folder", editFolderCallback)
 
@@ -117,7 +117,7 @@ class Coursesnippet {
       "foldernamefield" -> folderNameField,
       "startdatefield" -> startDateField,
       "enddatefield" -> endDateField,
-      "poselabel" -> poseLabel,
+      "visiblelabel" -> visibleLabel,
       "posebutton" -> postFolderButton,
       "editbutton" -> editFolderButton,
       "deletebutton" -> deleteFolderButton)
@@ -448,7 +448,7 @@ class Coursesnippet {
           TableHelper.renderTableWithHeader(
             folders,
             ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-            ("Posed", (folder: Folder) => Text(folder.getPosed.toString)),
+            ("Visible", (folder: Folder) => Text(folder.getVisible.toString)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
             ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
@@ -593,8 +593,8 @@ class Coursesnippet {
         //NOTE: These following two lines assume that you only want to count the grades/attempts of questions
         //which are CURRENTLY posed
         //If a student solves a question, but then its containing folder is unposed, that grade will not be accounted for
-        ("Total Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
-        ("Total Points", (user: User) => Text(course.getPosedProblems.map(_.getHighestAttempt(user)).sum.toString)),
+        ("Total Attempts", (user: User) => Text(course.getVisibleProblems.map(_.getNumberAttempts(user)).sum.toString)),
+        ("Total Points", (user: User) => Text(course.getVisibleProblems.map(_.getHighestAttempt(user)).sum.toString)),
         ("Average Grade", (user: User) => new CourseRenderer(course).renderAverageGrade(user)),
         ("", (user: User) => dismissLink(user)))
     } else {
@@ -604,6 +604,7 @@ class Coursesnippet {
     return supervisorList ++ participantList
   }
 
+  //TODO 8/7/2020 do we need this?
   def rendercreate(ignored: NodeSeq): NodeSeq = {
     if (CurrentProblemTypeInCourse.is == null) {
       S.warning("You have not selected a problem type")

@@ -20,7 +20,7 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   protected object createdBy extends MappedLongForeignKey(this, User)
 
   // "posed" information
-  protected object isPosed extends MappedBoolean(this)
+  protected object isVisible extends MappedBoolean(this)
   protected object startDate extends MappedDateTime(this)
   protected object endDate extends MappedDateTime(this)
 
@@ -36,8 +36,8 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def setCourse ( course : Course ) = this.courseId(course)
   def setCourse ( course: Box[Course] ) = this.courseId(course)
 
-  def getPosed: Boolean = this.isPosed.is
-  def setPosed(posed: Boolean) = this.isPosed(posed)
+  def getVisible: Boolean = this.isVisible.is
+  def setVisible(posed: Boolean) = this.isVisible(posed)
 
   def getProblemPointersUnderFolder: List[ProblemPointer] = {
     ProblemPointer.findAllByFolder(this)

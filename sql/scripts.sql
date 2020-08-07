@@ -11,8 +11,6 @@ create table PROBLEM(
     FOREIGN KEY (CREATEDBY) REFERENCES USER_T(ID)
 );
 
-insert into PROBLEM Values(1, 'Test Problem', 4, 1, 'idkman');
-
 drop table FOLDER;
 
 create table FOLDER(
@@ -20,20 +18,10 @@ create table FOLDER(
     LONGDESCRIPTION varchar,
     COURSEID BigInt,
     CREATEDBY BigInt,
-    ISPOSED BOOLEAN,
+    ISVISIBLE BOOLEAN,
     ENDDATE TimeStamp,
     STARTDATE TimeStamp,
     FOREIGN KEY (COURSEID) REFERENCES COURSE(ID)
-);
-
-insert into FOLDER Values(
-    1,
-    'Homework 1',
-    1,
-    1,
-    false,
-    null,
-    null
 );
 
 drop table PROBLEMPOINTER;
@@ -50,8 +38,6 @@ create table PROBLEMPOINTER(
     FOREIGN KEY (COURSEID) REFERENCES COURSE(ID),
     FOREIGN KEY (FOLDERID) REFERENCES FOLDER(ID)
 );
-
-insert into PROBLEMPOINTER Values(1, 1, 1, 1, 10, 10);
 
 drop table SOLUTIONATTEMPT;
 
