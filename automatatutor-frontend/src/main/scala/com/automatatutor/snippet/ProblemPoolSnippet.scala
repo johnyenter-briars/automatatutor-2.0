@@ -267,9 +267,6 @@ class Problempoolsnippet extends{
     }
   }
 
-
-  //TODO 7/27/2020 better reporting table - so that the folder somehow match up with their courses
-  //also adding things like average grade, number of attempts yada yada
   def renderproblemstatistics(ignored: NodeSeq): NodeSeq = {
     if (CurrentEditableProblem.is == null) {
       S.warning("Please first choose a problem to edit")
@@ -277,50 +274,7 @@ class Problempoolsnippet extends{
     }
     val problem : Problem = CurrentEditableProblem.is
 
-    def getType[T: Manifest](t: T): Manifest[T] = manifest[T]
-
-    val problemPointerInstances = ProblemPointer.findAll().filter(_.getProblem == problem)
-    val folderInstances = problemPointerInstances.map(_.getFolder)
-    val courseInstances = folderInstances.map(_.getCourse).distinct.map((a: Box[Course]) => {
-      a match {
-        case Full(course) => course
-        case Empty => throw new IllegalStateException("Error while opening a box while rendering problem statistics")
-      }
-    })
-
-    <div>
-      <button id="statistic-modal-button">View Statistics</button>
-
-      <div id="statistic-modal" class="modal">
-
-        <div class="modal-content">
-          <div class="modal-header">
-            <span class="close">&times;</span>
-            <h3>Problem Statistics</h3>
-          </div>
-          <div class="modal-body">
-            <div id="statistic-data" >
-              <div>
-                <h4>Course Instances</h4>
-                <ul>
-                  {
-                  courseInstances.map((c: Course) => <li>{c.getName}</li>)
-                  }
-                </ul>
-              </div>
-              <div>
-                <h4>Folder Instances</h4>
-                <ul>
-                  {
-                    folderInstances.map((f: Folder) => <li>{f.getLongDescription}</li>)
-                  }
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    new ProblemRenderer(problem).renderProblemInstancesTable
   }
 
   def renderdeletegrades(ignored: NodeSeq): NodeSeq = {

@@ -1,5 +1,7 @@
 package com.automatatutor.renderer
 
+import com.automatatutor.lib.TableHelper
+
 import scala.xml.NodeSeq
 import scala.xml.Text
 import com.automatatutor.model.{Course, Problem, ProblemPointer, SolutionAttempt, User}
@@ -26,6 +28,17 @@ class ProblemRenderer(problem : Problem) {
     SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd, "style" -> "color: red")
   }
 
+  private def renderProblemInstanceLink(problemPointer: ProblemPointer): NodeSeq = {
+    val course: Course = problemPointer.getFolder.getCourse.get
+
+    val locationString = course.getName + "/" + problemPointer.getFolder.getLongDescription
+
+    SHtml.link("/main/course/folders/index", () => {
+      CurrentFolderInCourse(problemPointer.getFolder)
+      CurrentCourse(course)
+    }, Text(locationString))
+  }
+
   def renderProblemInstances: NodeSeq = {
     val problemPointerInstances = problem.getProblemInstances
 
@@ -36,6 +49,14 @@ class ProblemRenderer(problem : Problem) {
     })
 
     Text(problemLocations.mkString("\n"))
+  }
+
+  def renderProblemInstancesTable: NodeSeq = {
+    val problemPointerInstances = problem.getProblemInstances
+
+    TableHelper.renderTableWithHeader(problemPointerInstances,
+      ("Course/Folder", (problem: ProblemPointer) => this.renderProblemInstanceLink(problem))
+    )
   }
 
   def renderProblemStats: NodeSeq = {

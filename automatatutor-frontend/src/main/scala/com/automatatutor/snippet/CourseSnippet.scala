@@ -488,23 +488,14 @@ class Coursesnippet {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
 
-//    val gradesCsvLink = SHtml.link("/main/course/downloadCSV", () => {}, Text("Grades (as .csv)"))
-//    val gradesXmlLink = SHtml.link("/main/course/downloadXML", () => {}, Text("Grades (as .xml)"))
     val userLink = SHtml.link("/main/course/folders/users", () => {}, Text("Users"))
-//    val exportLink = SHtml.link("/main/course/export", () => {}, Text("Export Problems"))
-//    val importLink = SHtml.link("/main/course/import", () => {}, Text("Import Problems"))
-
 
     <h2>Manage Folder</h2> ++
-      //gradesCsvLink ++
-//      Unparsed("&emsp;") ++ gradesXmlLink ++
       DownloadHelper.renderCsvDownloadLink(
         folder.renderGradesCsv,
         s"${folder.getLongDescription}_Grades",
         Text(s"FolderGrades_${folder.getLongDescription}.csv")) ++
       Unparsed("&emsp;") ++ userLink
-//      Unparsed("&emsp;") ++ exportLink ++
-//      Unparsed("&emsp;") ++ importLink
   }
 
   def folderuserlist(ignored: NodeSeq): NodeSeq = {
