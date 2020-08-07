@@ -216,10 +216,11 @@ class Problempoolsnippet extends{
             new ProblemRenderer(problem).renderDeleteLink("/main/problempool/index")
           })
         )
-        ++ SHtml.button("Batch Send", ()=>{S.redirectTo("/main/problempool/batchsend")})
+        ++ SHtml.button("Send Selected", ()=>{S.redirectTo("/main/problempool/batchsend")})
         ++ <br></br>
-        ++ <br></br>
-        ++ deleteAllLink)
+        ++ SHtml.button("Delete Selected", ()=>{
+          BatchProblems.is.foreach(_.delete_!)
+        }, "onclick" -> JsRaw("return confirm('Are you sure you want to delete the selected problems?')").toJsCmd))
       }
     </form>
 
@@ -283,23 +284,20 @@ class Problempoolsnippet extends{
       return S.redirectTo("/main/problempool/index")
     }
 
-    <div>
-      <h4><strong>Delete ALL User Grades</strong></h4>
-      <form>
-        {
-          val onClick = JsRaw("return confirm('Are you sure you want to delete all the user grades for this problem?')")
+    <form>
+      {
+        val onClick = JsRaw("return confirm('Are you sure you want to delete all the user grades for this problem?')")
 
-          SHtml.link(
-            "/main/problempool/index",
-            () => {
-              SolutionAttempt.deleteAllByProblem(CurrentEditableProblem.is)
-            },
-            Text("Delete"),
-            "onclick" -> onClick.toJsCmd,
-            "style" -> "color: red")
-        }
-      </form>
-    </div>
+        SHtml.link(
+          "/main/problempool/index",
+          () => {
+            SolutionAttempt.deleteAllByProblem(CurrentEditableProblem.is)
+          },
+          Text("Delete ALL User Grades"),
+          "onclick" -> onClick.toJsCmd,
+          "style" -> "color: red")
+      }
+    </form>
   }
 
   def renderpractice(ignored: NodeSeq): NodeSeq = {
