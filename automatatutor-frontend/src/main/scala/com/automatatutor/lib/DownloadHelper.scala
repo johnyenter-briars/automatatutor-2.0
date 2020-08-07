@@ -50,15 +50,15 @@ object DownloadHelper {
     throw new ResponseShortcutException(buildDownloadResponse)
   }
 
-  def renderCsvDownloadLink ( contents : String, filename : String, linkBody : NodeSeq ) : NodeSeq = {
+  def renderCsvDownloadLink(contents : String, filename : String, linkBody : NodeSeq ) : NodeSeq = {
     return SHtml.link("ignored", () => offerDownloadToUser(contents, filename, CsvFile), linkBody)
   }
   
-  def renderXmlDownloadLink ( contents : NodeSeq, filename : String, linkBody : NodeSeq ) : NodeSeq = {
+  def renderXmlDownloadLink(contents : NodeSeq, filename : String, linkBody : NodeSeq ) : NodeSeq = {
     return SHtml.link("ignored", () => offerDownloadToUser(contents.toString, filename, XmlFile), linkBody)
   }
 
-  def renderXlsxDownloadLink ( contents : String, filename : String, linkBody : NodeSeq ) : NodeSeq = {
+  def renderDownloadLink(contents : String, filename : String, linkBody : NodeSeq ) : NodeSeq = {
     return SHtml.link("ignored", () => offerDownloadToUser(contents.toString, filename, XlsxFile), linkBody)
   }
 }

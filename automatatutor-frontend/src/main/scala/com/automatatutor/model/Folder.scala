@@ -121,6 +121,17 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def isOpen: Boolean = {
     this.getEndDate.compareTo(Calendar.getInstance().getTime) > 0
   }
+
+  def renderGradesCsv: String = {
+    val posedProblems = this.getProblemPointersUnderFolder
+    val participants = this.getCourse.get.getParticipants
+    val participantsWithGrades : Seq[(User, Seq[Int], Int)]
+          = participants.map(
+            participant => (participant, posedProblems.map(_.getHighestAttempt(participant)), this.getAchievedPoints(participant)))
+    val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";") + ";Total;"
+    val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";"), tuple._3).mkString(";"))
+    firstLine + "\n" + csvLines.mkString("\n")
+  }
 }
 
 object Folder extends Folder with LongKeyedMetaMapper[Folder] {

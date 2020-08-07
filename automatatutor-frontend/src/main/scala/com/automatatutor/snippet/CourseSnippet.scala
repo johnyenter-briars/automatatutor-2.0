@@ -479,8 +479,11 @@ class Coursesnippet {
   }
 
   def foldersupervisorsection(ignored: NodeSeq): NodeSeq = {
-    val course = CurrentCourse.is
+    if(CurrentFolderInCourse.is == null)
+      println("we got a problem")
 
+    val course = CurrentCourse.is
+    val folder = CurrentFolderInCourse.is
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
 
@@ -491,9 +494,13 @@ class Coursesnippet {
 //    val importLink = SHtml.link("/main/course/import", () => {}, Text("Import Problems"))
 
 
-    <h2>Manage Users</h2> ++
+    <h2>Manage Folder</h2> ++
       //gradesCsvLink ++
 //      Unparsed("&emsp;") ++ gradesXmlLink ++
+      DownloadHelper.renderCsvDownloadLink(
+        folder.renderGradesCsv,
+        s"FolderGrades_${folder.getLongDescription}",
+        Text(s"FolderGrades_${folder.getLongDescription}.csv")) ++
       Unparsed("&emsp;") ++ userLink
 //      Unparsed("&emsp;") ++ exportLink ++
 //      Unparsed("&emsp;") ++ importLink
@@ -533,8 +540,10 @@ class Coursesnippet {
     val importLink = SHtml.link("/main/course/import", () => {}, Text("Import Problems"))
 
 
-    return <h2>Manage Course</h2> ++ gradesCsvLink ++
-      Unparsed("&emsp;") ++ gradesXmlLink ++
+    <h2>Manage Course</h2> ++
+      Unparsed("&emsp;") ++
+        DownloadHelper.renderCsvDownloadLink(
+          course.renderGradesCsv, "CourseGrades_"+course.getName, Text("CourseGrades.csv")) ++
       Unparsed("&emsp;") ++ userLink ++
       Unparsed("&emsp;") ++ exportLink ++
       Unparsed("&emsp;") ++ importLink
@@ -548,7 +557,7 @@ class Coursesnippet {
     return downloadXmlLink
   }
 
-  def rendercsvdownloadlink(ignored: NodeSeq): NodeSeq = {
+  def rendercoursecsvdownloadlink(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
 
     val downloadCsvLink = DownloadHelper.renderCsvDownloadLink(course.renderGradesCsv, "grades", Text("Grades.csv"))
