@@ -36,15 +36,14 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
 
   def renderAccess(target : String, asLink : Boolean) : NodeSeq = {
     if (asLink) return SHtml.link(target, () => {
-      CurrentProblemPointerInCourse(problemPointer)}, Text("Edit"))
+      CurrentBatchProblemPointersInCourse.is += problemPointer
+    }, Text("Edit"))
 
     val button: NodeSeq = <button type='button'>Edit</button>
     SHtml.link(target, () => {
-      CurrentProblemPointerInCourse(problemPointer)}, button)
+      CurrentBatchProblemPointersInCourse.is += problemPointer
+    }, button)
   }
-
-  def renderAccessLink: NodeSeq = renderAccess("/main/course/problems/editproblemaccess", true)
-  def renderAccessButton: NodeSeq = renderAccess("/main/course/problems/editproblemaccess", false)
 
   def renderDelete(target: String): NodeSeq = {
     val onClick: JsCmd = JsRaw(

@@ -184,63 +184,6 @@ class Coursesnippet {
       "createbutton" -> createFolderButton)
   }
 
-  def renderaccessedit(xhtml: NodeSeq): NodeSeq = {
-    if (CurrentProblemPointerInCourse.is == null) {
-      S.warning("Please first choose a problem to edit")
-      return S.redirectTo("/main/course/index")
-    }
-
-    val problem: ProblemPointer = CurrentProblemPointerInCourse.is
-
-    var attempts = problem.getAllowedAttemptsString
-    var maxGrade = problem.getMaxGrade.toString
-
-    def editProblem() = {
-      var errors: List[String] = List()
-      val numMaxGrade = try {
-        if (maxGrade.toInt < 1) {
-          errors = errors ++ List("Best grade must be positive")
-          10
-        }
-        else maxGrade.toInt
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(maxGrade + " is not an integer")
-          10
-        }
-      }
-      val numAttempts = try {
-        if (attempts.toInt < 0) {
-          errors = errors ++ List("Nr of attempts must not be negative")
-          3
-        }
-        else attempts.toInt
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(attempts + " is not an integer")
-          3
-        }
-      }
-      if (!errors.isEmpty) {
-        S.warning(errors.head)
-      } else {
-        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
-
-        S.redirectTo("/main/course/index", () => {})
-      }
-    }
-
-    val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
-    val attemptsField = SHtml.text(attempts, attempts = _)
-
-    val editButton = SHtml.submit("Edit Problem", editProblem)
-
-    Helpers.bind("renderaccesseditform", xhtml,
-      "maxgradefield" -> maxGradeField,
-      "attemptsfield" -> attemptsField,
-      "editbutton" -> editButton)
-  }
-
   def renderaddproblems(xhtml: NodeSeq): NodeSeq = {
     new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton
   }
@@ -250,6 +193,8 @@ class Coursesnippet {
       S.warning("Please first choose a folder")
       return S.redirectTo("/main/course/index")
     }
+
+    CurrentBatchProblemPointersInCourse.is.clear()
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     val folder = CurrentFolderInCourse.is
@@ -271,7 +216,7 @@ class Coursesnippet {
           ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
           ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
           ("Avg Grade/Avg Attempts", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderProblemStats),
-          ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccessButton),
+          ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccess("/main/course/problems/batchedit", false)),
           ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
             new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
           ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
