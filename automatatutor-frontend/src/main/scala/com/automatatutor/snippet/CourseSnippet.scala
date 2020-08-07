@@ -542,8 +542,7 @@ class Coursesnippet {
 
     <h2>Manage Course</h2> ++
       Unparsed("&emsp;") ++
-        DownloadHelper.renderCsvDownloadLink(
-          course.renderGradesCsv, "CourseGrades_"+course.getName, Text("CourseGrades.csv")) ++
+        DownloadHelper.renderZipDownloadLink(course.getName, course.renderFoldersForZip, Text("Grades")) ++
       Unparsed("&emsp;") ++ userLink ++
       Unparsed("&emsp;") ++ exportLink ++
       Unparsed("&emsp;") ++ importLink

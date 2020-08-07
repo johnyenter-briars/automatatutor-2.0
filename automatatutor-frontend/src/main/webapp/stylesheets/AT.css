@@ -42,8 +42,8 @@ table td {
     cursor: pointer;
 }
 
-.container {
-    width: 90%;
+.main-content{
+    width: 100%
 }
 
 

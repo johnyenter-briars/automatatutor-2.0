@@ -80,6 +80,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	  if (this.canBeSupervisedBy(user)) return this.getProblems
 	  return this.getSolvableProblems
 	}
+
 	def getFoldersForUser(user: User) : List[Folder] = {
 		if (!user.isAdmin && !this.isEnrolled(user)) return List()
 		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
@@ -91,6 +92,12 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		UserToCourse.deleteByCourse(this)
 		Folder.deleteByCourse(this)
 		return super.delete_!
+	}
+
+	def renderFoldersForZip: List[(String, String)] = {
+		val folders = Folder.findAllByCourse(this)
+
+		folders.map(folder => (folder.getLongDescription, folder.renderGradesCsv))
 	}
 
 	def renderGradesCsv: String = {
