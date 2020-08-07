@@ -12,7 +12,7 @@ object TableHelper {
 	}
 	 
 	private def renderSingleRow[T] ( datum : T , displayFuncs : Seq[T => NodeSeq]) : Node = {
-	  return <tr> { displayFuncs.map(func => <td> { func(datum) } </td>) } </tr>
+	  return <tr> { displayFuncs.map(func => <td>{ func(datum) }</td>) } </tr>
 	}
 
 	private def renderTableBody[T] ( data : Seq[T], displayFuncs : Seq[T => NodeSeq]) : NodeSeq = {
@@ -72,6 +72,25 @@ object TableHelper {
 		val dataRows = renderTableBody(data, displayFuncs)
 
 		<table id={tableID}> <thead> {headerRow} </thead> <tbody> {dataRows} </tbody> </table>
+	}
+
+	def renderTableWithHeaderColumnWidths[T](tableID: String, data : Seq[T], colWidths: List[Double], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
+		if(colWidths.length != colSpec.length) throw new IllegalArgumentException("The length of the column width list does not match the length of the column spec list")
+		val headings = colSpec.map(x => Text(x._1))
+		val headerRow = renderTableHeader(headings)
+
+		val displayFuncs = colSpec.map(x => x._2)
+		val dataRows = renderTableBody(data, displayFuncs)
+
+		<table id={tableID} width="100%">
+			<colgroup>
+				{
+					colWidths.map(width => <col width={width.toString + "%"}></col>)
+				}
+			</colgroup>
+			<thead> {headerRow} </thead> <tbody> {dataRows} </tbody>
+
+		</table>
 	}
 	
 	def renderTableWithComplexHeader[T] (data : Seq[T], colSpec : (NodeSeq, (T => NodeSeq))*) : NodeSeq = {

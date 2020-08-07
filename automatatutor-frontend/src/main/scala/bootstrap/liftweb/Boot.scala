@@ -89,20 +89,20 @@ class Boot {
 					(
 						Menu.i("View Folder") / "main" / "course" / "folders" / "index" >> courseChosenPredicate submenus
 						(
-							Menu.i("Create Folder") / "main" / "course" / "folders" / "addproblems" >> Hidden,
-							Menu.i("Edit Folder") / "main" / "course" / "folders" / "edit" >> Hidden
+							Menu.i("Add Problems to Folder") / "main" / "course" / "folders" / "addproblems" >> Hidden,
+							Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
+							Menu.i("View Users of Folder") / "main" / "course" / "folders" / "users" >> Hidden
 						),
 						Menu.i("User List") / "main" / "course" / "users" >> canSuperviseCoursePredicate,
 						Menu.i("Grade Download XML") / "main" / "course" / "downloadXML" >> canSuperviseCoursePredicate,
 						Menu.i("Grade Download CSV") / "main" / "course" / "downloadCSV" >> canSuperviseCoursePredicate,
 						Menu.i("Export Problems") / "main" / "course" / "export" >> canSuperviseCoursePredicate,
 						Menu.i("Import Problems") / "main" / "course" / "import" >> canSuperviseCoursePredicate,
+						//TODO 8/7/2020 do we need this?
 						Menu.i("Create Problem") / "main" / "course" / "problems" / "create" >> Hidden,
-						Menu.i("Pose Problem") / "main" / "course" / "problems" / "pose" >> Hidden,
 						Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
 						Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
 						Menu.i("Batch Edit Problems") / "main" / "course" / "problems" / "batchedit" >> Hidden,
-//						Menu.i("Edit Problem") / "main" / "course" / "problems" / "edit" >> Hidden,
 						Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden
 					)
 	  	),

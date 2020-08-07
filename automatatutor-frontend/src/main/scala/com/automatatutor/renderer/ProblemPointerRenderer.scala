@@ -2,13 +2,14 @@ package com.automatatutor.renderer
 
 import scala.xml.NodeSeq
 import scala.xml.Text
-import com.automatatutor.model.{Course, Folder, Problem, ProblemPointer, User}
+import com.automatatutor.model.{Course, Folder, Problem, ProblemPointer, SolutionAttempt, User}
 import com.automatatutor.snippet._
 import net.liftweb.http._
 import net.liftweb.http.js.JE.JsRaw
 import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JsCmds
 import net.liftweb.http.js.JsCmds.jsExpToJsCmd
+import net.liftweb.mapper.By
 
 class ProblemPointerRenderer(problemPointer: ProblemPointer) {
 
@@ -74,5 +75,38 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
 
   def renderReferencedProblemLink(previousPage: String): NodeSeq = renderReferencedProblem("/main/problempool/edit", true, previousPage)
   def renderReferencedProblemButton(previousPage: String): NodeSeq = renderReferencedProblem("/main/problempool/edit", false, previousPage)
+
+  def renderProblemStats: NodeSeq = {
+    //get all students who tried the problem
+    val students = problemPointer.getStudentsWhoAttempted
+
+    //map each student to the number of attempts they have on this problem
+    val attemptsPerStudent: List[Int] = students.map(student => {
+      SolutionAttempt.findAll(
+        By(SolutionAttempt.userId, student),
+        By(SolutionAttempt.problempointerId, problemPointer))
+        .length
+    })
+
+    //compute average number of attempts
+    val averageAttempts: Float = attemptsPerStudent.sum.toFloat / attemptsPerStudent.length
+
+    val highestGradesPerUser = students.map(student => {
+      //Get all attempts for each user, and filter based on the current problem
+      val attempts = SolutionAttempt.findAll(
+        By(SolutionAttempt.userId, student),
+        By(SolutionAttempt.problempointerId, problemPointer))
+
+      //map each attempt at the problem to its grade (points/maxgrade), and take the max
+      attempts.map(sa => {
+        sa.grade.is.toFloat / sa.getProblemPointer.getMaxGrade
+      }).max
+    })
+
+    var averageGrade: Float = highestGradesPerUser.sum / highestGradesPerUser.length
+    averageGrade = (averageGrade * 100).round
+
+    Text(averageGrade + "%/" + averageAttempts.round)
+  }
 
 }

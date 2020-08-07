@@ -15,30 +15,29 @@
 - It should be possible to remove exercises from a folder.
 - Figure out what to do with duplicates (folder having the same problem pointer or folders having the problem pointers that reference the same problem)
 - Have ProblemPointers delete their referenced SolutionAttempts/better error handling
-
-## TODO
-- I'd like to see, in the pool, in which course/folder the exercise appears.
 - Sorting in the pool.  Sorting everywhere.
-- Batch operations in the pool (that's basically just for delete, but still, batch operations everywhere.)
-
 - Batch operations would be: delete, change points, change # attempts, move to folder/copy to folder.
 
-- Edit folder shouldn't be a page, should be done on this page
-- Add a "clear all problems" button
-- Fix All TODOS
-- Better individual problem reporting, like average grade, average number of attempts for each student. Maybe its own separate section?
+## TODO
+- Fix All TODOS in the code
+- I'd like to see, in the pool, in which course/folder the exercise appears.
+- Better individual problem reporting, like average grade, average number of attempts for each student.
 - Better and more comprehensive UI features to control the flow of problems
 - Allow admins or teachers to edit grades directly instead of having to open the database
-- Sorting folders
 - optionally moving grades to exercises
 - Formatting in questions with mathjax
 - multiple ways of checking correctness of solutions for the instructor
 - extending syntax for CFG
 - more uniform feedback for students
 - adding exercises
+- Edit/solve/send: Using small pictograms E.g.,
+https://fontawesome.com/icons/edit
+https://fontawesome.com/icons/brain
+https://fontawesome.com/icons/share
 
 
-# Current task as of 7/17/2020:
---> Batch Operations
+# Current task as of 8/4/2020:
+--> - I'd like to see, in the pool, in which course/folder the exercise appears.
+- Better individual problem reporting, like average grade, average number of attempts for each student.
 
 

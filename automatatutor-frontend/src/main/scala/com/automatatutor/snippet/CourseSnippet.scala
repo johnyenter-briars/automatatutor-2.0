@@ -105,11 +105,11 @@ class Coursesnippet {
     val folderNameField = SHtml.text(folderName, folderName = _)
     val startDateField = SHtml.text(startDateString, startDateString = _)
     val endDateField = SHtml.text(endDateString, endDateString = _)
-    val poseLabel = <strong>{currentFolder.getPosed.toString}</strong>
+    val visibleLabel = <strong>{currentFolder.getVisible.toString}</strong>
 
     val postFolderButton = SHtml.button(
-      if(currentFolder.getPosed) "Unpose" else "Pose",
-      () => {currentFolder.setPosed(!currentFolder.getPosed).save})
+      if(currentFolder.getVisible) "Remove Visibility" else "Make Visible",
+      () => {currentFolder.setVisible(!currentFolder.getVisible).save})
 
     val editFolderButton = SHtml.submit("Save changes to folder", editFolderCallback)
 
@@ -117,7 +117,7 @@ class Coursesnippet {
       "foldernamefield" -> folderNameField,
       "startdatefield" -> startDateField,
       "enddatefield" -> endDateField,
-      "poselabel" -> poseLabel,
+      "visiblelabel" -> visibleLabel,
       "posebutton" -> postFolderButton,
       "editbutton" -> editFolderButton,
       "deletebutton" -> deleteFolderButton)
@@ -268,8 +268,9 @@ class Coursesnippet {
           problems,
           ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
           ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-          ("Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
+          ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
           ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
+          ("Avg Grade/Avg Attempts", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderProblemStats),
           ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccessButton),
           ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
             new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
@@ -290,7 +291,7 @@ class Coursesnippet {
         ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
         ("Your Attempts", (problem: ProblemPointer) => Text(problem.getAttempts(user).length.toString)),
         ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-        ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getGrade(user).toString)),
+        ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getHighestAttempt(user).toString)),
         ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
         ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton)
       )
@@ -448,7 +449,7 @@ class Coursesnippet {
           TableHelper.renderTableWithHeader(
             folders,
             ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-            ("Posed", (folder: Folder) => Text(folder.getPosed.toString)),
+            ("Visible", (folder: Folder) => Text(folder.getVisible.toString)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
             ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
@@ -465,24 +466,66 @@ class Coursesnippet {
       //logged in user is a student
       <div>
         {
-          folders.map(folder => {
-            if (!folder.isOpen) {
-              NodeSeq.Empty
-            }
-            else {
-              TableHelper.renderTableWithHeader(
-                folders,
-                ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
-                ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-                ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-                ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
-                ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton)
-              )
-            }
-          })
+          TableHelper.renderTableWithHeader(
+            folders,
+            ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+            ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
+            ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+            ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
+            ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton)
+          )
         }
       </div>
     }
+  }
+
+  def foldersupervisorsection(ignored: NodeSeq): NodeSeq = {
+    if(CurrentFolderInCourse.is == null)
+      println("we got a problem")
+
+    val course = CurrentCourse.is
+    val folder = CurrentFolderInCourse.is
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
+
+//    val gradesCsvLink = SHtml.link("/main/course/downloadCSV", () => {}, Text("Grades (as .csv)"))
+//    val gradesXmlLink = SHtml.link("/main/course/downloadXML", () => {}, Text("Grades (as .xml)"))
+    val userLink = SHtml.link("/main/course/folders/users", () => {}, Text("Users"))
+//    val exportLink = SHtml.link("/main/course/export", () => {}, Text("Export Problems"))
+//    val importLink = SHtml.link("/main/course/import", () => {}, Text("Import Problems"))
+
+
+    <h2>Manage Folder</h2> ++
+      //gradesCsvLink ++
+//      Unparsed("&emsp;") ++ gradesXmlLink ++
+      DownloadHelper.renderCsvDownloadLink(
+        folder.renderGradesCsv,
+        s"${folder.getLongDescription}_Grades",
+        Text(s"FolderGrades_${folder.getLongDescription}.csv")) ++
+      Unparsed("&emsp;") ++ userLink
+//      Unparsed("&emsp;") ++ exportLink ++
+//      Unparsed("&emsp;") ++ importLink
+  }
+
+  def folderuserlist(ignored: NodeSeq): NodeSeq = {
+    val course = CurrentCourse.is
+    val folder = CurrentFolderInCourse.is
+
+    val participantList = if (course.hasParticipants) {
+      TableHelper.renderTableWithHeader(course.getParticipants,
+        ("First Name", (user: User) => Text(user.firstName.is)),
+        ("Last Name", (user: User) => Text(user.lastName.is)),
+        ("Email", (user: User) => Text(user.email.is)),
+        ("Possible Points", (user: User) => Text(folder.getPossiblePoints.toString)),
+        ("Achieved Points", (user: User) => Text(folder.getAchievedPoints(user).toString)),
+        ("Average Grade/Num Attempts", (user: User) =>
+          Text(folder.getOverallGrade(user).toString + "%/" + folder.getNumAttemptsAcrossAllProblems(user)))
+      )
+    } else {
+      Text("There are no participants yet.")
+    }
+
+    <h3>Users of Folder: </h3> ++ participantList
   }
 
   def supervisorsection(ignored: NodeSeq): NodeSeq = {
@@ -498,8 +541,9 @@ class Coursesnippet {
     val importLink = SHtml.link("/main/course/import", () => {}, Text("Import Problems"))
 
 
-    return <h2>Manage Course</h2> ++ gradesCsvLink ++
-      Unparsed("&emsp;") ++ gradesXmlLink ++
+    <h2>Manage Course</h2> ++
+      Unparsed("&emsp;") ++
+        DownloadHelper.renderZipDownloadLink(course.getName, course.renderFoldersForZip, Text("Grades")) ++
       Unparsed("&emsp;") ++ userLink ++
       Unparsed("&emsp;") ++ exportLink ++
       Unparsed("&emsp;") ++ importLink
@@ -513,7 +557,7 @@ class Coursesnippet {
     return downloadXmlLink
   }
 
-  def rendercsvdownloadlink(ignored: NodeSeq): NodeSeq = {
+  def rendercoursecsvdownloadlink(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
 
     val downloadCsvLink = DownloadHelper.renderCsvDownloadLink(course.renderGradesCsv, "grades", Text("Grades.csv"))
@@ -549,8 +593,9 @@ class Coursesnippet {
         //NOTE: These following two lines assume that you only want to count the grades/attempts of questions
         //which are CURRENTLY posed
         //If a student solves a question, but then its containing folder is unposed, that grade will not be accounted for
-        ("Attempts", (user: User) => Text(course.getPosedProblems.map(_.getNumberAttempts(user)).sum.toString)),
-        ("Points", (user: User) => Text(course.getPosedProblems.map(_.getGrade(user)).sum.toString)),
+        ("Total Attempts", (user: User) => Text(course.getVisibleProblems.map(_.getNumberAttempts(user)).sum.toString)),
+        ("Total Points", (user: User) => Text(course.getVisibleProblems.map(_.getHighestAttempt(user)).sum.toString)),
+        ("Average Grade", (user: User) => new CourseRenderer(course).renderAverageGrade(user)),
         ("", (user: User) => dismissLink(user)))
     } else {
       <h2>Participants</h2> ++ Text("There are no paticipants yet.")
@@ -559,6 +604,7 @@ class Coursesnippet {
     return supervisorList ++ participantList
   }
 
+  //TODO 8/7/2020 do we need this?
   def rendercreate(ignored: NodeSeq): NodeSeq = {
     if (CurrentProblemTypeInCourse.is == null) {
       S.warning("You have not selected a problem type")
@@ -646,7 +692,7 @@ class Coursesnippet {
     }
 
     def bestGrade(): Int = {
-      problemPointer.getGrade(user)
+      problemPointer.getHighestAttempt(user)
     }
 
     //If the user is the admin or instructor, don't even bother recording an attempt

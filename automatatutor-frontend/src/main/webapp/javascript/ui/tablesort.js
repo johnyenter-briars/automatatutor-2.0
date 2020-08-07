@@ -1,7 +1,12 @@
 ;(function() {
   function Tablesort(el, options) {
     if (!(this instanceof Tablesort)) return new Tablesort(el, options);
-    console.log(el);
+    
+    var filtered = Array.from(el.children).filter(e => e.tagName == "THEAD")
+    
+    if(filtered.length != 1){
+        throw new Error('Element must be a properly formatted table');  
+    }
     if (!el || el.tagName !== 'TABLE') {
       throw new Error('Element must be a table');
     }

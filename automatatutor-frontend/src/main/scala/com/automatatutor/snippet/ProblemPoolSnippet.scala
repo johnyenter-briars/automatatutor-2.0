@@ -194,20 +194,24 @@ class Problempoolsnippet extends{
     
     val table = <form>
       {
-        (TableHelper.renderTableWithHeaderPlusID(
+        (TableHelper.renderTableWithHeaderColumnWidths(
           tableID,
           usersProblems,
+          List(3, 10.5, 21, 5, 13, 13.5, 5, 5.3, 10, 4),
+          ("", (problem: Problem) => checkBoxForProblem(problem)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
           ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
+          ("Problem Stats", (problem: Problem) => new ProblemRenderer(problem).renderProblemStats),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
+          ("Instances", (problem: Problem) => new ProblemRenderer(problem).renderProblemInstances),
           ("", (problem: Problem) => editProblemButton(problem)),
           ("", (problem: Problem) => SHtml.link(
             "/main/problempool/practice",
             () => {
               CurrentEditableProblem(problem)
             },
-            <button type='button'>Solve</button>) ++ sendButton(problem)),
-          ("", (problem: Problem) => checkBoxForProblem(problem)),
+            <button type='button'>Solve</button>)),
+          ("", (problem: Problem) => sendButton(problem)),
           ("", (problem: Problem) => {
             new ProblemRenderer(problem).renderDeleteLink("/main/problempool/index")
           })
@@ -284,30 +288,39 @@ class Problempoolsnippet extends{
       }
     })
 
-    <h4>Problem Statistics</h4> ++
-    <table>
-      <tr>
-        <td>Number of Instances in Courses</td>
-        <td>{courseInstances.length}</td>
-        {
-          courseInstances.map((c: Course) => {<td>{c.getName}</td>})
-        }
-      </tr>
-      <tr>
-        <td>Number of Instances in Folders</td>
-        <td>{folderInstances.length}</td>
-        {
-          folderInstances.map((f: Folder) => {<td>{f.getLongDescription}</td>})
-        }
-      </tr>
-      <tr>
-        <td>Number of Raw Instances</td>
-        <td>{problemPointerInstances.length}</td>
-        {
-        problemPointerInstances.map((p: ProblemPointer) => {<td>{p.getLongDescription}</td>})
-        }
-      </tr>
-    </table>
+    <div>
+      <button id="statistic-modal-button">View Statistics</button>
+
+      <div id="statistic-modal" class="modal">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <h3>Problem Statistics</h3>
+          </div>
+          <div class="modal-body">
+            <div id="statistic-data" >
+              <div>
+                <h4>Course Instances</h4>
+                <ul>
+                  {
+                  courseInstances.map((c: Course) => <li>{c.getName}</li>)
+                  }
+                </ul>
+              </div>
+              <div>
+                <h4>Folder Instances</h4>
+                <ul>
+                  {
+                    folderInstances.map((f: Folder) => <li>{f.getLongDescription}</li>)
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 
   def renderdeletegrades(ignored: NodeSeq): NodeSeq = {

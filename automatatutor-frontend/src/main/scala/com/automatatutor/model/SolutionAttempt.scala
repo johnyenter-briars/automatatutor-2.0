@@ -12,6 +12,10 @@ class SolutionAttempt extends LongKeyedMapper[SolutionAttempt] with IdPK {
 	object userId extends MappedLongForeignKey(this, User) // CARE: might have been deleted
 	object problempointerId extends MappedLongForeignKey(this, ProblemPointer) // CARE: might have been deleted
 	object grade extends MappedInt(this)
+
+	def getProblemPointer: ProblemPointer = problempointerId.obj openOrThrowException("Each solution attempt must have a referenced problem")
+
+	def getUser: User = userId.obj openOrThrowException("Each solution attempt must have a referenced user")
 }
 
 object SolutionAttempt extends SolutionAttempt with LongKeyedMetaMapper[SolutionAttempt] {

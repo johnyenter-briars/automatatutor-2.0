@@ -24,7 +24,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   protected object maxGrade extends MappedLong(this)
   def getProblemPointerID: Long = this.id.is
 
-  def getProblem = this.referencedProblemId.obj openOrThrowException "Every ProblemToFolder must have a Problem"
+  def getProblem = this.referencedProblemId.obj openOrThrowException "Every ProblemPointer must have a Problem"
   def setProblem ( problem : Problem ) = this.referencedProblemId(problem)
 
   def getCourse : Box[Course] = this.courseId.obj
@@ -35,7 +35,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   def getAllowedAttemptsString: String = if (this.allowedAttempts.is == 0) "∞" else this.allowedAttempts.is.toString
   def setAllowedAttempts(attempts: Long) = this.allowedAttempts(attempts)
 
-  def getFolder: Folder = this.folderId.obj openOrThrowException "Every ProblemToFolder must have a Folder"
+  def getFolder: Folder = this.folderId.obj openOrThrowException "Every ProblemPointer must have a Folder"
   def setFolder(folder: Folder) = this.folderId(folder)
   def setFolder(folder: Box[Folder]) = this.folderId(folder)
 
@@ -62,7 +62,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     else return this.getNumberAttemptsRemaining(user).toString
   }
 
-  def getGrade(user: User): Int = {
+  def getHighestAttempt(user: User): Int = {
     val grades = this.getAttempts(user).map(_.grade.is)
     if (grades.isEmpty) {
       0
@@ -71,23 +71,27 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     }
   }
 
+  def getGrade(user: User): Float = {
+    this.getHighestAttempt(user).toFloat / this.getAllowedAttempts
+  }
+
   def getLongDescription: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
 
     matchingProblems.head.getLongDescription
   }
 
   def getShortDescription: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
 
     matchingProblems.head.getShortDescription
   }
 
   def getTypeName: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each problem link must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
 
     matchingProblems.head.getTypeName()
   }
@@ -113,9 +117,17 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     val allowedAttempts = this.allowedAttempts.is
     val takenAttempts = this.getNumberAttempts(user)
     val maxGrade = this.maxGrade.is
-    val userGrade = this.getGrade(user)
+    val userGrade = this.getHighestAttempt(user)
 
     takenAttempts < allowedAttempts && userGrade < maxGrade
+  }
+
+  def getStudentsWhoAttempted: List[User] = {
+    SolutionAttempt
+      .findAll(By(SolutionAttempt.problempointerId, this))
+      .map(_.getUser)
+      .filter(_.isStudent)
+      .distinct
   }
 }
 
