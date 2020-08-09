@@ -32,7 +32,21 @@
     <br>
     <lift:Coursesnippet:renderaddproblems></lift:Coursesnippet:renderaddproblems>
     <h2>Problems</h2>
-    <lift:Coursesnippet.renderproblems></lift:Coursesnippet.renderproblems>
+    <lift:Coursesnippet.renderproblems>
+        <h4>Edit Data of Problems</h4>
+        <table>
+            <tr>
+                <td> Max Grade: </td>
+                <td> <renderbatcheditform:maxgradefield> </renderbatcheditform:maxgradefield> </td>
+            </tr>
+            <tr>
+                <td> Number of attempts allowed (0 --> unlimited): </td>
+                <td> <renderbatcheditform:attemptsfield> </renderbatcheditform:attemptsfield>
+            </tr>
+        </table>
+        <renderbatcheditform:deletebutton></renderbatcheditform:deletebutton>
+        <renderbatcheditform:editbutton></renderbatcheditform:editbutton>
+    </lift:Coursesnippet.renderproblems>
     <br>
     <br>
     <lift:Coursesnippet.foldersupervisorsection></lift:Coursesnippet.foldersupervisorsection>

@@ -188,7 +188,7 @@ class Coursesnippet {
     new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton
   }
 
-  def renderproblems(ignored: NodeSeq): NodeSeq = {
+  def renderproblems(xhtml: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder")
       return S.redirectTo("/main/course/index")
@@ -222,10 +222,24 @@ class Coursesnippet {
           ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
           ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
           ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
-        ).theSeq ++ SHtml.button(
-          "Batch Edit",
-          () => {S.redirectTo("/main/course/problems/batchedit")})
+        )
       }
+        <button type="button" id="statistic-modal-button">Batch Edit</button>
+
+        <div id="statistic-modal" class="modal">
+
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="close">&times;</span>
+              <h3>Edit Problem Access</h3>
+            </div>
+            <div class="modal-body">
+              {
+                this.renderbatchedit(xhtml)
+              }
+            </div>
+          </div>
+        </div>
       </form>
     }
     else{
@@ -286,7 +300,7 @@ class Coursesnippet {
       if (!errors.isEmpty) {
         S.warning(errors.head)
       } else {
-        currentProblems.foreach((problemPointer: ProblemPointer) => {
+        CurrentBatchProblemPointersInCourse.is.foreach((problemPointer: ProblemPointer) => {
           problemPointer.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
         })
       }
@@ -299,15 +313,12 @@ class Coursesnippet {
     val onClick: JsCmd = JsRaw(
       "return confirm('Are you sure you want to delete these problems from the folder? " +
         "If you do, all student grades on these problems will be lost!')")
-    val deleteButton = SHtml.link(
-      "/main/course/folders/index",
-      () => {
-        currentProblems.foreach((problemPointer: ProblemPointer) => {
-          problemPointer.delete_!
-        })
-      },
-      Text("Delete"),
-      "onclick" -> onClick.toJsCmd,
+
+    val deleteButton = SHtml.button("Delete", ()=>{
+      CurrentBatchProblemPointersInCourse.is.foreach((problemPointer: ProblemPointer) => {
+        problemPointer.delete_!
+      })
+    }, "onclick" -> onClick.toJsCmd,
       "style" -> "color: red")
 
     Helpers.bind("renderbatcheditform", xhtml,
@@ -708,6 +719,7 @@ class Coursesnippet {
   def renderbacktofolderbutton(xhtml: NodeSeq): NodeSeq = {
     SHtml.link("/main/course/folder/index", () => {}, <button type='button'>Go back to Course Overview</button>)
   }
+
 }
 
 object Courses {
