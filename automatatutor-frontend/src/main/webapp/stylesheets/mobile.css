@@ -14,12 +14,9 @@ img{
 .container {
 	width:100%;
 	min-width: 800px; 
-	max-width: 1050px;
+	max-width: 1500px;
 }
 
-/*.main-content {
-	width:70%;
-}*/
 .sidebar ul {
 	margin:0;
 	padding:0;

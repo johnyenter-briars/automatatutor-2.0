@@ -35,12 +35,9 @@ function expandOrCollapseHiddenText(tableCell){
 
     tableCell.style.whiteSpace = tableCell.style.whiteSpace === "nowrap" || 
                                     tableCell.style.whiteSpace === "" ? "pre-wrap" : "nowrap";
-}
 
-var tables = Array.from(document.getElementsByTagName('table'));
-
-for(var table of tables){
-    var _ = new Tablesort(table);
+    tableCell.style.display = tableCell.style.display === "table-cell" ||
+                                tableCell.style.display === "" ? "grid" : "table-cell"
 }
 
 Array.from(document.getElementsByTagName("td")).forEach(td => {
@@ -49,3 +46,8 @@ Array.from(document.getElementsByTagName("td")).forEach(td => {
     }
 })
 
+var tables = Array.from(document.getElementsByTagName('table'));
+
+for(var table of tables){
+    var _ = new Tablesort(table);
+}

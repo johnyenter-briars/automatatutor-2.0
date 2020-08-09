@@ -48,7 +48,9 @@ class ProblemRenderer(problem : Problem) {
       course.getName + "/" + problemPointer.getFolder.getLongDescription
     })
 
-    Text(problemLocations.mkString("\n"))
+    if(problemPointerInstances.isEmpty) return Text(problemLocations.mkString("\n"))
+
+    problemPointerInstances.flatMap(problemPointer => renderProblemInstanceLink(problemPointer)).theSeq
   }
 
   def renderProblemInstancesTable: NodeSeq = {
