@@ -94,7 +94,7 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
     val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
     val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5")
-    val submitButton = SHtml.submit("Edit", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
+    val submitButton = SHtml.submit("Save", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
     val setupScript = <script type="text/javascript"> initCanvas(); Editor.canvas.setAutomaton("{ preprocessBlockAutomatonXml(nfaConstructionProblem.getAutomaton) }") </script>
 
     val template : NodeSeq = Templates(List("templates-hidden", "description-to-nfa-problem", "edit")) openOr Text("Could not find template /templates-hidden/description-to-nfa-problem/edit")

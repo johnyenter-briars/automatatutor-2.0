@@ -262,7 +262,7 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
     val exportData: String = "document.getElementById('automatonField').value = Editor.canvasDfa.exportAutomaton(); "
     //val submitString: String = ajaxCallString(exportData, edit(_))
     //val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submitString }>Submit</button>
-    val submitButton: NodeSeq = SHtml.submit("Edit", edit, "onclick" -> exportData, "id" -> "submitButton")
+    val submitButton: NodeSeq = SHtml.submit("Save", edit, "onclick" -> exportData, "id" -> "submitButton")
     //val submitStringNoExport: String = ajaxCallString("", edit(_))
     val submitButtonNoExport: NodeSeq = SHtml.submit("Edit", edit, "onclick" -> "", "id" -> "submitButton")
 

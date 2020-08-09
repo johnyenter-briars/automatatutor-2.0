@@ -118,7 +118,7 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + "' + getProgram() + '" + shortdescFieldValXmlJs+ longdescFieldValXmlJs+ whileFieldValXmlJs + "</createattempt>'"), edit(_))
     val checkAlphabetAndSubmit: JsCmd = JsIf(Call("whileChecks", "whilefield"), hideSubmitButton & ajaxCall)
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Save</button>
 
 
     val template : NodeSeq = Templates(List("templates-hidden", "while-to-tm-problem", "edit")) openOr Text("Could not find template /templates-hidden/while-to-tm-problem/edit")

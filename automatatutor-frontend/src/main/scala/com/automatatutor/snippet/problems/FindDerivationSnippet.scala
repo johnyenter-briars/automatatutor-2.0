@@ -126,7 +126,7 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
     val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<editattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + derivationTypeFieldValXmlJs + shortdescFieldValXmlJs + "</editattempt>'"), edit(_))
     val submit: JsCmd = hideSubmitButton & ajaxCall
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Save</button>
 
     //put HTML into template
     val template: NodeSeq = Templates(List("templates-hidden", "find-derivation-problem", "edit")) openOr Text("Could not find template /templates-hidden/find-derivation-problem/edit")

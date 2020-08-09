@@ -96,7 +96,7 @@ object NFAToDFAProblemSnippet extends SpecificProblemSnippet {
     // Remember to remove all newlines from the generated XML by using filter
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
     val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
-    val submitButton = SHtml.submit("Edit", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
+    val submitButton = SHtml.submit("Save", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
     val setupScript =
       <script type="text/javascript">
         initCanvas();

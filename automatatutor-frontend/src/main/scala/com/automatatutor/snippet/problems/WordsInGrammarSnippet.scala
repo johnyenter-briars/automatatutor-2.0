@@ -129,7 +129,7 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
 
     val submit: JsCmd = hideSubmitButton & ajaxCall
 
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={submit}>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={submit}>Save</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "words-in-grammar-problem", "edit")) openOr Text("Could not find template /templates-hidden/words-in-grammar-problem/edit")
     Helpers.bind("editform", template,

@@ -260,12 +260,19 @@ class Problempoolsnippet extends{
       S.redirectTo(redirectTarget)
     }
 
-    problemSnippet.renderEdit match {
-      case Full(renderFunc) => renderFunc(problem, returnFunc)
-      case Empty            =>
-        S.error("Editing not implemented for this problem type"); S.redirectTo("/main/course/index")
-      case _                => S.error("Error when retrieving editing function"); S.redirectTo("/main/course/index")
-    }
+    <div>
+      {
+        SHtml.link("/main/problempool/index", ()=>{}, <button>Cancel</button>)
+      }
+      {
+        problemSnippet.renderEdit match {
+          case Full(renderFunc) => renderFunc(problem, returnFunc)
+          case Empty            =>
+            S.error("Editing not implemented for this problem type"); S.redirectTo("/main/course/index")
+          case _                => S.error("Error when retrieving editing function"); S.redirectTo("/main/course/index")
+        }
+      }
+    </div>
   }
 
   def renderproblemstatistics(ignored: NodeSeq): NodeSeq = {

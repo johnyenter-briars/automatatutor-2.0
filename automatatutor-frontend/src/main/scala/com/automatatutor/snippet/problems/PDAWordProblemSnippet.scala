@@ -97,7 +97,7 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
     val numberOfWordsInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full[String](numberOfWordsInLanguage.toString), value => numberOfWordsInLanguage = value.toInt)
     val numberOfWordsNotInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full[String](numberOfWordsNotInLanguage.toString), value => numberOfWordsNotInLanguage = value.toInt)
     val allowSimulationField = SHtml.checkbox(allowSimulation, res => allowSimulation = res)
-    val submitButton = SHtml.submit("Edit", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
+    val submitButton = SHtml.submit("Save", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
 
     val setupScript =
       <script type="text/javascript">
