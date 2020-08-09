@@ -236,6 +236,11 @@ class Problempoolsnippet extends{
     )
   }
 
+  def renderbackbutton(xhtml: NodeSeq): NodeSeq = {
+    val redirectTarget = if(PreviousPage.is == null) "/main/problempool/index" else PreviousPage.is
+    SHtml.link(redirectTarget, ()=>{PreviousPage(null)}, <button>Cancel</button>)
+  }
+
   def renderproblemedit(ignored: NodeSeq): NodeSeq ={
     if (CurrentEditableProblem.is == null) {
       S.warning("Please first choose a problem to edit")
@@ -252,19 +257,13 @@ class Problempoolsnippet extends{
       S.redirectTo(redirectTarget)
     }
 
-    <div>
-      {
-        SHtml.link("/main/problempool/index", ()=>{}, <button>Cancel</button>)
-      }
-      {
-        problemSnippet.renderEdit match {
-          case Full(renderFunc) => renderFunc(problem, returnFunc)
-          case Empty            =>
-            S.error("Editing not implemented for this problem type"); S.redirectTo("/main/course/index")
-          case _                => S.error("Error when retrieving editing function"); S.redirectTo("/main/course/index")
-        }
-      }
-    </div>
+    problemSnippet.renderEdit match {
+      case Full(renderFunc) => renderFunc(problem, returnFunc)
+      case Empty            =>
+        S.error("Editing not implemented for this problem type"); S.redirectTo("/main/course/index")
+      case _                => S.error("Error when retrieving editing function"); S.redirectTo("/main/course/index")
+    }
+
   }
 
   def renderproblemstatistics(ignored: NodeSeq): NodeSeq = {

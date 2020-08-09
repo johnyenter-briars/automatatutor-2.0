@@ -425,8 +425,10 @@ class Coursesnippet {
   }
 
   def foldersupervisorsection(ignored: NodeSeq): NodeSeq = {
-    if(CurrentFolderInCourse.is == null)
-      println("we got a problem")
+    if (CurrentFolderInCourse.is == null) {
+      S.warning("Please first choose a folder")
+      return S.redirectTo("/main/course/index")
+    }
 
     val course = CurrentCourse.is
     val folder = CurrentFolderInCourse.is
@@ -697,6 +699,14 @@ class Coursesnippet {
   def rendernavigation(ignored: NodeSeq): NodeSeq = {
     val overviewButton = SHtml.link("/main/course/index", () => {}, <button type='button' class='navButton'>Course Overview</button>)
     return overviewButton
+  }
+
+  def renderbacktocoursebutton(xhtml: NodeSeq): NodeSeq = {
+    SHtml.link("/main/course/index", () => {}, <button type='button'>Go back to Course Overview</button>)
+  }
+
+  def renderbacktofolderbutton(xhtml: NodeSeq): NodeSeq = {
+    SHtml.link("/main/course/folder/index", () => {}, <button type='button'>Go back to Course Overview</button>)
   }
 }
 
