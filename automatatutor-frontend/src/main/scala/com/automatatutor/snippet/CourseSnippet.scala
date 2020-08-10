@@ -212,7 +212,7 @@ class Coursesnippet {
     def checkBoxForProblem(p: ProblemPointer): NodeSeq = {
       SHtml.checkbox(false, (chosen: Boolean) => {
         if(chosen) CurrentBatchProblemPointersInCourse.is += p
-      })
+      }, "class"->"checkbox")
     }
 
     if(CurrentCourse.canBeSupervisedBy(user)){
@@ -220,7 +220,8 @@ class Coursesnippet {
         {
           TableHelper.renderTableWithHeader(
             problems,
-            ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+            ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
+            ("Problem Name", (problem: ProblemPointer) => Text(problem.getShortDescription)),
             ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
             ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
             ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
@@ -228,12 +229,14 @@ class Coursesnippet {
             ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccess("/main/course/problems/batchedit", false)),
             ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
               new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
-            ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
             ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
             ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
           ).theSeq ++ SHtml.button(
             "Batch Edit",
-            () => {S.redirectTo("/main/course/problems/batchedit")})
+            () => {
+              PreviousPage("/main/course/folders/index")
+              S.redirectTo("/main/course/problems/batchedit")}
+          )
         }
       </form>
     }
@@ -325,6 +328,11 @@ class Coursesnippet {
 
   }
 
+  def rendercancelbatchedit(xhtml: NodeSeq): NodeSeq = {
+    val redirectTarget = if(PreviousPage.is == null) "/main/course/index" else PreviousPage.is
+    SHtml.link(redirectTarget, ()=>{PreviousPage(null)}, <button type="button">Cancel</button>)
+  }
+
   def renderbatchmove(xhtml: NodeSeq): NodeSeq = {
     if (CurrentBatchProblemPointersInCourse.is == null) {
       S.warning("Please first choose problems to batch edit")
@@ -399,12 +407,11 @@ class Coursesnippet {
         {
           TableHelper.renderTableWithHeader(
             folders,
-            ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
+            ("Folder Name", (folder: Folder) => new FolderRenderer(folder).renderSelectLink),
             ("Visible", (folder: Folder) => Text(folder.getVisible.toString)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
             ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
-            ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton),
             ("", (folder: Folder) => new FolderRenderer(folder).renderDeleteLink)
           )
         }

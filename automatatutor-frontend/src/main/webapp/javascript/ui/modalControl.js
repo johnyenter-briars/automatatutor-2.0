@@ -1,6 +1,8 @@
 function initializeModal(){
     var modals = document.getElementsByClassName("modal")
+    
     if(modals.length == 0) return;
+    
     var modal= modals[0]
 
     var btn = document.getElementsByClassName("modal-button")[0];
