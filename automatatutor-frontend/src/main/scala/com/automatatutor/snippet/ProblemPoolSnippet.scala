@@ -234,10 +234,11 @@ class Problempoolsnippet extends{
     
     val table = <form>
       {
-        (TableHelper.renderTableWithHeaderColumnWidths(
+        (TableHelper.renderTableWithHeader(
           tableID,
           usersProblems,
           List(3, 10.5, 21, 5, 13, 13.5, 5, 5.3, 10, 4),
+          Map("Problem Stats" -> "Average grade a student gets on this problem/Average attempts per student"),
           ("", (problem: Problem) => checkBoxForProblem(problem)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
           ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
