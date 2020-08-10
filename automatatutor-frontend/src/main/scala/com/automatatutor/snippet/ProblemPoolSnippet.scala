@@ -146,7 +146,6 @@ class Problempoolsnippet extends{
     val supervisedCourses = user.getSupervisedCourses
 
     val selectedFolders = new ListBuffer[Folder]
-
     def checkBoxForFolder(folder: Folder): NodeSeq = {
       SHtml.checkbox(false, (chosen: Boolean) => {
         if(chosen) selectedFolders += folder
@@ -168,19 +167,26 @@ class Problempoolsnippet extends{
           </li>
         })
       }
-    </ul> ++ SHtml.button("Send Problems", () => {
-      selectedFolders.foreach(folder => {
-        BatchProblems.foreach(problem => {
-          val problemPointer = new ProblemPointer
-          problemPointer.setCourse(folder.getCourse.get)
-            .setProblem(problem)
-            .setFolder(folder)
-            .setMaxGrade(10)
-            .setAllowedAttempts(10)
-            .save
+    </ul> ++
+    <form>
+    {
+      SHtml.button("Send Problems", () => {
+        selectedFolders.foreach(folder => {
+          BatchProblems.is.foreach(problem => {
+            val problemPointer = new ProblemPointer
+            problemPointer.setCourse(folder.getCourse.get)
+              .setProblem(problem)
+              .setFolder(folder)
+              //TODO 8/10/2020 add a method by which the user can set these settings on first transfer
+              .setMaxGrade(10)
+              .setAllowedAttempts(10)
+              .save
+          })
         })
+        S.redirectTo("/main/problempool/index")
       })
-    })
+    }
+    </form>
   }
 
   def renderproblempool(xhtml: NodeSeq): NodeSeq ={

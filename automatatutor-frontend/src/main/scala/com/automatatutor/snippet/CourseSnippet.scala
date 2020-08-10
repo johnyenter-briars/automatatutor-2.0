@@ -94,12 +94,20 @@ class Coursesnippet {
       }
     }
 
-    val deleteFolderButton = SHtml.link("/main/course/folders/index", () => {
+    val deleteFolderButton = SHtml.link("/main/course/index", () => {
       val currentFolder = CurrentFolderInCourse.is
 
       currentFolder.delete_!
     }, Text("Delete Folder"), "onclick" -> JsRaw(
       "return confirm('Are you sure you want to delete this folder? If you do, all student grades will be lost!')")
+      .toJsCmd, "style" -> "color: red")
+
+    val deleteProblems = SHtml.link("/main/course/folders/index", () => {
+      val currentFolder = CurrentFolderInCourse.is
+
+      currentFolder.getProblemPointersUnderFolder.foreach(_.delete_!)
+    }, Text("Delete Problems in this Folder"), "onclick" -> JsRaw(
+      "return confirm('Are you sure you want to delete all problems in this folder? If you do, all student grades will be lost!')")
       .toJsCmd, "style" -> "color: red")
 
     val folderNameField = SHtml.text(folderName, folderName = _)
@@ -120,7 +128,8 @@ class Coursesnippet {
       "visiblelabel" -> visibleLabel,
       "posebutton" -> postFolderButton,
       "editbutton" -> editFolderButton,
-      "deletebutton" -> deleteFolderButton)
+      "deletebutton" -> deleteFolderButton,
+      "deleteproblemsbutton" -> deleteProblems)
   }
 
   def renderaddfolderform(xhtml: NodeSeq): NodeSeq = {
