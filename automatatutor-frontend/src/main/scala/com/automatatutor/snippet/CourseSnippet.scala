@@ -208,38 +208,24 @@ class Coursesnippet {
 
     if(CurrentCourse.canBeSupervisedBy(user)){
       <form>
-      {
-        TableHelper.renderTableWithHeader(
-          problems,
-          ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
-          ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-          ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-          ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
-          ("Avg Grade/Avg Attempts", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderProblemStats),
-          ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccess("/main/course/problems/batchedit", false)),
-          ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
-            new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
-          ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
-          ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
-          ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
-        )
-      }
-        <button type="button" id="statistic-modal-button">Batch Edit</button>
-
-        <div id="statistic-modal" class="modal">
-
-          <div class="modal-content">
-            <div class="modal-header">
-              <span class="close">&times;</span>
-              <h3>Edit Problem Access</h3>
-            </div>
-            <div class="modal-body">
-              {
-                this.renderbatchedit(xhtml)
-              }
-            </div>
-          </div>
-        </div>
+        {
+          TableHelper.renderTableWithHeader(
+            problems,
+            ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
+            ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
+            ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
+            ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
+            ("Avg Grade/Avg Attempts", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderProblemStats),
+            ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccess("/main/course/problems/batchedit", false)),
+            ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
+              new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
+            ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
+            ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
+            ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
+          ).theSeq ++ SHtml.button(
+            "Batch Edit",
+            () => {S.redirectTo("/main/course/problems/batchedit")})
+        }
       </form>
     }
     else{

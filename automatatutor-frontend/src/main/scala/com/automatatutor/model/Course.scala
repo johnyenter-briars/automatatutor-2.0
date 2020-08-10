@@ -88,6 +88,10 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		return Folder.findAllByCourse(this).filter(f => f.getVisible && f.isOpen)
 	}
 
+	def getFolders : List[Folder] = {
+		Folder.findAllByCourse(this)
+	}
+
 	override def delete_! : Boolean = {
 		UserToCourse.deleteByCourse(this)
 		Folder.deleteByCourse(this)
