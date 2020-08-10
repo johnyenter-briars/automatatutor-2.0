@@ -224,7 +224,7 @@ class Problempoolsnippet extends{
     def checkBoxForProblem(potentialProblem: Problem): NodeSeq = {
       SHtml.checkbox(false, (chosen: Boolean) => {
         if(chosen) BatchProblems.is += potentialProblem
-      })
+      }, "class" -> "checkbox")
     }
 
     //Clear out BatchProblems to avoid over collection of problems if the user goes back and forth between pages
