@@ -39,7 +39,7 @@ table td {
     text-overflow:ellipsis;
     overflow:hidden;
     white-space:nowrap;
-    cursor: pointer;
+
     padding: 10px 10px 10px 10px;
 }
 

@@ -51,3 +51,12 @@ var tables = Array.from(document.getElementsByTagName('table'));
 for(var table of tables){
     var _ = new Tablesort(table);
 }
+
+var cells = Array.from(document.getElementsByTagName("TD"));
+
+for(var cell of cells){
+    for(var child of cell.children){
+        if(child.nodeName == "A")
+            cell.style.cursor = "pointer";
+    }
+}

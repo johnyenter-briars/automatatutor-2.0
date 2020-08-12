@@ -2,8 +2,6 @@ $(document).ready(function() {
     var $chkboxes = $('.checkbox');
     var lastChecked = null;
 
-    console.log($chkboxes);
-
     $chkboxes.click(function(e) {
         if (!lastChecked) {
             lastChecked = this;
