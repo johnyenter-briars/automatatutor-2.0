@@ -170,7 +170,7 @@ ul, #myUL {
 }
 
 .modal-body input {
-    width: 20px;
+    min-width: 20px;
     height: 20px;
 }
 

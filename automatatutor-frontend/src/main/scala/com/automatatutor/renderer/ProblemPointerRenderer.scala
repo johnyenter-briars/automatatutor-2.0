@@ -45,6 +45,25 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
     }, button)
   }
 
+  def renderAccessModal: NodeSeq = {
+    <div>
+      <button type="button" id="batch_send-modal-button" class="modal-button">Batch Send</button>
+
+      <div id="batch_send-modal" class="modal">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <h3>Send Problems to Folders</h3>
+          </div>
+          <div class="modal-body">
+            <h2>Test</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
   def renderDelete(target: String): NodeSeq = {
     val onClick: JsCmd = JsRaw(
       "return confirm('Are you sure you want to delete this problem from the folder? " +

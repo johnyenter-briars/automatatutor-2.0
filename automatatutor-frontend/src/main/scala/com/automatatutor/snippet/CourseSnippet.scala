@@ -197,6 +197,72 @@ class Coursesnippet {
     new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton
   }
 
+  def renderexerciseedit(xhtml: NodeSeq, problem: ProblemPointer): NodeSeq = {
+    if (CurrentBatchProblemPointersInCourse.is == null) {
+      S.warning("Please first choose problems to batch edit")
+      return S.redirectTo("/main/course/folders/index")
+    }
+
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+
+    //set to default cause we're working with multiple problems
+    var attempts = "10"
+    var maxGrade = "10"
+
+    def editProblem() = {
+      var errors: List[String] = List()
+      val numMaxGrade = try {
+        if (maxGrade.toInt < 1) {
+          errors = errors ++ List("Best grade must be positive")
+          10
+        }
+        else maxGrade.toInt
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(maxGrade + " is not an integer")
+          10
+        }
+      }
+      val numAttempts = try {
+        if (attempts.toInt < 0) {
+          errors = errors ++ List("Nr of attempts must not be negative")
+          3
+        }
+        else attempts.toInt
+      } catch {
+        case e: Exception => {
+          errors = errors ++ List(attempts + " is not an integer")
+          3
+        }
+      }
+      if (errors.nonEmpty) {
+        S.warning(errors.head)
+      } else {
+        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+      }
+    }
+
+    val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
+    val attemptsField = SHtml.text(attempts, attempts = _)
+    val editButton = SHtml.submit("Edit Problems", editProblem)
+
+    val onClick: JsCmd = JsRaw(
+      "return confirm('Are you sure you want to delete these problems from the folder? " +
+        "If you do, all student grades on these problems will be lost!')")
+
+    val deleteButton = SHtml.button("Delete", ()=>{
+      problem.delete_!
+    }, "onclick" -> onClick.toJsCmd,
+      "style" -> "color: red")
+
+    Helpers.bind("renderbatcheditform", xhtml,
+      "maxgradefield" -> maxGradeField,
+      "attemptsfield" -> attemptsField,
+      "editbutton" -> editButton,
+      "deletebutton" -> deleteButton
+    )
+  }
+
   def renderproblems(xhtml: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder")
@@ -215,6 +281,28 @@ class Coursesnippet {
       }, "class"->"checkbox")
     }
 
+    def renderAccessModal(problem: ProblemPointer): NodeSeq = {
+
+      <div>
+        <button type="button" id={"edit_access-modal-button_" + problem.getProblemPointerID} class="modal-button">Edit Access</button>
+
+        <div id={"edit_access-modal_" + problem.getProblemPointerID} class="modal">
+
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="close" id={"edit_access-span_" + problem.getProblemPointerID}>&times;</span>
+              <h3>Edit an Exercise</h3>
+            </div>
+            <div class="modal-body">
+              {
+                this.renderexerciseedit(xhtml, problem)
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     if(CurrentCourse.canBeSupervisedBy(user)){
       <form>
         {
@@ -226,7 +314,7 @@ class Coursesnippet {
             ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
             ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
             ("Avg Grade/Avg Attempts", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderProblemStats),
-            ("Edit Access", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderAccess("/main/course/problems/batchedit", false)),
+            ("Edit Access", (problem: ProblemPointer) => renderAccessModal(problem)),
             ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
               new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
             ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
@@ -325,7 +413,6 @@ class Coursesnippet {
       "editbutton" -> editButton,
       "deletebutton" -> deleteButton
       )
-
   }
 
   def rendercancelbatchedit(xhtml: NodeSeq): NodeSeq = {
@@ -383,14 +470,6 @@ class Coursesnippet {
           TableHelper.renderTableWithHeader(
             CurrentBatchProblemPointersInCourse.is.toList,
             ("", (problem: ProblemPointer) => Text(problem.getShortDescription)))
-        }
-        {
-          //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
-          //and then which which ever ones are clicked are
-          SHtml.button("Deselect Problems", ()=>{
-            CurrentBatchProblemPointersInCourse.is.clear()
-            S.redirectTo("/main/course/folders/index")
-          })
         }
       </form>
   }

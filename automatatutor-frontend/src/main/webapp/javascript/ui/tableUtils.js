@@ -30,6 +30,13 @@ function filterTableRows(tableId, columnName, inputId){
 }
 
 function expandOrCollapseHiddenText(tableCell){
+    var aTags = Array.from(tableCell.children).find((child, index) => {
+        return child.nodeName == "A";
+    });
+
+    if(!aTags)
+        return;
+
     tableCell.style.overflow = tableCell.style.overflow === "hidden" || 
                                 tableCell.style.overflow === "" ? "visible" : "hidden";
 

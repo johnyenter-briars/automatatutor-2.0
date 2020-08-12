@@ -44,7 +44,7 @@ class Problempoolsnippet extends{
       {
         //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
         //and then which which ever ones are clicked are
-        SHtml.button("Deselect Problems", ()=>{BatchProblems.is.clear()})
+//        SHtml.button("Deselect Problems", ()=>{BatchProblems.is.clear()})
       }
     </form>
 
@@ -476,7 +476,7 @@ class Problempoolsnippet extends{
               .save
           }
         }
-      })
+      }, "class"->"checkbox")
     }
     val tableID = "problemOptionsTable"
 
@@ -485,9 +485,10 @@ class Problempoolsnippet extends{
         TableHelper.renderTableWithHeaderPlusID(
           tableID,
           problems,
+          ("Click to add problem", (problem: Problem) => checkBoxForProblem(problem)),
           ("Description", (problem: Problem) => Text(problem.getShortDescription)),
-          ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
-          ("Click to add problem", (problem: Problem) => checkBoxForProblem(problem))
+          ("Problem Type", (problem: Problem) => Text(problem.getTypeName))
+
         )
       }
       {

@@ -1,28 +1,57 @@
+function openModal(e){
+    var targetButtonId = e.target.id.split("_")[2];
+
+    var modal = Array.from(document.getElementsByClassName("modal")).filter((modal, index) => {
+        return modal.id.split("_")[2] === targetButtonId;
+    })[0];
+
+    modal.style.display = "block";
+}
+
+function closeModal(e){
+    var targetButtonId = e.target.id.split("_")[2];
+
+    var modal = Array.from(document.getElementsByClassName("modal")).filter((modal, index) => {
+        return modal.id.split("_")[2] === targetButtonId;
+    })[0];
+
+    modal.style.display = "none";
+}
+
 function initializeModal(){
     var modals = document.getElementsByClassName("modal")
     
     if(modals.length == 0) return;
+
+    var buttons = document.getElementsByClassName("modal-button");
     
-    var modal= modals[0]
+    var spans = document.getElementsByClassName("close");
 
-    var btn = document.getElementsByClassName("modal-button")[0];
+
+    for(var modal of modals){
+        
+        var modalProblemId = modal.id.split("_")[2];
+        
+        var connectedButton = Array.from(buttons).filter((button, index) => {
+            return button.id.split("_")[2] === modalProblemId
+        })[0]
     
-    var span = document.getElementsByClassName("close")[0];
+        connectedButton.onclick = openModal;
 
-
-    btn.onclick = () => {
-        modal.style.display = "block";
-    }
-
-    span.onclick = () => {
-        modal.style.display = "none";
+        var connectedSpan = Array.from(spans).filter((span, index) => {
+            return span.id.split("_")[2] === modalProblemId
+        })[0]
+        
+        connectedSpan.onclick = closeModal;
     }
 
     window.onclick = (event) => {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        
+        if (event.target.className === "modal") {
+            event.target.style.display = "none";
         }
     }
+    
 }
 
 function initializeTree(){
