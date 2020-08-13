@@ -29,28 +29,67 @@ function filterTableRows(tableId, columnName, inputId){
     }
 }
 
-function expandOrCollapseHiddenText(tableCell){
-    var aTags = Array.from(tableCell.children).find((child, index) => {
-        return child.nodeName == "A";
-    });
+function collapseCell(e){
+    var targetCell = e.target;
 
-    if(!aTags)
-        return;
+    var children = Array.from(targetCell.children);
+    children[1].style.display = "block";
+    children.slice(2).forEach((link, index) => {
+        link.style.display = "none";
+    })
 
-    tableCell.style.overflow = tableCell.style.overflow === "hidden" || 
-                                tableCell.style.overflow === "" ? "visible" : "hidden";
+    targetCell.style.display = "flex";
+}
 
-    tableCell.style.whiteSpace = tableCell.style.whiteSpace === "nowrap" || 
-                                    tableCell.style.whiteSpace === "" ? "pre-wrap" : "nowrap";
+function expandCell(e){
+    var ellipsis = e.target;
 
-    tableCell.style.display = tableCell.style.display === "table-cell" ||
-                                tableCell.style.display === "" ? "grid" : "table-cell"
+    ellipsis.style.display = "none";
+
+    var parentCell = e.target.parentElement;
+
+    parentCell.style.display = "grid";
+    
+    var children = Array.from(parentCell.children)
+
+    children.slice(2).forEach((link, index) => {
+        link.style.display = "inline";
+    })
+
+    //give the click enough time to not be registered anymore
+    //otherwise the collapseCell function will fire on ever click
+    setTimeout(() => {  
+        parentCell.onclick = collapseCell;
+    }, 10);
+    
 }
 
 Array.from(document.getElementsByTagName("td")).forEach(td => {
-    td.onclick = (e) => {
-        expandOrCollapseHiddenText(e.target);
-    }
+    var firstATag = Array.from(td.children).find((child, index) => {
+        return child.nodeName == "A";
+    });
+
+    var cellChildren = Array.from(td.children);
+
+    if(!firstATag || !(cellChildren.length > 1))
+        return;
+
+    td.style.display = "flex";
+
+    var para = document.createElement("p");
+    var node = document.createTextNode(". . .");
+    para.style.fontSize = "15px";
+    
+    para.appendChild(node);
+    
+    para.onclick = expandCell;
+
+
+    td.insertBefore(para, cellChildren[1]);
+    
+    Array.from(td.children).slice(2).forEach((element, index) => {
+        element.style.display = "none";
+    })
 })
 
 var tables = Array.from(document.getElementsByTagName('table'));

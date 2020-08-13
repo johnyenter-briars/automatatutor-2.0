@@ -260,7 +260,13 @@ class Problempoolsnippet extends{
         ++ {
           <div>
             <button type="button" id="batch_send-modal-button" class="modal-button">Batch Send</button>
-
+            <br></br>
+            <br></br>
+            {
+              SHtml.button("Delete Selected", ()=>{
+                BatchProblems.is.foreach(_.delete_!)
+              }, "onclick" -> JsRaw("return confirm('Are you sure you want to delete the selected problems?')").toJsCmd)
+            }
             <div id="batch_send-modal" class="modal">
 
               <div class="modal-content">
@@ -276,11 +282,7 @@ class Problempoolsnippet extends{
               </div>
             </div>
           </div>
-        }
-        ++ <br></br>
-        ++ SHtml.button("Delete Selected", ()=>{
-          BatchProblems.is.foreach(_.delete_!)
-        }, "onclick" -> JsRaw("return confirm('Are you sure you want to delete the selected problems?')").toJsCmd))
+        })
       }
     </form>
 

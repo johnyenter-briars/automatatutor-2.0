@@ -801,6 +801,14 @@ class Coursesnippet {
     SHtml.link("/main/course/folder/index", () => {}, <button type='button'>Go back to Course Overview</button>)
   }
 
+  def rendercoursename(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentCourse.is == null) {
+      S.warning("You have not selected a course")
+      return S.redirectTo("/main/index")
+    }
+    <h3>{CurrentCourse.is.getName}</h3>
+  }
+
 }
 
 object Courses {

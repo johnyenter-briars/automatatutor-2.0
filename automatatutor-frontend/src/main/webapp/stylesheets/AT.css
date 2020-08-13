@@ -25,6 +25,9 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover {
     outline: thin solid black;
 }
 
+
+/* CSS FOR TABLES */
+
 th{
    cursor: pointer;
 }
@@ -36,15 +39,25 @@ table {
 table td {
     border-bottom:1px solid #fff;
     border-left:1px solid #fff;
-    text-overflow:ellipsis;
+    
+    /* text-overflow:ellipsis;
     overflow:hidden;
-    white-space:nowrap;
+    white-space:nowrap; */
 
     padding: 10px 10px 10px 10px;
 }
 
+p {
+    margin: 0 0 0;
+}
+
 .main-content{
     width: 100%
+}
+
+a {
+    width: fit-content;
+    pointer-events: auto;
 }
 
 
