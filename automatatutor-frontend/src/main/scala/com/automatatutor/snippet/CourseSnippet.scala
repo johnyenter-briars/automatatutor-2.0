@@ -36,14 +36,10 @@ class Coursesnippet {
 
     val currentFolder = CurrentFolderInCourse.is
 
-    val dateFormat = new SimpleDateFormat("EEE, MMM d, K:mm ''yy")
-    val now: Calendar = Calendar.getInstance()
-    val oneWeekFromNow: Calendar = Calendar.getInstance()
-    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1)
-
+    val dateFormat = currentFolder.getDateFormat
     var folderName = if (currentFolder.getLongDescription == null) "" else currentFolder.getLongDescription
-    var startDateString: String = if (currentFolder.getStartDate == null) dateFormat.format(now.getTime) else dateFormat.format(currentFolder.getStartDate)
-    var endDateString: String = if (currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime) else dateFormat.format(currentFolder.getEndDate)
+    var startDateString: String = currentFolder.getStartDateString
+    var endDateString: String = currentFolder.getEndDateString
 
     if (!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
@@ -471,8 +467,8 @@ class Coursesnippet {
             folders,
             ("Folder Name", (folder: Folder) => new FolderRenderer(folder).renderSelectLink),
             ("Visible", (folder: Folder) => Text(folder.getVisible.toString)),
-            ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
-            ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
+            ("Start Date", (folder: Folder) => Text(folder.getStartDateString)),
+            ("End Date", (folder: Folder) => Text(folder.getEndDateString)),
             ("Number of Problems", (folder: Folder) => Text(folder.getExercisesUnderFolder.length.toString)),
             ("", (folder: Folder) => new FolderRenderer(folder).renderDeleteLink)
           )

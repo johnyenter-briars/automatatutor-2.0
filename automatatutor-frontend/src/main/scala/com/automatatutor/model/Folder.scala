@@ -1,5 +1,7 @@
 package com.automatatutor.model
 
+import java.text.SimpleDateFormat
+
 import com.automatatutor.model.problems._
 import com.automatatutor.snippet._
 import com.automatatutor.snippet.problems._
@@ -8,6 +10,7 @@ import net.liftweb.common._
 import net.liftweb.mapper._
 import bootstrap.liftweb.StartupHook
 import com.automatatutor.lib.Config
+
 import scala.xml.XML
 import scala.xml.Node
 import java.util.{Calendar, Date}
@@ -38,6 +41,27 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
 
   def getVisible: Boolean = this.isVisible.is
   def setVisible(posed: Boolean) = this.isVisible(posed)
+
+  private val dateFormat = new SimpleDateFormat("EEE, MMM d, K:mm ''yy")
+
+  def getDateFormat: SimpleDateFormat = {
+    dateFormat
+  }
+
+  def getStartDateString: String = {
+    if(this.getStartDate == null) return ""
+
+    dateFormat.format(this.getStartDate)
+  }
+
+  def getEndDateString: String = {
+    val oneWeekFromNow: Calendar = Calendar.getInstance()
+    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1)
+
+    if (this.getEndDate == null) return dateFormat.format(oneWeekFromNow.getTime)
+
+    dateFormat.format(this.getEndDate)
+  }
 
   def getExercisesUnderFolder: List[Exercise] = {
     Exercise.findAllByFolder(this)
