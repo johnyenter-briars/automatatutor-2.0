@@ -1,10 +1,8 @@
 package com.automatatutor.snippet
 
-import java.text.DateFormat
+import java.text.{DateFormat, SimpleDateFormat}
 import java.util.Calendar
 import java.util.Date
-
-import scala.Array.canBuildFrom
 import scala.xml._
 import com.automatatutor.lib._
 import com.automatatutor.model._
@@ -13,27 +11,13 @@ import net.liftweb.common.Empty
 import net.liftweb.common.Full
 import net.liftweb.http._
 import net.liftweb.http.SHtml.ElemAttr.pairToBasic
-import net.liftweb.http.js.JsCmd
 import net.liftweb.http.js.JsCmds
-import net.liftweb.http.js.JsCmds._
 import net.liftweb.http.js.JE.JsRaw
-import net.liftweb.mapper.By
 import net.liftweb.util.AnyVar.whatVarIs
 import net.liftweb.util.Helpers
-import net.liftweb.util.Helpers.bind
 import net.liftweb.util.Helpers.strToSuperArrowAssoc
-import net.liftweb.util.SecurityHelpers
 import net.liftweb.http.js.JsCmd
-import net.liftweb.http.js.JsCmds._
-import SHtml._
-import js._
 import JsCmds._
-
-import util._
-import Helpers._
-import net.liftweb.http.provider.HTTPCookie
-
-import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
@@ -50,15 +34,16 @@ class Coursesnippet {
   def rendereditfolderform(xhtml: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
-    val dateFormat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
-    val now: Calendar = Calendar.getInstance()
-    val oneWeekFromNow: Calendar = Calendar.getInstance();
-    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
     val currentFolder = CurrentFolderInCourse.is
 
+    val dateFormat = new SimpleDateFormat("EEE, MMM d, K:mm ''yy")
+    val now: Calendar = Calendar.getInstance()
+    val oneWeekFromNow: Calendar = Calendar.getInstance()
+    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1)
+
     var folderName = if (currentFolder.getLongDescription == null) "" else currentFolder.getLongDescription
-    var startDateString: String = if (currentFolder.getStartDate == null) dateFormat.format(now.getTime()) else dateFormat.format(currentFolder.getStartDate)
-    var endDateString: String = if (currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime()) else dateFormat.format(currentFolder.getEndDate)
+    var startDateString: String = if (currentFolder.getStartDate == null) dateFormat.format(now.getTime) else dateFormat.format(currentFolder.getStartDate)
+    var endDateString: String = if (currentFolder.getEndDate == null) dateFormat.format(oneWeekFromNow.getTime) else dateFormat.format(currentFolder.getEndDate)
 
     if (!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
@@ -80,7 +65,7 @@ class Coursesnippet {
           null
         }
       }
-      if (endDate.compareTo(startDate) < 0) errors = errors ++ List("The end date must not be before the start date")
+      if (endDate != null && startDate != null && endDate.compareTo(startDate) < 0) errors = errors ++ List("The end date must not be before the start date")
       if (errors.nonEmpty) {
         S.warning(errors.head)
       } else {
@@ -135,10 +120,10 @@ class Coursesnippet {
   def renderaddfolderform(xhtml: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
-    val dateFormat: DateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+    val dateFormat = new SimpleDateFormat("EEE, MMM d, K:mm ''yy")
     val now: Calendar = Calendar.getInstance()
-    val oneWeekFromNow: Calendar = Calendar.getInstance();
-    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1);
+    val oneWeekFromNow: Calendar = Calendar.getInstance()
+    oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1)
 
     var folderName = ""
     var startDateString: String = dateFormat.format(now.getTime())
