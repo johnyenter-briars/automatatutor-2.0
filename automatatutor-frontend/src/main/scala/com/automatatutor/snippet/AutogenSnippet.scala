@@ -151,8 +151,8 @@ class Autogensnippet {
 
       val folder = Folder.findByID(folderID)
       val problem = CurrentPracticeProblem.is
-      val problemPointer = new ProblemPointer
-      problemPointer.setProblem(problem)
+      val exercise = new Exercise
+      exercise.setProblem(problem)
                     .setFolder(folder)
                     //TODO 7/15/2020 add a method by which the user can set these settings on first transfer
                     .setAllowedAttempts(10)

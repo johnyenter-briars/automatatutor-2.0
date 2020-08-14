@@ -165,14 +165,14 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     throw new NotImplementedError("Problems no longer have a enddate. ProblemLinks are the objects" +
       "which live under courses and reference problem objects")
 
-  def getProblemInstances: List[ProblemPointer] = {
-    ProblemPointer.findAllByReferencedProblem(this)
+  def getProblemInstances: List[Exercise] = {
+    Exercise.findAllByReferencedProblem(this)
   }
 
   def getStudentsWhoAttempted: List[User] = {
     SolutionAttempt
       .findAll()
-      .filter(_.getProblemPointer.getProblem == this)
+      .filter(_.getExercise.getProblem == this)
       .map(_.getUser)
       .filter(_.isStudent)
       .distinct
@@ -215,7 +215,7 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     if (!canBeDeleted) {
       return false
     } else {
-      ProblemPointer.deleteByReferencedProblem(this)
+      Exercise.deleteByReferencedProblem(this)
       val specificDel = this.getProblemType.getSpecificProblemSingleton.deleteByGeneralProblem(this)
       val superDel = super.delete_!
       return specificDel & superDel

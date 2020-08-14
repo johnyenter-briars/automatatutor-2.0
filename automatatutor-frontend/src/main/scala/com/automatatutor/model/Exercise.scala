@@ -13,18 +13,18 @@ import java.util.{Calendar, Date}
 
 
 
-class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
+class Exercise extends LongKeyedMapper[Exercise] with IdPK {
 
-  def getSingleton = ProblemPointer
+  def getSingleton = Exercise
 
   protected object courseId extends MappedLongForeignKey(this, Course)
   protected object allowedAttempts extends MappedLong(this)
   protected object folderId extends MappedLongForeignKey(this, Folder)
   protected object referencedProblemId extends MappedLongForeignKey(this, Problem)
   protected object maxGrade extends MappedLong(this)
-  def getProblemPointerID: Long = this.id.is
+  def getExerciseID: Long = this.id.is
 
-  def getProblem = this.referencedProblemId.obj openOrThrowException "Every ProblemPointer must have a Problem"
+  def getProblem = this.referencedProblemId.obj openOrThrowException "Every Exercise must have a Problem"
   def setProblem ( problem : Problem ) = this.referencedProblemId(problem)
 
   def getCourse : Box[Course] = this.courseId.obj
@@ -35,7 +35,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   def getAllowedAttemptsString: String = if (this.allowedAttempts.is == 0) "∞" else this.allowedAttempts.is.toString
   def setAllowedAttempts(attempts: Long) = this.allowedAttempts(attempts)
 
-  def getFolder: Folder = this.folderId.obj openOrThrowException "Every ProblemPointer must have a Folder"
+  def getFolder: Folder = this.folderId.obj openOrThrowException "Every Exercise must have a Folder"
   def setFolder(folder: Folder) = this.folderId(folder)
   def setFolder(folder: Box[Folder]) = this.folderId(folder)
 
@@ -45,7 +45,7 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
   def getAttempts(user: User): Seq[SolutionAttempt] = {
     SolutionAttempt.findAll(
       By(SolutionAttempt.userId, user),
-      By(SolutionAttempt.problempointerId, this))
+      By(SolutionAttempt.exerciseId, this))
   }
 
   def getNumberAttempts(user: User): Int = {
@@ -77,21 +77,21 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
   def getLongDescription: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each Exercise must only have ONE linked problem")
 
     matchingProblems.head.getLongDescription
   }
 
   def getShortDescription: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each Exercise must only have ONE linked problem")
 
     matchingProblems.head.getShortDescription
   }
 
   def getTypeName: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
-    if(matchingProblems.length > 1) throw new IllegalStateException("Each ProblemPointer must only have ONE linked problem")
+    if(matchingProblems.length > 1) throw new IllegalStateException("Each Exercise must only have ONE linked problem")
 
     matchingProblems.head.getTypeName()
   }
@@ -102,13 +102,13 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
     if (!canBeDeleted) {
       false
     } else {
-      SolutionAttempt.deleteAllByProblemPointer(this)
+      SolutionAttempt.deleteAllByExercise(this)
       super.delete_!
     }
   }
 
   /**
-    * A ProblemPointer is defined as closed if either the user has used all attempts
+    * An Exercise is defined as closed if either the user has used all attempts
     * or if they have reached the maximal possible grade
     */
   def isOpen(user: User): Boolean = {
@@ -124,24 +124,24 @@ class ProblemPointer extends LongKeyedMapper[ProblemPointer] with IdPK {
 
   def getStudentsWhoAttempted: List[User] = {
     SolutionAttempt
-      .findAll(By(SolutionAttempt.problempointerId, this))
+      .findAll(By(SolutionAttempt.exerciseId, this))
       .map(_.getUser)
       .filter(_.isStudent)
       .distinct
   }
 }
 
-object ProblemPointer extends ProblemPointer with LongKeyedMetaMapper[ProblemPointer] {
+object Exercise extends Exercise with LongKeyedMetaMapper[Exercise] {
 
-  def findAllByCourse(course: Course): List[ProblemPointer] = findAll(By(ProblemPointer.courseId, course))
+  def findAllByCourse(course: Course): List[Exercise] = findAll(By(Exercise.courseId, course))
 
-  def findAllByFolder(folder: Folder): List[ProblemPointer] = findAll(By(ProblemPointer.folderId, folder))
+  def findAllByFolder(folder: Folder): List[Exercise] = findAll(By(Exercise.folderId, folder))
 
-  def findAllByReferencedProblem(problem: Problem): List[ProblemPointer] = findAll(By(ProblemPointer.referencedProblemId, problem))
+  def findAllByReferencedProblem(problem: Problem): List[Exercise] = findAll(By(Exercise.referencedProblemId, problem))
 
   def deleteProblemsUnderFolder(folder: Folder): Unit = this.findAllByFolder(folder).foreach(_.delete_!)
 
-  //Given a Problem object, delete all the ProblemPointers that reference said problem
+  //Given a Problem object, delete all the Exercises that reference said problem
   def deleteByReferencedProblem(problem: Problem) : Unit = this.findAllByReferencedProblem(problem).foreach(_.delete_!)
 
 }

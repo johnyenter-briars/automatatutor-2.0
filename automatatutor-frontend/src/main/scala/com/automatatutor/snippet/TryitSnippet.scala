@@ -20,7 +20,7 @@ import net.liftweb.util.Helpers.strToSuperArrowAssoc
 import net.liftweb.http.Templates
 import com.automatatutor.renderer.ProblemRenderer
 
-object CurrentTryitProblemPointer extends SessionVar[ProblemPointer](null)
+object CurrentTryitExercise extends SessionVar[Exercise](null)
 
 class Tryitsnippet {
 
@@ -36,32 +36,32 @@ class Tryitsnippet {
     }
 
     val tryitCourse = tryitCourseBox openOrThrowException "tryitCourseBox should not be empty here..."
-    val tryitProblems: List[ProblemPointer] = tryitCourse.getVisibleProblems
+    val tryitProblems: List[Exercise] = tryitCourse.getVisibleExercises
 
     if (tryitProblems.isEmpty) return Text("There are currently no problems to try... Please ask the admin to add some!")
 
     return TableHelper.renderTableWithHeader(
       tryitProblems,
-      ("Description", (problemPointer: ProblemPointer) => Text(problemPointer.getProblem.getShortDescription)),
-      ("Problem Type", (problemPointer: ProblemPointer) => Text(problemPointer.getProblem.getTypeName)),
-      ("", (problem: ProblemPointer) => SHtml.link(
+      ("Description", (exercise: Exercise) => Text(exercise.getProblem.getShortDescription)),
+      ("Problem Type", (exercise: Exercise) => Text(exercise.getProblem.getTypeName)),
+      ("", (problem: Exercise) => SHtml.link(
         "/tryit/practice",
         () => {
-          CurrentTryitProblemPointer(problem)
+          CurrentTryitExercise(problem)
         },
         <button type='button'>Try it!</button>)))
   }
 
 
   def renderpractice(ignored: NodeSeq): NodeSeq = {
-    if (CurrentTryitProblemPointer == null) {
+    if (CurrentTryitExercise == null) {
       S.warning("Please first choose a problem")
       return S.redirectTo("/tryit/index")
     }
 
-    val problemPointer: ProblemPointer = CurrentTryitProblemPointer.is
+    val problemPointer: Exercise = CurrentTryitExercise.is
     val problem = problemPointer.getProblem
-    val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
+    val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet()
 
     def returnFunc(problem: Problem) = {
       S.redirectTo("/tryit/index")

@@ -2,7 +2,7 @@ package com.automatatutor.renderer
 
 import scala.xml.NodeSeq
 import scala.xml.Text
-import com.automatatutor.model.{Course, Problem, ProblemPointer, SolutionAttempt, User}
+import com.automatatutor.model.{Course, Problem, Exercise, SolutionAttempt, User}
 import com.automatatutor.snippet._
 import net.liftweb.http._
 import net.liftweb.http.js.JE.JsRaw
@@ -34,13 +34,13 @@ class CourseRenderer(course : Course) {
   }
 
   def renderAverageGrade(user: User): NodeSeq = {
-    //get all problems in the course
-    val problems = ProblemPointer.findAllByCourse(course)
+    //get all exercises in the course
+    val exercises = Exercise.findAllByCourse(course)
 
-    //map each problem to the students grade on said problem
-    val gradesPerProblem: List[Float] = problems.map(_.getGrade(user))
+    //map each exercise to the students grade on said exercise
+    val gradesPerProblem: List[Float] = exercises.map(_.getGrade(user))
 
-    //take the average across all problems
+    //take the average across all exercises
     var averageGrade: Float = gradesPerProblem.sum / gradesPerProblem.length
     averageGrade = (averageGrade * 100).toInt
 

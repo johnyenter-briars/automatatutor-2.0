@@ -62,7 +62,7 @@ class Problempoolsnippet extends{
 
     //Keep a list of all the problem pointers we are going to send over to the multiple courses/folders
     //This is done because two different components need to be able to change attributes of the PPs at different times
-    var problemPointersToSend = new ListBuffer[ProblemPointer]
+    var exercisesToSend = new ListBuffer[Exercise]
     var attempts = "10"
     var maxGrade = "10"
 
@@ -95,8 +95,8 @@ class Problempoolsnippet extends{
       if (!errors.isEmpty) {
         S.warning(errors.head)
       } else {
-        problemPointersToSend.foreach((problemPointer: ProblemPointer) => {
-          problemPointer.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        exercisesToSend.foreach((exercise: Exercise) => {
+          exercise.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
         })
 
         //Clear out BatchProblems for reuse
@@ -110,9 +110,9 @@ class Problempoolsnippet extends{
         val folder = Folder.findByID(folderID)
 
         currentProblems.foreach((problem: Problem) => {
-          var problemPointer = new ProblemPointer
-          problemPointer.setCourse(course).setFolder(folder).setProblem(problem)
-          problemPointersToSend += problemPointer
+          var exercise = new Exercise
+          exercise.setCourse(course).setFolder(folder).setProblem(problem)
+          exercisesToSend += exercise
         })
       })
     }
@@ -173,8 +173,8 @@ class Problempoolsnippet extends{
       SHtml.button("Send Problems", () => {
         selectedFolders.foreach(folder => {
           BatchProblems.is.foreach(problem => {
-            val problemPointer = new ProblemPointer
-            problemPointer.setCourse(folder.getCourse.get)
+            val exercise = new Exercise
+            exercise.setCourse(folder.getCourse.get)
               .setProblem(problem)
               .setFolder(folder)
               //TODO 8/10/2020 add a method by which the user can set these settings on first transfer
@@ -387,7 +387,7 @@ class Problempoolsnippet extends{
       (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0) ++ returnLink
   }
 
-  //TODO 7/17/2020 Have capability to delete a problempointer from a folder
+  //TODO 7/17/2020 Have capability to delete a exercise from a folder
   //also need to have finer control over sending a problem and taking it back
   //also what if that folder already has that problem in it?
   //Better error handling overall
@@ -404,8 +404,8 @@ class Problempoolsnippet extends{
       folderIDS.foreach((folderID: String) => {
         val folder = Folder.findByID(folderID)
         val problem = CurrentEditableProblem.is
-        val problemPointer = new ProblemPointer
-        problemPointer.setProblem(problem)
+        val exercise = new Exercise
+        exercise.setProblem(problem)
           .setFolder(folder)
           //TODO 7/15/2020 add a method by which the user can set these settings on first transfer
           .setAllowedAttempts(10)
@@ -461,15 +461,15 @@ class Problempoolsnippet extends{
       SHtml.checkbox(false, (chosen: Boolean) => {
         if(chosen){
           //TODO 7/21/2020 refactor this to make less ugly and more responsive. Something like returning a JSCmd to alert the user
-          //If a ProblemPointer with the same problem already exists with the folder don't add it
+          //If an exercise with the same problem already exists with the folder don't add it
           var isDuplicate: Boolean = false
-          ProblemPointer.findAllByFolder(folder).map(_.getProblem).foreach(problem =>{
+          Exercise.findAllByFolder(folder).map(_.getProblem).foreach(problem =>{
             if(problemsAreIdentical(problem, potentialProblem)) isDuplicate = true
           })
 
           if(!isDuplicate){
-            val problemPointer = new ProblemPointer
-            problemPointer.setProblem(potentialProblem)
+            val exerise = new Exercise
+            exerise.setProblem(potentialProblem)
               .setFolder(folder)
               //TODO 7/17/2020 add a method by which the user can set these settings on first transfer
               .setAllowedAttempts(10)

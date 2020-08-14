@@ -39,13 +39,13 @@ import scala.collection.mutable.ListBuffer
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
 object CurrentProblemTypeInCourse extends RequestVar[ProblemType](null) // RequestVar as only needed in a single request
-object CurrentProblemPointerInCourse extends RequestVar[ProblemPointer](null)
-object CurrentBatchProblemPointersInCourse extends SessionVar[ListBuffer[ProblemPointer]](null)
+object CurrentExerciseInCourse extends RequestVar[Exercise](null)
+object CurrentBatchExercisesInCourse extends SessionVar[ListBuffer[Exercise]](null)
 object CurrentFolderInCourse extends SessionVar[Folder](null)
 
 class Coursesnippet {
 
-  if(CurrentBatchProblemPointersInCourse.is == null) CurrentBatchProblemPointersInCourse(new ListBuffer[ProblemPointer])
+  if(CurrentBatchExercisesInCourse.is == null) CurrentBatchExercisesInCourse(new ListBuffer[Exercise])
 
   def rendereditfolderform(xhtml: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
@@ -105,7 +105,7 @@ class Coursesnippet {
     val deleteProblems = SHtml.link("/main/course/folders/index", () => {
       val currentFolder = CurrentFolderInCourse.is
 
-      currentFolder.getProblemPointersUnderFolder.foreach(_.delete_!)
+      currentFolder.getExercisesUnderFolder.foreach(_.delete_!)
     }, Text("Delete Problems in this Folder"), "onclick" -> JsRaw(
       "return confirm('Are you sure you want to delete all problems in this folder? If you do, all student grades will be lost!')")
       .toJsCmd, "style" -> "color: red")
@@ -197,8 +197,8 @@ class Coursesnippet {
     new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton
   }
 
-  def renderexerciseedit(xhtml: NodeSeq, problem: ProblemPointer): NodeSeq = {
-    if (CurrentBatchProblemPointersInCourse.is == null) {
+  def renderexerciseedit(xhtml: NodeSeq, problem: Exercise): NodeSeq = {
+    if (CurrentBatchExercisesInCourse.is == null) {
       S.warning("Please first choose problems to batch edit")
       return S.redirectTo("/main/course/folders/index")
     }
@@ -263,34 +263,34 @@ class Coursesnippet {
     )
   }
 
-  def renderproblems(xhtml: NodeSeq): NodeSeq = {
+  def renderexercises(xhtml: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder")
       return S.redirectTo("/main/course/index")
     }
 
-    CurrentBatchProblemPointersInCourse.is.clear()
+    CurrentBatchExercisesInCourse.is.clear()
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     val folder = CurrentFolderInCourse.is
-    val problems = folder.getProblemPointersUnderFolder
+    val exercises = folder.getExercisesUnderFolder
 
-    def checkBoxForProblem(p: ProblemPointer): NodeSeq = {
+    def checkBoxForProblem(p: Exercise): NodeSeq = {
       SHtml.checkbox(false, (chosen: Boolean) => {
-        if(chosen) CurrentBatchProblemPointersInCourse.is += p
+        if(chosen) CurrentBatchExercisesInCourse.is += p
       }, "class"->"checkbox")
     }
 
-    def renderAccessModal(problem: ProblemPointer): NodeSeq = {
+    def renderAccessModal(problem: Exercise): NodeSeq = {
 
       <div>
-        <button type="button" id={"edit_access-modal-button_" + problem.getProblemPointerID} class="modal-button">Edit Access</button>
+        <button type="button" id={"edit_access-modal-button_" + problem.getExerciseID} class="modal-button">Edit Access</button>
 
-        <div id={"edit_access-modal_" + problem.getProblemPointerID} class="modal">
+        <div id={"edit_access-modal_" + problem.getExerciseID} class="modal">
 
           <div class="modal-content">
             <div class="modal-header">
-              <span class="close" id={"edit_access-span_" + problem.getProblemPointerID}>&times;</span>
+              <span class="close" id={"edit_access-span_" + problem.getExerciseID}>&times;</span>
               <h3>Edit an Exercise</h3>
             </div>
             <div class="modal-body">
@@ -307,18 +307,18 @@ class Coursesnippet {
       <form>
         {
           TableHelper.renderTableWithHeader(
-            problems,
-            ("", (problem: ProblemPointer) => checkBoxForProblem(problem)),
-            ("Problem Name", (problem: ProblemPointer) => Text(problem.getShortDescription)),
-            ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-            ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-            ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
-            ("Avg Grade/Avg Attempts", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderProblemStats),
-            ("Edit Access", (problem: ProblemPointer) => renderAccessModal(problem)),
-            ("Edit/View Referenced Problems", (problem: ProblemPointer) =>
-              new ProblemPointerRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
-            ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton),
-            ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderDeleteLink)
+            exercises,
+            ("", (problem: Exercise) => checkBoxForProblem(problem)),
+            ("Problem Name", (problem: Exercise) => Text(problem.getShortDescription)),
+            ("Type", (problem: Exercise) => Text(problem.getTypeName)),
+            ("Max Attempts", (problem: Exercise) => Text(problem.getAllowedAttemptsString)),
+            ("Max Grade", (problem: Exercise) => Text(problem.getMaxGrade.toString)),
+            ("Avg Grade/Avg Attempts", (problem: Exercise) => new ExerciseRenderer(problem).renderExerciseStats),
+            ("Edit Access", (problem: Exercise) => renderAccessModal(problem)),
+            ("Edit/View Referenced Problems", (problem: Exercise) =>
+              new ExerciseRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
+            ("", (problem: Exercise) => new ExerciseRenderer(problem).renderSolveButton),
+            ("", (problem: Exercise) => new ExerciseRenderer(problem).renderDeleteLink)
           ).theSeq ++ SHtml.button(
             "Batch Edit",
             () => {
@@ -331,27 +331,25 @@ class Coursesnippet {
     else{
       //logged in user is a student
       TableHelper.renderTableWithHeader(
-        problems,
-        ("Problem Description", (problem: ProblemPointer) => Text(problem.getShortDescription)),
-        ("Type", (problem: ProblemPointer) => Text(problem.getTypeName)),
-        ("Your Attempts", (problem: ProblemPointer) => Text(problem.getAttempts(user).length.toString)),
-        ("Max Attempts", (problem: ProblemPointer) => Text(problem.getAllowedAttemptsString)),
-        ("Your Highest Grade", (problem: ProblemPointer) => Text(problem.getHighestAttempt(user).toString)),
-        ("Max Grade", (problem: ProblemPointer) => Text(problem.getMaxGrade.toString)),
-        ("", (problem: ProblemPointer) => new ProblemPointerRenderer(problem).renderSolveButton)
+        exercises,
+        ("Problem Description", (problem: Exercise) => Text(problem.getShortDescription)),
+        ("Type", (problem: Exercise) => Text(problem.getTypeName)),
+        ("Your Attempts", (problem: Exercise) => Text(problem.getAttempts(user).length.toString)),
+        ("Max Attempts", (problem: Exercise) => Text(problem.getAllowedAttemptsString)),
+        ("Your Highest Grade", (problem: Exercise) => Text(problem.getHighestAttempt(user).toString)),
+        ("Max Grade", (problem: Exercise) => Text(problem.getMaxGrade.toString)),
+        ("", (problem: Exercise) => new ExerciseRenderer(problem).renderSolveButton)
       )
     }
   }
 
   def renderbatchedit(xhtml: NodeSeq): NodeSeq = {
-    if (CurrentBatchProblemPointersInCourse.is == null) {
+    if (CurrentBatchExercisesInCourse.is == null) {
       S.warning("Please first choose problems to batch edit")
       return S.redirectTo("/main/course/folders/index")
     }
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
-
-    val currentProblems = CurrentBatchProblemPointersInCourse.is.toList
 
     //set to default cause we're working with multiple problems
     var attempts = "10"
@@ -386,12 +384,12 @@ class Coursesnippet {
       if (!errors.isEmpty) {
         S.warning(errors.head)
       } else {
-        CurrentBatchProblemPointersInCourse.is.foreach((problemPointer: ProblemPointer) => {
-          problemPointer.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        CurrentBatchExercisesInCourse.is.foreach((exercise: Exercise) => {
+          exercise.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
         })
       }
     }
-    
+
     val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
     val attemptsField = SHtml.text(attempts, attempts = _)
     val editButton = SHtml.submit("Edit Problems", editProblem)
@@ -401,8 +399,8 @@ class Coursesnippet {
         "If you do, all student grades on these problems will be lost!')")
 
     val deleteButton = SHtml.button("Delete", ()=>{
-      CurrentBatchProblemPointersInCourse.is.foreach((problemPointer: ProblemPointer) => {
-        problemPointer.delete_!
+      CurrentBatchExercisesInCourse.is.foreach((exercise: Exercise) => {
+        exercise.delete_!
       })
     }, "onclick" -> onClick.toJsCmd,
       "style" -> "color: red")
@@ -421,17 +419,17 @@ class Coursesnippet {
   }
 
   def renderbatchmove(xhtml: NodeSeq): NodeSeq = {
-    if (CurrentBatchProblemPointersInCourse.is == null) {
+    if (CurrentBatchExercisesInCourse.is == null) {
       S.warning("Please first choose problems to batch edit")
       return S.redirectTo("/main/course/folders/index")
     }
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     val supervisedCourses = user.getSupervisedCourses
-    val currentProblems = CurrentBatchProblemPointersInCourse.is.toList
+    val currentProblems = CurrentBatchExercisesInCourse.is.toList
 
     def moveProblems() = {
-      CurrentBatchProblemPointersInCourse.is.clear()
+      CurrentBatchExercisesInCourse.is.clear()
       S.redirectTo("/main/course/folders/index", () => {})
     }
 
@@ -439,8 +437,8 @@ class Coursesnippet {
       folderIDS.foreach((folderID: String) =>{
         val folder = Folder.findByID(folderID)
 
-        currentProblems.foreach((problemPointer: ProblemPointer) => {
-          problemPointer.setFolder(folder).setCourse(course).save
+        currentProblems.foreach((exercise: Exercise) => {
+          exercise.setFolder(folder).setCourse(course).save
         })
       })
     }
@@ -468,8 +466,8 @@ class Coursesnippet {
       <form>
         {
           TableHelper.renderTableWithHeader(
-            CurrentBatchProblemPointersInCourse.is.toList,
-            ("", (problem: ProblemPointer) => Text(problem.getShortDescription)))
+            CurrentBatchExercisesInCourse.is.toList,
+            ("", (problem: Exercise) => Text(problem.getShortDescription)))
         }
       </form>
   }
@@ -490,7 +488,7 @@ class Coursesnippet {
             ("Visible", (folder: Folder) => Text(folder.getVisible.toString)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-            ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
+            ("Number of Problems", (folder: Folder) => Text(folder.getExercisesUnderFolder.length.toString)),
             ("", (folder: Folder) => new FolderRenderer(folder).renderDeleteLink)
           )
         }
@@ -508,7 +506,7 @@ class Coursesnippet {
             ("Folder Name", (folder: Folder) => Text(folder.getLongDescription)),
             ("Start Date", (folder: Folder) => Text(folder.getStartDate.toString)),
             ("End Date", (folder: Folder) => Text(folder.getEndDate.toString)),
-            ("Number of Problems", (folder: Folder) => Text(folder.getProblemPointersUnderFolder.length.toString)),
+            ("Number of Problems", (folder: Folder) => Text(folder.getExercisesUnderFolder.length.toString)),
             ("", (folder: Folder) => new FolderRenderer(folder).renderSelectButton)
           )
         }
@@ -623,8 +621,8 @@ class Coursesnippet {
         //NOTE: These following two lines assume that you only want to count the grades/attempts of questions
         //which are CURRENTLY posed
         //If a student solves a question, but then its containing folder is unposed, that grade will not be accounted for
-        ("Total Attempts", (user: User) => Text(course.getVisibleProblems.map(_.getNumberAttempts(user)).sum.toString)),
-        ("Total Points", (user: User) => Text(course.getVisibleProblems.map(_.getHighestAttempt(user)).sum.toString)),
+        ("Total Attempts", (user: User) => Text(course.getVisibleExercises.map(_.getNumberAttempts(user)).sum.toString)),
+        ("Total Points", (user: User) => Text(course.getVisibleExercises.map(_.getHighestAttempt(user)).sum.toString)),
         ("Average Grade", (user: User) => new CourseRenderer(course).renderAverageGrade(user)),
         ("", (user: User) => dismissLink(user)))
     } else {
@@ -662,7 +660,7 @@ class Coursesnippet {
     return problemType.getProblemSnippet().renderCreate(createUnspecificProb, returnFunc)
   }
 
-
+  //TODO 8/14/2020 do we need this?
   def renderedit(ignored: NodeSeq): NodeSeq = {
     if (CurrentProblemInCourse.is == null) {
       S.warning("Please first choose a problem to edit")
@@ -685,30 +683,30 @@ class Coursesnippet {
     }
   }
 
-
+  //TODO 8/14/2020 do we need this?
   def rendersolve(ignored: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
-    if (CurrentProblemPointerInCourse.is == null) {
+    if (CurrentExerciseInCourse.is == null) {
       S.warning("Please first choose a problem to solve")
       return S.redirectTo("/main/course/index")
     }
 
-    val problemPointer = CurrentProblemPointerInCourse.is
-    val problem: Problem = problemPointer.getProblem
+    val exercise = CurrentExerciseInCourse.is
+    val problem: Problem = exercise.getProblem
     val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
 
-    val lastAttempt = SolutionAttempt.getLatestAttempt(user, problemPointer)
+    val lastAttempt = SolutionAttempt.getLatestAttempt(user, exercise)
 
     var lastGrade = 0
 
     def recordSolutionAttempt(grade: Int, dateTime: Date): SolutionAttempt = {
       lastGrade = grade
 
-      if (dateTime.compareTo(problemPointer.getFolder.getEndDate) > 0 ||
-        dateTime.compareTo(problemPointer.getFolder.getStartDate) < 0) return null
+      if (dateTime.compareTo(exercise.getFolder.getEndDate) > 0 ||
+        dateTime.compareTo(exercise.getFolder.getStartDate) < 0) return null
       // otherwise: create SolutionAttempt
       val solutionAttempt = new SolutionAttempt
-      solutionAttempt.problempointerId(problemPointer).userId(user).dateTime(dateTime).grade(grade).save
+      solutionAttempt.exerciseId(exercise).userId(user).dateTime(dateTime).grade(grade).save
 
       solutionAttempt
     }
@@ -718,18 +716,18 @@ class Coursesnippet {
     }
 
     def remainingAttempts(): Int = {
-      problemPointer.getNumberAttemptsRemaining(user).toInt
+      exercise.getNumberAttemptsRemaining(user).toInt
     }
 
     def bestGrade(): Int = {
-      problemPointer.getHighestAttempt(user)
+      exercise.getHighestAttempt(user)
     }
 
     //If the user is the admin or instructor, don't even bother recording an attempt
     if (user.isAdmin || user.isInstructor)
-      return problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, Empty, (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0)
+      return problemSnippet.renderSolve(problem, exercise.getMaxGrade, Empty, (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0)
 
-    problemSnippet.renderSolve(problem, problemPointer.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
+    problemSnippet.renderSolve(problem, exercise.getMaxGrade, lastAttempt, recordSolutionAttempt, returnFunc, remainingAttempts, bestGrade)
   }
 
   def renderexportforcourse(ignored: NodeSeq): NodeSeq = {
@@ -737,9 +735,9 @@ class Coursesnippet {
 
     //create export xml
     var xml = NodeSeq.Empty
-    course.getProblems.foreach(
-      (problemPointer) => {
-        xml = xml ++ problemPointer.getProblem.toXML
+    course.getExercises.foreach(
+      (exercise) => {
+        xml = xml ++ exercise.getProblem.toXML
       })
     xml = <exported>
       {xml}

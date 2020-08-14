@@ -39,25 +39,25 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   def getVisible: Boolean = this.isVisible.is
   def setVisible(posed: Boolean) = this.isVisible(posed)
 
-  def getProblemPointersUnderFolder: List[ProblemPointer] = {
-    ProblemPointer.findAllByFolder(this)
+  def getExercisesUnderFolder: List[Exercise] = {
+    Exercise.findAllByFolder(this)
   }
 
-  def getOpenProblemPointersUnderFolder(user: User): List[ProblemPointer] = {
-    if(user.isAdmin || user.isInstructor) return ProblemPointer.findAllByFolder(this)
-    ProblemPointer.findAllByFolder(this).filter(_.isOpen(user))
+  def getOpenExercisesUnderFolder(user: User): List[Exercise] = {
+    if(user.isAdmin || user.isInstructor) return Exercise.findAllByFolder(this)
+    Exercise.findAllByFolder(this).filter(_.isOpen(user))
   }
 
   def getProblemsUnderFolder: List[Problem] = {
-    ProblemPointer.findAllByFolder(this).map(_.getProblem)
+    Exercise.findAllByFolder(this).map(_.getProblem)
   }
 
   def getPossiblePoints: Long = {
-    this.getProblemPointersUnderFolder.map(_.getMaxGrade).sum
+    this.getExercisesUnderFolder.map(_.getMaxGrade).sum
   }
 
   def getAchievedPoints(user: User): Int = {
-    this.getProblemPointersUnderFolder.map(_.getHighestAttempt(user)).sum
+    this.getExercisesUnderFolder.map(_.getHighestAttempt(user)).sum
   }
 
   def getOverallGrade(user: User): Float = {
@@ -70,7 +70,7 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     val solutionAttempts =
       SolutionAttempt
         .findAll(By(SolutionAttempt.userId, user))
-        .filter(_.getProblemPointer.getFolder == this)
+        .filter(_.getExercise.getFolder == this)
     solutionAttempts.length
   }
 
@@ -109,8 +109,8 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     if (!canBeDeleted) {
       false
     } else {
-      //before deleting the folder, we must delete all the ProblemPointers that are under the folder
-      ProblemPointer.deleteProblemsUnderFolder(this)
+      //before deleting the folder, we must delete all the Exercises that are under the folder
+      Exercise.deleteProblemsUnderFolder(this)
       super.delete_!
     }
   }
@@ -123,12 +123,12 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
   }
 
   def renderGradesCsv: String = {
-    val posedProblems = this.getProblemPointersUnderFolder
+    val exercises = this.getExercisesUnderFolder
     val participants = this.getCourse.get.getParticipants
     val participantsWithGrades : Seq[(User, Seq[Int], Int)]
           = participants.map(
-            participant => (participant, posedProblems.map(_.getHighestAttempt(participant)), this.getAchievedPoints(participant)))
-    val firstLine = "FirstName;LastName;Email;" + posedProblems.map(_.getShortDescription).mkString(";") + ";Total;"
+            participant => (participant, exercises.map(_.getHighestAttempt(participant)), this.getAchievedPoints(participant)))
+    val firstLine = "FirstName;LastName;Email;" + exercises.map(_.getShortDescription).mkString(";") + ";Total;"
     val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";"), tuple._3).mkString(";"))
     firstLine + "\n" + csvLines.mkString("\n")
   }
@@ -140,7 +140,7 @@ object Folder extends Folder with LongKeyedMetaMapper[Folder] {
   def findByID(ID: String): Folder = this.findAll().filter(_.getFolderID == ID.toLong).head
 
   def deleteByCourse(course: Course) : Unit = {
-    this.findAllByCourse(course).filter( folder => folder.getCourse == course).foreach(folder => folder.delete_!)
+    this.findAllByCourse(course).filter( folder => folder.getCourse.get == course).foreach(folder => folder.delete_!)
   }
 }
 
