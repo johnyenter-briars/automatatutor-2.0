@@ -35,6 +35,8 @@ function initializeModal(){
         var connectedButton = Array.from(buttons).filter((button, index) => {
             return button.id.split("_")[2] === modalProblemId
         })[0]
+
+        console.log(connectedButton)
     
         connectedButton.onclick = openModal;
 

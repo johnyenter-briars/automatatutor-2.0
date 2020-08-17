@@ -168,7 +168,7 @@ class Problempoolsnippet extends{
         })
       }
     </ul> ++
-    <form>
+    <div>
     {
       SHtml.button("Send Problems", () => {
         selectedFolders.foreach(folder => {
@@ -186,7 +186,53 @@ class Problempoolsnippet extends{
         S.redirectTo("/main/problempool/index")
       })
     }
-    </form>
+    </div>
+  }
+
+  def renderlocationtreeforsingleproblem(xhtml: NodeSeq, problem: Problem): NodeSeq = {
+    val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here"
+    val supervisedCourses = user.getSupervisedCourses
+
+    val selectedFolders = new ListBuffer[Folder]
+    def checkBoxForFolder(folder: Folder): NodeSeq = {
+      SHtml.checkbox(false, (chosen: Boolean) => {
+        if(chosen) selectedFolders += folder
+      })
+    }
+
+    <ul id="myUL">
+      {
+      supervisedCourses.map(course => {
+        <li><span class="caret">{course.getName}</span>
+          <ul class="nested">
+            {
+            course.getFolders.map(f => {
+
+              <li>{f.getLongDescription}{checkBoxForFolder(f)}</li>
+            })
+            }
+          </ul>
+        </li>
+      })
+      }
+    </ul> ++
+      <div>
+        {
+        SHtml.button("Send Problems", () => {
+          selectedFolders.foreach(folder => {
+            val exercise = new Exercise
+            exercise.setCourse(folder.getCourse.get)
+              .setProblem(problem)
+              .setFolder(folder)
+              //TODO 8/10/2020 add a method by which the user can set these settings on first transfer
+              .setMaxGrade(10)
+              .setAllowedAttempts(10)
+              .save
+          })
+          S.redirectTo("/main/problempool/index")
+        })
+        }
+      </div>
   }
 
   def renderproblempool(xhtml: NodeSeq): NodeSeq ={
@@ -231,6 +277,31 @@ class Problempoolsnippet extends{
     BatchProblems.is.clear()
 
     val tableID = "problemPoolTable"
+
+    def renderSendModal(problem: Problem): NodeSeq = {
+
+      <div>
+
+
+        <button type="button" id={"edit_access-modal-button_" + problem.getProblemID} class="modal-button">Send to a folder</button>
+
+          <div id={"edit_access-modal_" + problem.getProblemID} class="modal">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="close" id={"edit_access-span_" + problem.getProblemID}>&times;</span>
+                <h3>Edit an Exercise</h3>
+              </div>
+              <div class="modal-body">
+                {
+                  this.renderlocationtreeforsingleproblem(xhtml, problem)
+                }
+              </div>
+            </div>
+          </div>
+
+      </div>
+    }
     
     val table = <form>
       {
@@ -252,7 +323,7 @@ class Problempoolsnippet extends{
               CurrentEditableProblem(problem)
             },
             <button type='button'>Solve</button>)),
-          ("", (problem: Problem) => sendButton(problem)),
+          ("Send to Folder", (problem: Problem) => renderSendModal(problem)),
           ("", (problem: Problem) => {
             new ProblemRenderer(problem).renderDeleteLink("/main/problempool/index")
           })
