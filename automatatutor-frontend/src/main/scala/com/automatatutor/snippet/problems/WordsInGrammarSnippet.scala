@@ -48,7 +48,7 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        val unspecificProblem = createUnspecificProb(name, name)
+        val unspecificProblem = createUnspecificProb(name, description)
 
         val specificProblem: WordsInGrammarProblem = WordsInGrammarProblem.create
         specificProblem.problemId(unspecificProblem).grammar(grammar).inNeeded(inNeeded).outNeeded(outNeeded)

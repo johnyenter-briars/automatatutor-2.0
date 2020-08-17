@@ -40,12 +40,13 @@ object GrammarToCNFSnippet extends SpecificProblemSnippet {
     def create(formValues: String): JsCmd = {
       val formValuesXml = XML.loadString(formValues)
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        val unspecificProblem = createUnspecificProb(shortDescription, shortDescription)
+        val unspecificProblem = createUnspecificProb(name, description)
 
         val specificProblem: GrammarToCNFProblem = GrammarToCNFProblem.create
         specificProblem.problemId(unspecificProblem).grammar(grammar)
@@ -59,19 +60,23 @@ object GrammarToCNFSnippet extends SpecificProblemSnippet {
 
     }
     val grammarField = SHtml.textarea("S -> a S b | x | S S", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
-    val shortDescriptionField = SHtml.text("", value => {}, "id" -> "shortdescfield")
+    val nameField = SHtml.text("", value => {}, "id" -> "namefield")
+    val descriptionField = SHtml.text("", value => {}, "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), create(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), create(_))
     val submit: JsCmd = hideSubmitButton & ajaxCall
     val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Submit</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "grammar-to-cnf-problem", "create")) openOr Text("Could not find template /templates-hidden/grammar-to-cnf-problem/create")
     Helpers.bind("createform", template,
       "grammarfield" -> grammarField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
@@ -81,18 +86,20 @@ object GrammarToCNFSnippet extends SpecificProblemSnippet {
 
     val grammarToCNFProblem = GrammarToCNFProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getName
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var grammar: String = Grammar.preprocessLoadedGrammar(grammarToCNFProblem.getGrammar)
 
     def edit(formValues: String): JsCmd = {
       val formValuesXml = XML.loadString(formValues)
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setName(shortDescription).setDescription(shortDescription).save()
+        problem.setName(name).setDescription(description).save()
         grammarToCNFProblem.grammar(grammar).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {
@@ -102,12 +109,14 @@ object GrammarToCNFSnippet extends SpecificProblemSnippet {
     }
 
     val grammarField = SHtml.textarea(grammar, grammar = _, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
+    val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionField = SHtml.text(problemDescription, problemDescription = _, "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), edit(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), edit(_))
 
     val submit: JsCmd = hideSubmitButton & ajaxCall
 
@@ -116,7 +125,8 @@ object GrammarToCNFSnippet extends SpecificProblemSnippet {
     val template: NodeSeq = Templates(List("templates-hidden", "grammar-to-cnf-problem", "edit")) openOr Text("Could not find template /templates-hidden/grammar-to-cnf-problem/edit")
     Helpers.bind("editform", template,
       "grammarfield" -> grammarField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
