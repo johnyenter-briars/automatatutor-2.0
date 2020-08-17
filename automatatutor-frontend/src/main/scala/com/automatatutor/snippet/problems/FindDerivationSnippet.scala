@@ -37,12 +37,13 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
       val word = (formValuesXml \ "wordfield").head.text
       val derivationType = (formValuesXml \ "derivationtypefield").head.text.toInt
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+    val name = (formValuesXml \ "namefield").head.text
+    val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        val unspecificProblem = createUnspecificProb(shortDescription, shortDescription)
+        val unspecificProblem = createUnspecificProb(name, description)
 
         val specificProblem : FindDerivationProblem = FindDerivationProblem.create
         specificProblem.setGeneralProblem(unspecificProblem).setGrammar(grammar).setWord(word).setDerivationType(derivationType)
@@ -58,17 +59,19 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
 	
 	//create HTML
     val grammarField = SHtml.textarea("S -> a S b | x | S S", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
-    val shortDescriptionField = SHtml.text("", value => {}, "id" -> "shortdescfield")
-	val wordField = SHtml.text("axbaaxbb", value => {}, "id" -> "wordfield")
-	val derivationTypeField = SHtml.select(Array(("0", "ANY"), ("1", "LEFTMOST"), ("2", "RIGHTMOST")), Empty, value => {}, "id" -> "derivationtypefield")
+    val nameField = SHtml.text("", value => {}, "id" -> "namefield")
+    val descriptionField = SHtml.text("", value => {}, "id" -> "descriptionfield")
+    val wordField = SHtml.text("axbaaxbb", value => {}, "id" -> "wordfield")
+    val derivationTypeField = SHtml.select(Array(("0", "ANY"), ("1", "LEFTMOST"), ("2", "RIGHTMOST")), Empty, value => {}, "id" -> "derivationtypefield")
     
 	//JavaScript
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
     val wordFieldValXmlJs: String = "<wordfield>' + document.getElementById('wordfield').value + '</wordfield>"
     val derivationTypeFieldValXmlJs: String = "<derivationtypefield>' + document.getElementById('derivationtypefield').value + '</derivationtypefield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + derivationTypeFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), create(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + derivationTypeFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), create(_))
     val submit: JsCmd = hideSubmitButton & ajaxCall
     val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Submit</button>
 
@@ -78,7 +81,8 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
         "grammarfield" -> grammarField,
         "wordfield" -> wordField,
         "derivationtypefield" -> derivationTypeField,
-        "shortdescription" -> shortDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
 
@@ -86,7 +90,8 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
 
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val specificProblem = FindDerivationProblem.findByGeneralProblem(problem)
-    var shortDescription: String = problem.getName
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var grammar: String = Grammar.preprocessLoadedGrammar(specificProblem.getGrammar)
     var word: String = specificProblem.getWord
     var derivationType: Int = specificProblem.getDerivationType
@@ -96,12 +101,13 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
       val word = (formValuesXml \ "wordfield").head.text
       val derivationType = (formValuesXml \ "derivationtypefield").head.text.toInt
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setName(shortDescription).save()
+        problem.setName(name).setDescription(description).save()
         specificProblem.setGrammar(grammar).setWord(word).setDerivationType(derivationType).save()
 
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
@@ -114,17 +120,19 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
 
     //create HTML
     val grammarField = SHtml.textarea(grammar, value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
-    val shortDescriptionField = SHtml.text(shortDescription, value => {}, "id" -> "shortdescfield")
-	val wordField = SHtml.text(word, value => {}, "id" -> "wordfield")
-	val derivationTypeField = SHtml.select(Array(("0", "ANY"), ("1", "LEFTMOST"), ("2", "RIGHTMOST")), new Full("" + derivationType), value => {}, "id" -> "derivationtypefield")
+    val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionField = SHtml.text(problemDescription, problemDescription = _, "id" -> "descriptionfield")
+	  val wordField = SHtml.text(word, value => {}, "id" -> "wordfield")
+	  val derivationTypeField = SHtml.select(Array(("0", "ANY"), ("1", "LEFTMOST"), ("2", "RIGHTMOST")), new Full("" + derivationType), value => {}, "id" -> "derivationtypefield")
     
     //JavaScript
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
     val wordFieldValXmlJs: String = "<wordfield>' + document.getElementById('wordfield').value + '</wordfield>"
     val derivationTypeFieldValXmlJs: String = "<derivationtypefield>' + document.getElementById('derivationtypefield').value + '</derivationtypefield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<editattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + derivationTypeFieldValXmlJs + shortdescFieldValXmlJs + "</editattempt>'"), edit(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<editattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + derivationTypeFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</editattempt>'"), edit(_))
     val submit: JsCmd = hideSubmitButton & ajaxCall
     val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Save</button>
 
@@ -134,7 +142,8 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
         "grammarfield" -> grammarField,
         "wordfield" -> wordField,
         "derivationtypefield" -> derivationTypeField,
-        "shortdescription" -> shortDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
 
