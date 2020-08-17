@@ -3,7 +3,7 @@ function filterTableRows(tableId, columnName, inputId){
     var input = document.getElementById(inputId);
     
     var filterString = input.value.toLowerCase();
-
+    console.log(filterString)
     var rows = table.rows;
     
     var columnIndex = -1;

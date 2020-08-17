@@ -357,23 +357,23 @@ class Problempoolsnippet extends{
       }
     </form>
 
-    val descriptionFilterID = "input_desc"
-    val descriptionFilter = SHtml.text("", (x: String)=>{},
-      "onkeyup"->s"filterTableRows('$tableID', 'Description', '$descriptionFilterID');", "id"->descriptionFilterID)
+    val nameFilterID = "input_name"
+    val nameFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Name', '$nameFilterID');", "id"->nameFilterID)
 
     val problemTypeFilterID = "input_pt"
     val problemTypeFilter = SHtml.text("", (x: String)=>{},
       "onkeyup"->s"filterTableRows('$tableID', 'Problem Type', '$problemTypeFilterID');", "id"->problemTypeFilterID)
 
-    val longdescriptionFilterID = "input_long_desc"
-    val longdescriptionFilter = SHtml.text("", (x: String)=>{},
-      "onkeyup"->s"filterTableRows('$tableID', 'Long Description', '$longdescriptionFilterID');", "id"->longdescriptionFilterID)
+    val descriptionFilterID = "input_desc"
+    val descriptionFilter = SHtml.text("", (x: String)=>{},
+      "onkeyup"->s"filterTableRows('$tableID', 'Description', '$descriptionFilterID');", "id"->descriptionFilterID)
 
     Helpers.bind("problempool", xhtml,
       "problemlist" -> table,
-      "descriptionfilter" -> descriptionFilter,
+      "namefilter" -> nameFilter,
       "problemtypefilter" -> problemTypeFilter,
-      "longdescriptionfilter" -> longdescriptionFilter
+      "descriptionfilter" -> descriptionFilter
     )
   }
 
