@@ -98,8 +98,8 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
 
   protected object problemType extends MappedLongForeignKey(this, ProblemType)
   protected object createdBy extends MappedLongForeignKey(this, User)
-  protected object shortDescription extends MappedText(this)
-  protected object longDescription extends MappedText(this)
+  protected object name extends MappedText(this)
+  protected object description extends MappedText(this)
 
   def getProblemID: Long = this.id.is
 
@@ -111,11 +111,11 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
   def getCreator: User = this.createdBy.obj openOrThrowException "Every Problem must have a CreatedBy"
   def setCreator(creator: User) = this.createdBy(creator)
 
-  def getShortDescription = this.shortDescription.is
-  def setShortDescription(description: String) = this.shortDescription(description)
+  def getName = this.name.is
+  def setName(description: String) = this.name(description)
 
-  def getLongDescription = this.longDescription.is
-  def setLongDescription(description: String) = this.longDescription(description)
+  def getDescription = this.description.is
+  def setDescription(description: String) = this.description(description)
 
   def getCourse : Box[Course] =
     throw new NotImplementedError("Problems are no longer tied directly to courses. ProblemLinks are the objects" +
@@ -187,8 +187,8 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     val copiedGeneralProblem = new Problem
     copiedGeneralProblem.problemType(this.problemType.get)
     copiedGeneralProblem.createdBy(otherUser)
-    copiedGeneralProblem.shortDescription(this.shortDescription.get)
-    copiedGeneralProblem.longDescription(this.longDescription.get)
+    copiedGeneralProblem.name(this.name.get)
+    copiedGeneralProblem.description(this.description.get)
     copiedGeneralProblem.save()
 
     val copiedSpecificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this).copy()
@@ -202,12 +202,12 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     val specificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this)
     return <problem>
              <typeName>{ this.getTypeName }</typeName>
-             <shortDescription>{ this.getShortDescription }</shortDescription>
-             <longDescription>{ this.getLongDescription }</longDescription>
+             <shortDescription>{ this.getName }</shortDescription>
+             <longDescription>{ this.getDescription }</longDescription>
              <specificProblem>{ specificProblem.toXML }</specificProblem>
            </problem>
   }
-  
+
   def canBeDeleted : Boolean = true
   def getDeletePreventers : Seq[String] = List()
 
@@ -239,8 +239,8 @@ object Problem extends Problem with LongKeyedMetaMapper[Problem] {
     val generalProblem = new Problem
     generalProblem.problemType(specificType)
     generalProblem.createdBy(User.currentUser)
-    generalProblem.shortDescription((xml \ "shortDescription").text)
-    generalProblem.longDescription((xml \ "longDescription").text)
+    generalProblem.name((xml \ "name").text)
+    generalProblem.description((xml \ "description").text)
     generalProblem.save()
     //build specific problem
     val specificProblem = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)

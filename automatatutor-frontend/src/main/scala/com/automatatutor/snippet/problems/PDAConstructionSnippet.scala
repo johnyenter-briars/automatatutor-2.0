@@ -81,15 +81,15 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val pdaConstructionProblem = PDAConstructionProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getShortDescription
-    var longDescription: String = problem.getLongDescription
+    var shortDescription: String = problem.getName
+    var longDescription: String = problem.getDescription
     var automaton: String = ""
     var giveStackAlphabet: Boolean = pdaConstructionProblem.getGiveStackAlphabet
     var allowSimulation: Boolean = pdaConstructionProblem.getAllowSimulation
 
     def create() = {
       //TODO: better error handling
-      problem.setShortDescription(shortDescription).setLongDescription(longDescription).save()
+      problem.setName(shortDescription).setDescription(longDescription).save()
       pdaConstructionProblem.setGiveStackAlphabet(giveStackAlphabet)
       pdaConstructionProblem.setAllowSimulation(allowSimulation)
       if (!automaton.isEmpty) {
@@ -196,7 +196,7 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
       </script>
     }
 
-    val problemDescriptionNodeSeq = Text(generalProblem.getLongDescription)
+    val problemDescriptionNodeSeq = Text(generalProblem.getDescription)
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("pda.exportToXml()"), grade)

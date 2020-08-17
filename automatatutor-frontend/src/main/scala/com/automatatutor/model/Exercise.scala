@@ -79,14 +79,14 @@ class Exercise extends LongKeyedMapper[Exercise] with IdPK {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
     if(matchingProblems.length > 1) throw new IllegalStateException("Each Exercise must only have ONE linked problem")
 
-    matchingProblems.head.getLongDescription
+    matchingProblems.head.getDescription
   }
 
   def getShortDescription: String = {
     val matchingProblems = Problem.findAll().filter(p => p == this.getProblem)
     if(matchingProblems.length > 1) throw new IllegalStateException("Each Exercise must only have ONE linked problem")
 
-    matchingProblems.head.getShortDescription
+    matchingProblems.head.getName
   }
 
   def getTypeName: String = {

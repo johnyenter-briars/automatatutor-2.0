@@ -217,8 +217,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
 
     val specificProblem = PumpingLemmaGameProblem.findByGeneralProblem(problem)
-    var shortDescription: String = problem.getShortDescription
-    var longDescription: String = problem.getLongDescription
+    var shortDescription: String = problem.getName
+    var longDescription: String = problem.getDescription
 
     var alphabet: String = specificProblem.getAlphabet
     var symbolicString : String = specificProblem.getSymbolicString
@@ -231,8 +231,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
 
     def edit() = {
 
-      problem.setShortDescription(shortDescription)
-      problem.setLongDescription(longDescription)
+      problem.setName(shortDescription)
+      problem.setDescription(longDescription)
       specificProblem.setAlphabet(alphabet)
 
       if (regular)
@@ -723,7 +723,7 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
     val ajaxCallFindIString : String = ajaxCallString("document.getElementById('splitdisplaystart').innerHTML+" +
       "'#'+document.getElementById('splitdisplaymid').innerHTML+'#'+document.getElementById('splitdisplayend').innerHTML", chooseI(_))
 
-    val languageDescription = Text(generalProblem.getLongDescription)
+    val languageDescription = Text(generalProblem.getDescription)
     val alphabet = Text("{"+ specificProblem.getAlphabet +"}")
     val regularButton : NodeSeq = <button id="regularbutton" class="regularchoice" onclick={ajaxCallRegularString}>regular</button>
     val nonRegularButton : NodeSeq = <button id="nonregularbutton" class="regularchoice" onclick={ajaxCallNonRegularString + "; "+ajaxCallNString}>not regular</button>

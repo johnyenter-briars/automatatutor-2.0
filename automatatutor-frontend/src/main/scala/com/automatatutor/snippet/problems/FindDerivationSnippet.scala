@@ -86,7 +86,7 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
 
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val specificProblem = FindDerivationProblem.findByGeneralProblem(problem)
-    var shortDescription: String = problem.getShortDescription
+    var shortDescription: String = problem.getName
     var grammar: String = Grammar.preprocessLoadedGrammar(specificProblem.getGrammar)
     var word: String = specificProblem.getWord
     var derivationType: Int = specificProblem.getDerivationType
@@ -101,7 +101,7 @@ object FindDerivationSnippet extends SpecificProblemSnippet {
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setShortDescription(shortDescription).save()
+        problem.setName(shortDescription).save()
         specificProblem.setGrammar(grammar).setWord(word).setDerivationType(derivationType).save()
 
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))

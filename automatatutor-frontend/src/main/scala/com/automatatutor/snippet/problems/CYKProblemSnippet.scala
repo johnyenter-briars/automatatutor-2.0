@@ -87,7 +87,7 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
 
     val cykProblem = CYKProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getShortDescription
+    var shortDescription: String = problem.getName
     var grammar: String = Grammar.preprocessLoadedGrammar(cykProblem.getGrammar)
     var word: String = cykProblem.getWord
 
@@ -100,7 +100,7 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
       val parsingErrors = GraderConnection.getCNFParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setShortDescription(shortDescription).setLongDescription(shortDescription).save()
+        problem.setName(shortDescription).setDescription(shortDescription).save()
         cykProblem.grammar(grammar).word(word).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {
@@ -168,7 +168,7 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
 	}) openOr <cyk><cell start="1" end="1">NT1 NT2 ...</cell></cyk>
 	
 	//build html
-    val problemDescription = generalProblem.getLongDescription
+    val problemDescription = generalProblem.getDescription
     val grammarText = { specificProblem
       .getGrammar.replaceAll("->", " -> ")
       .replaceAll("=>", " -> ")

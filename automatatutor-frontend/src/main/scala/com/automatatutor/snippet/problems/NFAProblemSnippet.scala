@@ -80,12 +80,12 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val nfaConstructionProblem = NFAConstructionProblem.findByGeneralProblem(problem)
 
-    var shortDescription : String = problem.getShortDescription
-    var longDescription : String = problem.getLongDescription
+    var shortDescription : String = problem.getName
+    var longDescription : String = problem.getDescription
     var automaton : String = ""
 
     def create() = {
-      problem.setShortDescription(shortDescription).setLongDescription(longDescription).save()
+      problem.setName(shortDescription).setDescription(longDescription).save()
       nfaConstructionProblem.setAutomaton(automaton).save()
       returnFunc(problem)
     }
@@ -160,7 +160,7 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
 	  Editor.canvas.setAlphabetArray( { alphabetJavaScriptArray } ); </script>
 	
     val problemAlphabetNodeSeq = Text("{" + problemAlphabet.mkString(",") + "}")    
-    val problemDescriptionNodeSeq = Text(generalProblem.getLongDescription)    
+    val problemDescriptionNodeSeq = Text(generalProblem.getDescription)
 		
     
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")

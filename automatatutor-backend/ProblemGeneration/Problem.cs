@@ -32,8 +32,8 @@ namespace ProblemGeneration
                     new XAttribute("quality", Quality()),
                     new XAttribute("difficulty", Difficulty()),
                     new XElement("typeName", TypeName()),
-                    new XElement("shortDescription", "Gen " + DateTime.Now.ToString("yyMMdd HH:mm:ss")),
-                    new XElement("longDescription", LongDescription() ),
+                    new XElement("name", "Gen " + DateTime.Now.ToString("yyMMdd HH:mm:ss")),
+                    new XElement("description", LongDescription()),
                     new XElement("specificProblem", toXML())
                 );
         }

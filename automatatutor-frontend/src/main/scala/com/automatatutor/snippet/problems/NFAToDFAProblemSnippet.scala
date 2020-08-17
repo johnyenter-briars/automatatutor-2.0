@@ -84,11 +84,11 @@ object NFAToDFAProblemSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val nfaToDfaProblem = NFAToDFAProblem.findByGeneralProblem(problem)
 
-    var shortDescription : String = problem.getShortDescription
+    var shortDescription : String = problem.getName
     var automaton : String = ""
 
     def create() = {
-      problem.setShortDescription(shortDescription).save()
+      problem.setName(shortDescription).save()
       nfaToDfaProblem.setAutomaton(automaton).save()
       returnFunc(problem)
     }
@@ -158,7 +158,7 @@ object NFAToDFAProblemSnippet extends SpecificProblemSnippet {
 	//build html
 	val problemAlphabet = nfaToDfaProblem.getAlphabet
     val problemAlphabetNodeSeq = Text("{" + problemAlphabet.mkString(",") + "}")
-    val problemDescriptionNodeSeq = Text(generalProblem.getLongDescription)
+    val problemDescriptionNodeSeq = Text(generalProblem.getDescription)
 
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")
     val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("Editor.canvasDfa.exportAutomaton()"), grade(_))

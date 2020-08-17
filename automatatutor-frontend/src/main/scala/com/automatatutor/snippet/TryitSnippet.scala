@@ -42,7 +42,7 @@ class Tryitsnippet {
 
     return TableHelper.renderTableWithHeader(
       tryitProblems,
-      ("Description", (exercise: Exercise) => Text(exercise.getProblem.getShortDescription)),
+      ("Description", (exercise: Exercise) => Text(exercise.getProblem.getName)),
       ("Problem Type", (exercise: Exercise) => Text(exercise.getProblem.getTypeName)),
       ("", (problem: Exercise) => SHtml.link(
         "/tryit/practice",

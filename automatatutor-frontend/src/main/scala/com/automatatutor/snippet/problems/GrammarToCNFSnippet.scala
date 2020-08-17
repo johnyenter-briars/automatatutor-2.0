@@ -81,7 +81,7 @@ object GrammarToCNFSnippet extends SpecificProblemSnippet {
 
     val grammarToCNFProblem = GrammarToCNFProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getShortDescription
+    var shortDescription: String = problem.getName
     var grammar: String = Grammar.preprocessLoadedGrammar(grammarToCNFProblem.getGrammar)
 
     def edit(formValues: String): JsCmd = {
@@ -92,7 +92,7 @@ object GrammarToCNFSnippet extends SpecificProblemSnippet {
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setShortDescription(shortDescription).setLongDescription(shortDescription).save()
+        problem.setName(shortDescription).setDescription(shortDescription).save()
         grammarToCNFProblem.grammar(grammar).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {

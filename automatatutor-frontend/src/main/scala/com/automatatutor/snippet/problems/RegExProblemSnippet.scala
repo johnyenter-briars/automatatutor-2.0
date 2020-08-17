@@ -122,8 +122,8 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
     
     
     var alphabet : String = regexConstructionProblem.getAlphabet
-    var shortDescription : String = problem.getShortDescription
-    var longDescription : String = problem.getLongDescription
+    var shortDescription : String = problem.getName
+    var longDescription : String = problem.getDescription
     var regex : String = regexConstructionProblem.getRegex
     var equivalent = regexConstructionProblem.getEquivalent
 
@@ -147,7 +147,7 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
           val alphabetToSave = alphabetList.mkString(" ")
           val specificProblem: RegExConstructionProblem = RegExConstructionProblem.create
 
-          problem.setShortDescription(shortDescription).setLongDescription(longDescription).save()
+          problem.setName(shortDescription).setDescription(longDescription).save()
           regexConstructionProblem.setAlphabet(alphabetToSave).setRegex(regEx).setEquivalent(equivalent.split("\\s+").mkString("\n")).save()
           return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
         }
@@ -233,7 +233,7 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
 
     // Remember to remove all newlines from the generated XML by using filter
     val alphabetText = Text("{" + specificProblem.getAlphabet.split(" ").mkString(",") + "}")
-    val problemDescription = generalProblem.getLongDescription
+    val problemDescription = generalProblem.getDescription
     val regExField = SHtml.text(lastAttemptRegex, value => {}, "id" -> "regexfield")
 
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")

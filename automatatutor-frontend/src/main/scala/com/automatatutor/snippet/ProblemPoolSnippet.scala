@@ -39,7 +39,7 @@ class Problempoolsnippet extends{
       {
         TableHelper.renderTableWithHeader(
         BatchProblems.is.toList,
-        ("", (problem: Problem) => Text(problem.getShortDescription)))
+        ("", (problem: Problem) => Text(problem.getName)))
       }
       {
         //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
@@ -240,8 +240,8 @@ class Problempoolsnippet extends{
           List(3, 10.5, 21, 5, 13, 13.5, 5, 5.3, 10, 4),
           Map("Problem Stats" -> "Average grade a student gets on this problem/Average attempts per student"),
           ("", (problem: Problem) => checkBoxForProblem(problem)),
-          ("Description", (problem: Problem) => Text(problem.getShortDescription)),
-          ("Long Description", (problem: Problem) => Text(problem.getLongDescription)),
+          ("Name", (problem: Problem) => Text(problem.getName)),
+          ("Description", (problem: Problem) => Text(problem.getDescription)),
           ("Problem Stats", (problem: Problem) => new ProblemRenderer(problem).renderProblemStats),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName)),
           ("Instances", (problem: Problem) => new ProblemRenderer(problem).renderProblemInstances),
@@ -488,7 +488,7 @@ class Problempoolsnippet extends{
           tableID,
           problems,
           ("Click to add problem", (problem: Problem) => checkBoxForProblem(problem)),
-          ("Description", (problem: Problem) => Text(problem.getShortDescription)),
+          ("Description", (problem: Problem) => Text(problem.getName)),
           ("Problem Type", (problem: Problem) => Text(problem.getTypeName))
 
         )

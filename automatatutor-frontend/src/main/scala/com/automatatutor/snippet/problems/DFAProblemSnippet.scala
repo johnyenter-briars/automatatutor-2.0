@@ -78,12 +78,12 @@ object DFAConstructionSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val dfaConstructionProblem = DFAConstructionProblem.findByGeneralProblem(problem)
 
-    var shortDescription : String = problem.getShortDescription
-    var longDescription : String = problem.getLongDescription
+    var shortDescription : String = problem.getName
+    var longDescription : String = problem.getDescription
     var automaton : String = ""
 
     def create() = {
-      problem.setShortDescription(shortDescription).setLongDescription(longDescription).save()
+      problem.setName(shortDescription).setDescription(longDescription).save()
       dfaConstructionProblem.setAutomaton(automaton).save()
       returnFunc(problem)
     }
@@ -156,7 +156,7 @@ object DFAConstructionSnippet extends SpecificProblemSnippet {
     val alphabetScript : NodeSeq = <script type="text/javascript"> initCanvas(); Editor.canvas.setAlphabetArray( { alphabetJavaScriptArray } ) </script>
 	
     val problemAlphabetNodeSeq = Text("{" + problemAlphabet.mkString(",") + "}")
-    val problemDescriptionNodeSeq = Text(generalProblem.getLongDescription)
+    val problemDescriptionNodeSeq = Text(generalProblem.getDescription)
     
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")
     val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("Editor.canvas.exportAutomaton()"), grade(_))

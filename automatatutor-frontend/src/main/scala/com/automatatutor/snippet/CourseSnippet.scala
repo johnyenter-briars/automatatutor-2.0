@@ -613,7 +613,7 @@ class Coursesnippet {
     return supervisorList ++ participantList
   }
 
-  //TODO 8/7/2020 do we need this?
+  //TODO 8/7/2020 make a reference to problem create
   def rendercreate(ignored: NodeSeq): NodeSeq = {
     if (CurrentProblemTypeInCourse.is == null) {
       S.warning("You have not selected a problem type")
@@ -626,7 +626,7 @@ class Coursesnippet {
       val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
 
       val unspecificProblem: Problem = Problem.create.setCreator(createdBy)
-      unspecificProblem.setShortDescription(shortDesc).setLongDescription(longDesc).setProblemType(problemType)
+      unspecificProblem.setName(shortDesc).setDescription(longDesc).setProblemType(problemType)
       unspecificProblem.setCourse(CurrentCourse)
       unspecificProblem.save
 
