@@ -132,14 +132,14 @@ class Mainsnippet {
 	val usersButton = SHtml.link("/users/index", () => (), <button type='button'>User List</button>)
 	val editProfilButton = SHtml.link("/user_mgt/change_password", () => (), <button type='button'>Change Password</button>)
   val becomeInstructorButton = SHtml.link("/main/become_instructor", () => {}, <button type='button'>Become Instructor</button>)
-	val createGrammarWordsProbButton = SHtml.link("/main/problempool/create", () => {
-    val x = ProblemType.findByName("Grammar Words").head
+	val cykone = SHtml.link("/main/problempool/create", () => {
+    val x = ProblemType.findByName("CYK Algorithm").head
     println(x)
     CurrentProblemTypeInCourse(x)
-  }, <button type='button'>Create a Words in Grammar Problem</button>)
+  }, <button type='button'>Create a CYK Problem</button>)
 
-	if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton ++ createGrammarWordsProbButton
-	if (user.isInstructor) return autogenButton ++ problemPoolButton ++ editProfilButton ++ createGrammarWordsProbButton
+	if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton ++ cykone
+	if (user.isInstructor) return autogenButton ++ problemPoolButton ++ editProfilButton ++ cykone
 	return autogenButton ++ editProfilButton ++ becomeInstructorButton
   }
   

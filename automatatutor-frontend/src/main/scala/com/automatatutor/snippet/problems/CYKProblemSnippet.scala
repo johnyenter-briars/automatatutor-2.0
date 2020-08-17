@@ -41,12 +41,13 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
       val formValuesXml = XML.loadString(formValues)
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
       val word = (formValuesXml \ "wordfield").head.text
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getCNFParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        val unspecificProblem = createUnspecificProb(shortDescription, shortDescription)
+        val unspecificProblem = createUnspecificProb(name, description)
 
         val specificProblem: CYKProblem = CYKProblem.create
         specificProblem.problemId(unspecificProblem).grammar(grammar).word(word)
@@ -61,13 +62,15 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
     }
     val grammarField = SHtml.textarea("S -> AS B | x | S S \nAS -> A S \nA -> a \nB -> b", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
     val wordField = SHtml.text("abaxb", value => {}, "id" -> "wordfield")
-    val shortDescriptionField = SHtml.text("", value => {}, "id" -> "shortdescfield")
+    val nameField = SHtml.text("", value => {}, "id" -> "namefield")
+    val descriptionField = SHtml.text("", value => {}, "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
     val wordFieldValXmlJs: String = "<wordfield>' + document.getElementById('wordfield').value + '</wordfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), create(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), create(_))
 
     val submit: JsCmd = hideSubmitButton & ajaxCall
 
@@ -77,7 +80,8 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
     Helpers.bind("createform", template,
       "grammarfield" -> grammarField,
       "wordfield" -> wordField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
@@ -87,7 +91,8 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
 
     val cykProblem = CYKProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getName
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var grammar: String = Grammar.preprocessLoadedGrammar(cykProblem.getGrammar)
     var word: String = cykProblem.getWord
 
@@ -95,12 +100,13 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
       val formValuesXml = XML.loadString(formValues)
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
       val word = (formValuesXml \ "wordfield").head.text
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getCNFParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setName(shortDescription).setDescription(shortDescription).save()
+        problem.setName(name).setDescription(description).save()
         cykProblem.grammar(grammar).word(word).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {
@@ -111,13 +117,15 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
 
     val grammarField = SHtml.textarea(grammar, grammar = _, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
     val wordField = SHtml.text(word, word = _, "id" -> "wordfield")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
+    val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionField = SHtml.text(problemDescription, problemDescription = _, "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
     val wordFieldValXmlJs: String = "<wordfield>' + document.getElementById('wordfield').value + '</wordfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), edit(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + wordFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), edit(_))
 
     val submit: JsCmd = hideSubmitButton & ajaxCall
 
@@ -127,7 +135,8 @@ object CYKProblemSnippet extends SpecificProblemSnippet {
     Helpers.bind("editform", template,
       "grammarfield" -> grammarField,
       "wordfield" -> wordField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
