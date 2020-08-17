@@ -519,6 +519,32 @@ class Problempoolsnippet extends{
       "longdescriptionfilter" -> longdescriptionFilter
     )
   }
+
+  def rendercreate(ignored: NodeSeq): NodeSeq = {
+    if (CurrentProblemTypeInCourse.is == null) {
+      S.warning("You have not selected a problem type")
+      return S.redirectTo("/main/course/index")
+    }
+
+    val problemType = CurrentProblemTypeInCourse.is
+
+    def createUnspecificProb(name: String, desc: String): Problem = {
+      val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
+
+      val unspecificProblem: Problem = Problem.create.setCreator(createdBy)
+      unspecificProblem.setName(name).setDescription(desc).setProblemType(problemType)
+      unspecificProblem.save
+
+      return unspecificProblem
+    }
+
+    def returnFunc(problem: Problem) = {
+      CurrentProblemInCourse(problem)
+      S.redirectTo("/main/problempool/index")
+    }
+
+    return problemType.getProblemSnippet().renderCreate(createUnspecificProb, returnFunc)
+  }
 }
 
 object Problempoolsnippet{

@@ -614,32 +614,35 @@ class Coursesnippet {
   }
 
   //TODO 8/7/2020 make a reference to problem create
-  def rendercreate(ignored: NodeSeq): NodeSeq = {
-    if (CurrentProblemTypeInCourse.is == null) {
-      S.warning("You have not selected a problem type")
-      return S.redirectTo("/main/course/index")
-    }
-
-    val problemType = CurrentProblemTypeInCourse.is
-
-    def createUnspecificProb(shortDesc: String, longDesc: String): Problem = {
-      val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
-
-      val unspecificProblem: Problem = Problem.create.setCreator(createdBy)
-      unspecificProblem.setName(shortDesc).setDescription(longDesc).setProblemType(problemType)
-      unspecificProblem.setCourse(CurrentCourse)
-      unspecificProblem.save
-
-      return unspecificProblem
-    }
-
-    def returnFunc(problem: Problem) = {
-      CurrentProblemInCourse(problem)
-      S.redirectTo("/main/course/problems/preview")
-    }
-
-    return problemType.getProblemSnippet().renderCreate(createUnspecificProb, returnFunc)
-  }
+//  def rendercreate(ignored: NodeSeq): NodeSeq = {
+//    if (CurrentProblemTypeInCourse.is == null) {
+//      println("hello??")
+//      S.warning("You have not selected a problem type")
+//      return S.redirectTo("/main/course/index")
+//    }
+//
+//    println("did we get here?")
+//
+//    val problemType = CurrentProblemTypeInCourse.is
+//
+//    def createUnspecificProb(shortDesc: String, longDesc: String): Problem = {
+//      val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
+//
+//      val unspecificProblem: Problem = Problem.create.setCreator(createdBy)
+//      unspecificProblem.setName(shortDesc).setDescription(longDesc).setProblemType(problemType)
+//      unspecificProblem.setCourse(CurrentCourse)
+//      unspecificProblem.save
+//
+//      return unspecificProblem
+//    }
+//
+//    def returnFunc(problem: Problem) = {
+//      CurrentProblemInCourse(problem)
+//      S.redirectTo("/main/course/problems/preview")
+//    }
+//
+//    return problemType.getProblemSnippet().renderCreate(createUnspecificProb, returnFunc)
+//  }
 
   //TODO 8/14/2020 do we need this?
   def renderedit(ignored: NodeSeq): NodeSeq = {
