@@ -75,6 +75,23 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		folders.map(_.getAchievedPoints(user)).sum
 	}
 
+	def getPossiblePoints: Long = {
+		this.getFolders.map(_.getPossiblePoints).sum
+	}
+
+	def getAverageGrade(user: User): Int = {
+		//get all exercises in the course
+		val exercises = Exercise.findAllByCourse(this)
+
+		//map each exercise to the students grade on said exercise
+		val gradesPerProblem: List[Float] = exercises.map(_.getGrade(user))
+
+		//take the average across all exercises
+		var averageGrade: Float = gradesPerProblem.sum / gradesPerProblem.length
+		(averageGrade * 100).toInt
+
+	}
+
 	def getExercisesForUser(user : User) : List[Exercise] = {
 	  if (!user.isAdmin && !this.isEnrolled(user)) return List()
 	  if (this.canBeSupervisedBy(user)) return this.getExercises
