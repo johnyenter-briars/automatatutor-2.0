@@ -2,7 +2,7 @@ package com.automatatutor.renderer
 
 import scala.xml.NodeSeq
 import scala.xml.Text
-import com.automatatutor.model.{Course, Folder, Problem, ProblemPointer, SolutionAttempt, User}
+import com.automatatutor.model.{Course, Folder, Problem, Exercise, SolutionAttempt, User}
 import com.automatatutor.snippet._
 import net.liftweb.http._
 import net.liftweb.http.js.JE.JsRaw
@@ -11,14 +11,14 @@ import net.liftweb.http.js.JsCmds
 import net.liftweb.http.js.JsCmds.jsExpToJsCmd
 import net.liftweb.mapper.By
 
-class ProblemPointerRenderer(problemPointer: ProblemPointer) {
+class ExerciseRenderer(exercise: Exercise) {
 
   def renderSolve(target: String, asLink: Boolean): NodeSeq = {
     if(asLink){
       SHtml.link(
         target,
         () => {
-          CurrentProblemPointerInCourse(problemPointer)
+          CurrentExerciseInCourse(exercise)
         },
         Text("Solve"))
     }
@@ -26,7 +26,7 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
     SHtml.link(
       target,
       () => {
-        CurrentProblemPointerInCourse(problemPointer)
+        CurrentExerciseInCourse(exercise)
       },
       <button type='button'>Solve</button>)
   }
@@ -36,15 +36,33 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
 
   def renderAccess(target : String, asLink : Boolean) : NodeSeq = {
     if (asLink) return SHtml.link(target, () => {
-      CurrentProblemPointerInCourse(problemPointer)}, Text("Edit"))
+      CurrentBatchExercisesInCourse.is += exercise
+    }, Text("Edit"))
 
     val button: NodeSeq = <button type='button'>Edit</button>
     SHtml.link(target, () => {
-      CurrentProblemPointerInCourse(problemPointer)}, button)
+      CurrentBatchExercisesInCourse.is += exercise
+    }, button)
   }
 
-  def renderAccessLink: NodeSeq = renderAccess("/main/course/problems/editproblemaccess", true)
-  def renderAccessButton: NodeSeq = renderAccess("/main/course/problems/editproblemaccess", false)
+  def renderAccessModal: NodeSeq = {
+    <div>
+      <button type="button" id="batch_send-modal-button" class="modal-button">Batch Send</button>
+
+      <div id="batch_send-modal" class="modal">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">&times;</span>
+            <h3>Send Problems to Folders</h3>
+          </div>
+          <div class="modal-body">
+            <h2>Test</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 
   def renderDelete(target: String): NodeSeq = {
     val onClick: JsCmd = JsRaw(
@@ -54,7 +72,7 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
     SHtml.link(
       target,
       () => {
-        problemPointer.delete_!
+        exercise.delete_!
       },
       Text("Delete"),
       "onclick" -> onClick.toJsCmd,
@@ -66,25 +84,25 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
   def renderReferencedProblem(target : String, asLink : Boolean, previousPage: String) : NodeSeq = {
     if (asLink) return SHtml.link(target, () => {
       PreviousPage(previousPage)
-      CurrentEditableProblem(problemPointer.getProblem)}, Text("Edit"))
+      CurrentEditableProblem(exercise.getProblem)}, Text("Edit"))
 
     SHtml.link(target, () => {
       PreviousPage(previousPage)
-      CurrentEditableProblem(problemPointer.getProblem)}, <button type='button'>Edit</button>)
+      CurrentEditableProblem(exercise.getProblem)}, <button type='button'>Edit</button>)
   }
 
   def renderReferencedProblemLink(previousPage: String): NodeSeq = renderReferencedProblem("/main/problempool/edit", true, previousPage)
   def renderReferencedProblemButton(previousPage: String): NodeSeq = renderReferencedProblem("/main/problempool/edit", false, previousPage)
 
-  def renderProblemStats: NodeSeq = {
+  def renderExerciseStats: NodeSeq = {
     //get all students who tried the problem
-    val students = problemPointer.getStudentsWhoAttempted
+    val students = exercise.getStudentsWhoAttempted
 
     //map each student to the number of attempts they have on this problem
     val attemptsPerStudent: List[Int] = students.map(student => {
       SolutionAttempt.findAll(
         By(SolutionAttempt.userId, student),
-        By(SolutionAttempt.problempointerId, problemPointer))
+        By(SolutionAttempt.exerciseId, exercise))
         .length
     })
 
@@ -95,11 +113,11 @@ class ProblemPointerRenderer(problemPointer: ProblemPointer) {
       //Get all attempts for each user, and filter based on the current problem
       val attempts = SolutionAttempt.findAll(
         By(SolutionAttempt.userId, student),
-        By(SolutionAttempt.problempointerId, problemPointer))
+        By(SolutionAttempt.exerciseId, exercise))
 
       //map each attempt at the problem to its grade (points/maxgrade), and take the max
       attempts.map(sa => {
-        sa.grade.is.toFloat / sa.getProblemPointer.getMaxGrade
+        sa.grade.is.toFloat / sa.getExercise.getMaxGrade
       }).max
     })
 

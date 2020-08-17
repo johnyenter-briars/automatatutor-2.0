@@ -30,7 +30,6 @@ class SOAPConnection(val url : URL) {
       val connection = url.openConnection().asInstanceOf[HttpURLConnection]
 
       val methodNameWithNamespace = namespace + "/" + methodName
-
       connection.setDoOutput(true)
       connection.addRequestProperty("Content-Type", "text/xml; charset=utf-8")
       connection.addRequestProperty("SOAPAction", '"' + methodNameWithNamespace + '"')

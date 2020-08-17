@@ -103,8 +103,8 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
 
 
     var alphabet : String = regExToNFAProblem.getAlphabet
-    var shortDescription : String = problem.getShortDescription
-    var longDescription : String = problem.getLongDescription
+    var shortDescription : String = problem.getName
+    var longDescription : String = problem.getDescription
     var regex : String = regExToNFAProblem.getRegex
 
     def edit(formValues : String) : JsCmd = {
@@ -120,7 +120,7 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
       if(parsingErrors.isEmpty) {
           val alphabetToSave = alphabetList.mkString(" ")
 
-          problem.setShortDescription(shortDescription).setLongDescription(longDescription).save()
+          problem.setName(shortDescription).setDescription(longDescription).save()
           regExToNFAProblem.setAlphabet(alphabetToSave).setRegex(regEx).save()
           return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
         }
@@ -144,7 +144,7 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")
     val checkAlphabetAndSubmit : JsCmd = JsIf(Call("alphabetChecks",Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
-    val submitButton : NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Submit</button>
+    val submitButton : NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Save</button>
 
     val template : NodeSeq = Templates(List("templates-hidden", "regex-to-nfa-problem", "edit")) openOr Text("Could not find template /templates-hidden/regex-to-nfa-problem/edit")
     Helpers.bind("editform", template,
@@ -212,7 +212,7 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
       </script>
 
     val problemAlphabetNodeSeq = Text("{" + problemAlphabet.split(" ").mkString(",") + "}")
-    val problemDescriptionNodeSeq = Text(generalProblem.getLongDescription)
+    val problemDescriptionNodeSeq = Text(generalProblem.getDescription)
 
 
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")

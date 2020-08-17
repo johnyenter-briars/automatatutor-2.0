@@ -10,6 +10,24 @@ object TableHelper {
 	  val headingsXml : NodeSeq = headings.map(heading => <th> { heading } </th>)
 	  return <tr> { headingsXml } </tr>
 	}
+
+	private def renderTableHeaderWithTooltip( headings : Seq[NodeSeq], headingsToTooltip: Map[String, String]): Node = {
+		val headingsXml : NodeSeq = headings.map(heading =>
+			<th>
+				{
+					if(headingsToTooltip.keys.exists(targetHeading => targetHeading.equals(heading.toString()))){
+						<div class="tooltip">
+							{ heading }
+							<span class="tooltiptext">{headingsToTooltip(heading.toString())}</span>
+						</div>
+					}
+					else{
+						heading
+					}
+				}
+			</th>)
+		return <tr> { headingsXml } </tr>
+	}
 	 
 	private def renderSingleRow[T] ( datum : T , displayFuncs : Seq[T => NodeSeq]) : Node = {
 	  return <tr> { displayFuncs.map(func => <td>{ func(datum) }</td>) } </tr>
@@ -74,7 +92,7 @@ object TableHelper {
 		<table id={tableID}> <thead> {headerRow} </thead> <tbody> {dataRows} </tbody> </table>
 	}
 
-	def renderTableWithHeaderColumnWidths[T](tableID: String, data : Seq[T], colWidths: List[Double], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
+	def renderTableWithHeader[T](tableID: String, data : Seq[T], colWidths: List[Double], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
 		if(colWidths.length != colSpec.length) throw new IllegalArgumentException("The length of the column width list does not match the length of the column spec list")
 		val headings = colSpec.map(x => Text(x._1))
 		val headerRow = renderTableHeader(headings)
@@ -86,6 +104,26 @@ object TableHelper {
 			<colgroup>
 				{
 					colWidths.map(width => <col width={width.toString + "%"}></col>)
+				}
+			</colgroup>
+			<thead> {headerRow} </thead> <tbody> {dataRows} </tbody>
+
+		</table>
+	}
+
+	//For use when you want to include a tool tip in one or more table headers
+	def renderTableWithHeader[T](tableID: String, data : Seq[T], colWidths: List[Double], headersToToolTips: Map[String, String], colSpec : (String, (T => NodeSeq))*) : NodeSeq = {
+		if(colWidths.length != colSpec.length) throw new IllegalArgumentException("The length of the column width list does not match the length of the column spec list")
+		val headings = colSpec.map(x => Text(x._1))
+		val headerRow = renderTableHeaderWithTooltip(headings, headersToToolTips)
+
+		val displayFuncs = colSpec.map(x => x._2)
+		val dataRows = renderTableBody(data, displayFuncs)
+
+		<table id={tableID} width="100%">
+			<colgroup>
+				{
+				colWidths.map(width => <col width={width.toString + "%"}></col>)
 				}
 			</colgroup>
 			<thead> {headerRow} </thead> <tbody> {dataRows} </tbody>

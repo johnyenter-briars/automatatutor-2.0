@@ -10,28 +10,28 @@ class SolutionAttempt extends LongKeyedMapper[SolutionAttempt] with IdPK {
 
 	object dateTime extends MappedDateTime(this)
 	object userId extends MappedLongForeignKey(this, User) // CARE: might have been deleted
-	object problempointerId extends MappedLongForeignKey(this, ProblemPointer) // CARE: might have been deleted
+	object exerciseId extends MappedLongForeignKey(this, Exercise) // CARE: might have been deleted
 	object grade extends MappedInt(this)
 
-	def getProblemPointer: ProblemPointer = problempointerId.obj openOrThrowException("Each solution attempt must have a referenced problem")
+	def getExercise: Exercise = exerciseId.obj openOrThrowException("Each solution attempt must have a referenced problem")
 
 	def getUser: User = userId.obj openOrThrowException("Each solution attempt must have a referenced user")
 }
 
 object SolutionAttempt extends SolutionAttempt with LongKeyedMetaMapper[SolutionAttempt] {
-	def getLatestAttempt(user : User, problem : ProblemPointer) : Box[SolutionAttempt] = {
-	  val allAttempts = this.findAll(By(SolutionAttempt.userId, user), By(SolutionAttempt.problempointerId, problem))
+	def getLatestAttempt(user : User, problem : Exercise) : Box[SolutionAttempt] = {
+	  val allAttempts = this.findAll(By(SolutionAttempt.userId, user), By(SolutionAttempt.exerciseId, problem))
 	  return if (allAttempts.isEmpty) { Empty } else { Full(allAttempts.maxBy(attempt => attempt.dateTime.is.getTime())) }
 	}
 
-	def deleteAllByProblemPointer(problem: ProblemPointer): Unit = {
-		this.findAll(By(SolutionAttempt.problempointerId, problem)).foreach(_.delete_!)
+	def deleteAllByExercise(problem: Exercise): Unit = {
+		this.findAll(By(SolutionAttempt.exerciseId, problem)).foreach(_.delete_!)
 	}
 
 	def deleteAllByProblem(problem: Problem): Unit = {
 
-		ProblemPointer.findAllByReferencedProblem(problem).foreach((problemPointer: ProblemPointer) => {
-			this.findAll(By(SolutionAttempt.problempointerId, problemPointer)).foreach(_.delete_!)
+		Exercise.findAllByReferencedProblem(problem).foreach((exercise: Exercise) => {
+			this.findAll(By(SolutionAttempt.exerciseId, exercise)).foreach(_.delete_!)
 		})
 	}
 

@@ -25,6 +25,9 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover {
     outline: thin solid black;
 }
 
+
+/* CSS FOR TABLES */
+
 th{
    cursor: pointer;
 }
@@ -36,17 +39,73 @@ table {
 table td {
     border-bottom:1px solid #fff;
     border-left:1px solid #fff;
-    text-overflow:ellipsis;
+    
+    /* text-overflow:ellipsis;
     overflow:hidden;
-    white-space:nowrap;
-    cursor: pointer;
+    white-space:nowrap; */
+
+    padding: 10px 10px 10px 10px;
+}
+
+p {
+    margin: 0 0 0;
 }
 
 .main-content{
     width: 100%
 }
 
+a {
+    width: fit-content;
+    pointer-events: auto;
+}
 
+
+/*CSS FOR LOCATION TREE*/
+/* Remove default bullets */
+ul, #myUL {
+  list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the caret/arrow */
+.caret {
+  cursor: pointer;
+  user-select: none; /* Prevent text selection */
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+/* Hide the nested list */
+.nested {
+  display: none;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.active {
+  display: block;
+}
+
+
+
+
+/*CSS FOR MODAL POPUP*/
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -109,10 +168,71 @@ table td {
   color: white;
 }
 
-.modal-body {padding: 2px 16px;}
+.modal-body {
+    padding: 20px 20px;
+}
 
 .modal-footer {
   padding: 2px 16px;
   background-color: #5cb85c;
   color: white;
+}
+
+.modal-body li {
+    font-size: 20px;
+}
+
+.modal-body input {
+    min-width: 20px;
+    height: 20px;
+}
+
+/* Tooltip Styling*/
+
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }

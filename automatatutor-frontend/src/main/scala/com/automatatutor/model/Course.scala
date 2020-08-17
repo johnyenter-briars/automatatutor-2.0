@@ -63,10 +63,10 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 
 	def isEnrolled(user : User) = !UserToCourse.findByUserAndCourse(user, this).isEmpty
 
-	//5/16/2020 Updated to use ProblemPointers instead of raw Problems
-	def getProblems : List[ProblemPointer] = ProblemPointer.findAllByCourse(this)
-	def getVisibleProblems : List[ProblemPointer] = getProblems.filter(p => p.getFolder.getVisible)
-	def getSolvableProblems : List[ProblemPointer] = getVisibleProblems.filter(p => p.getFolder.getStartDate.compareTo(new Date()) < 0)
+	//5/16/2020 Updated to use Exercise instead of raw Problems
+	def getExercises : List[Exercise] = Exercise.findAllByCourse(this)
+	def getVisibleExercises : List[Exercise] = getExercises.filter(p => p.getFolder.getVisible)
+	def getSolvableExercises : List[Exercise] = getVisibleExercises.filter(p => p.getFolder.getStartDate.compareTo(new Date()) < 0)
 
 	//The total points is a sum of the highest attempt by the student on all the problems they attempted in the course
 	def getTotalPoints(user: User): Int = {
@@ -75,10 +75,10 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		folders.map(_.getAchievedPoints(user)).sum
 	}
 
-	def getProblemsForUser(user : User) : List[ProblemPointer] = {
+	def getExercisesForUser(user : User) : List[Exercise] = {
 	  if (!user.isAdmin && !this.isEnrolled(user)) return List()
-	  if (this.canBeSupervisedBy(user)) return this.getProblems
-	  return this.getSolvableProblems
+	  if (this.canBeSupervisedBy(user)) return this.getExercises
+	  return this.getSolvableExercises
 	}
 
 	def getFoldersForUser(user: User) : List[Folder] = {
@@ -86,6 +86,10 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		if (this.canBeSupervisedBy(user)) return Folder.findAllByCourse(this)
 		//otherwise, this is a student, show them all posed and open folders
 		return Folder.findAllByCourse(this).filter(f => f.getVisible && f.isOpen)
+	}
+
+	def getFolders : List[Folder] = {
+		Folder.findAllByCourse(this)
 	}
 
 	override def delete_! : Boolean = {
@@ -101,9 +105,9 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	}
 
 	def renderGradesCsv: String = {
-		val visibleProblems = this.getVisibleProblems
-		val participantsWithGrades : Seq[(User, Seq[Int], Int)] = this.getParticipants.map(participant => (participant, visibleProblems.map(_.getHighestAttempt(participant)), this.getTotalPoints(participant)))
-		val firstLine = "FirstName;LastName;Email;" + visibleProblems.map(_.getShortDescription).mkString(";") + ";Total;"
+		val visibleExercises = this.getVisibleExercises
+		val participantsWithGrades : Seq[(User, Seq[Int], Int)] = this.getParticipants.map(participant => (participant, visibleExercises.map(_.getHighestAttempt(participant)), this.getTotalPoints(participant)))
+		val firstLine = "FirstName;LastName;Email;" + visibleExercises.map(_.getShortDescription).mkString(";") + ";Total;"
 		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";"), tuple._3).mkString(";"))
 
 		firstLine + "\n" + csvLines.mkString("\n")
@@ -114,7 +118,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 			val userEmailAttribute = new UnprefixedAttribute("email", participant.email.is, Null)
 			val userLastNameAttribute = new UnprefixedAttribute("lastname", participant.lastName.is, userEmailAttribute)
 			val userFirstNameAttribute = new UnprefixedAttribute("firstname", participant.firstName.is, userLastNameAttribute)
-			val children: NodeSeq = this.getVisibleProblems.map(problem => {
+			val children: NodeSeq = this.getVisibleExercises.map(problem => {
 				val problemDescriptionAttribute = new UnprefixedAttribute("shortDescription", problem.getShortDescription, Null)
 				val maxGradeAttribute = new UnprefixedAttribute("maxGrade", problem.getMaxGrade.toString, problemDescriptionAttribute)
 				val problemTypeAttribute = new UnprefixedAttribute("problemType", problem.getTypeName, maxGradeAttribute)

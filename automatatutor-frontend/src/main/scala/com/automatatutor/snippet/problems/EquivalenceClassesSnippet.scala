@@ -162,7 +162,7 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
     //    val submit: JsCmd = hideSubmitButton & ajaxCall
     val checkAlphabetAndSubmit: JsCmd = JsIf(Call("alphabetChecks", Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ checkAlphabetAndSubmit }>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ checkAlphabetAndSubmit }>Save</button>
     val ajaxEvaluate: JsCmd = SHtml.ajaxCall(JsRaw("'<evaluation>" + regexFieldValXmlJs + alphabetFieldValXmlJs + firstWordFieldValXmlJs + secondWordFieldValXmlJs + "</evaluation>'"), evaluate(_))
     val evaluateButton: NodeSeq = <button type='button' id="evaluatebutton" onclick={ ajaxEvaluate }>Evaluate</button>
 
@@ -190,7 +190,7 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
 
     val specificProblem = EquivalenceClassesProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getShortDescription
+    var shortDescription: String = problem.getName
     var regEx: String = specificProblem.getRegex
     var inNeeded: Int = specificProblem.getInNeeded
     var alphabet: String = specificProblem.getAlphabet
@@ -214,7 +214,7 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
       val parsingErrors = GraderConnection.getRegexParsingErrors(regEx, alphabetList)
 
       if (parsingErrors.isEmpty) {
-        problem.setShortDescription(shortDescription).setLongDescription(shortDescription).save()
+        problem.setName(shortDescription).setDescription(shortDescription).save()
         specificProblem.regEx(regEx).inNeeded(inNeeded).alphabet(alphabet).problemType(problemType).representative(representative).firstWord(firstWord).secondWord(secondWord)
         specificProblem.save
 

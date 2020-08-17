@@ -4,6 +4,7 @@ import scala.Array.canBuildFrom
 import scala.xml._
 import com.automatatutor.lib._
 import com.automatatutor.model._
+import com.automatatutor.model.problems.WordsInGrammarProblem
 import com.automatatutor.renderer.{CourseRenderer, ProblemRenderer}
 import net.liftweb.common.Empty
 import net.liftweb.common.Full
@@ -131,7 +132,7 @@ class Mainsnippet {
 	val usersButton = SHtml.link("/users/index", () => (), <button type='button'>User List</button>)
 	val editProfilButton = SHtml.link("/user_mgt/change_password", () => (), <button type='button'>Change Password</button>)
   val becomeInstructorButton = SHtml.link("/main/become_instructor", () => {}, <button type='button'>Become Instructor</button>)
-	
+
 	if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton
 	if (user.isInstructor) return autogenButton ++ problemPoolButton ++ editProfilButton
 	return autogenButton ++ editProfilButton ++ becomeInstructorButton

@@ -72,7 +72,7 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
 
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val pdaWordProblem = PDAWordProblem.findByGeneralProblem(problem)
-    var shortDescription = problem.getShortDescription
+    var shortDescription = problem.getName
     var numberOfWordsInLanguage: Int = pdaWordProblem.getNumberOfWordsInLanguage
     var numberOfWordsNotInLanguage: Int = pdaWordProblem.getNumberOfWordsNotInLanguage
     var automaton: String = ""
@@ -80,7 +80,7 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
 
     def create() = {
       //TODO: better error handling
-      problem.setShortDescription(shortDescription).setLongDescription(shortDescription).save()
+      problem.setName(shortDescription).setDescription(shortDescription).save()
       pdaWordProblem
         .setNumberOfWordsInLanguage(numberOfWordsInLanguage)
         .setNumberOfWordsNotInLanguage(numberOfWordsNotInLanguage)
@@ -97,7 +97,7 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
     val numberOfWordsInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full[String](numberOfWordsInLanguage.toString), value => numberOfWordsInLanguage = value.toInt)
     val numberOfWordsNotInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full[String](numberOfWordsNotInLanguage.toString), value => numberOfWordsNotInLanguage = value.toInt)
     val allowSimulationField = SHtml.checkbox(allowSimulation, res => allowSimulation = res)
-    val submitButton = SHtml.submit("Edit", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
+    val submitButton = SHtml.submit("Save", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
 
     val setupScript =
       <script type="text/javascript">
@@ -210,7 +210,7 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
 
     return SHtml.ajaxForm(Helpers.bind("solveform", template,
       "setupscript" -> setupScript,
-      "shortdescription" -> generalProblem.getShortDescription,
+      "shortdescription" -> generalProblem.getName,
       "wordsinlanguage" -> wordsInFieldNodeSeq,
       "wordsnotinlanguage" -> wordsNotInFieldNodeSeq,
       "submitbutton" -> submitButton,

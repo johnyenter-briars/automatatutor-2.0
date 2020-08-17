@@ -100,7 +100,7 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
   
     val wordsInRegExProblem = WordsInRegExProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getShortDescription
+    var shortDescription: String = problem.getName
     var regEx: String = wordsInRegExProblem.getRegex
     var inNeeded: Int = wordsInRegExProblem.getInNeeded
     var outNeeded: Int = wordsInRegExProblem.getOutNeeded
@@ -118,7 +118,7 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
       val parsingErrors = GraderConnection.getRegexParsingErrors(regEx, alphabetList)
 
       if (parsingErrors.isEmpty) {
-        problem.setShortDescription(shortDescription).setLongDescription(shortDescription).save()
+        problem.setName(shortDescription).setDescription(shortDescription).save()
         wordsInRegExProblem.regEx(regEx).inNeeded(inNeeded).outNeeded(outNeeded).alphabet(alphabet).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {
@@ -145,7 +145,7 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
 
     val checkAlphabetAndSubmit : JsCmd = JsIf(Call("alphabetChecks",Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ checkAlphabetAndSubmit }>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ checkAlphabetAndSubmit }>Save</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "words-in-regex-problem", "edit")) openOr Text("Could not find template /templates-hidden/words-in-regex-problem/edit")
     Helpers.bind("editform", template,
@@ -212,7 +212,7 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
     }) openOr List()
 
     //build html
-    val problemDescription = generalProblem.getLongDescription
+    val problemDescription = generalProblem.getDescription
     val regexText = Text(Regex.encodedToVisual(specificProblem.getRegex))
     val alphabet = Text("{" + specificProblem.getAlphabet.split(" ").mkString(",") + "}")
     var inNeededText = Text(specificProblem.inNeeded + " words")

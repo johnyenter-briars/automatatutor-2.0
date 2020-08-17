@@ -69,7 +69,7 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
     val longdescFieldValXmlJs: String = "<longdescfield>' + document.getElementById('longdescfield').value + '</longdescfield>"
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + shortdescFieldValXmlJs + longdescFieldValXmlJs + "</createattempt>'"), create(_))
     val submit: JsCmd = hideSubmitButton & ajaxCall
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Save</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "description-to-grammar-problem", "create")) openOr Text("Could not find template /templates-hidden/description-to-grammar-problem/create")
     Helpers.bind("createform", template,
@@ -85,8 +85,8 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
 
     val descriptionToGrammarProblem = DescriptionToGrammarProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getShortDescription
-    var longDescription: String = problem.getLongDescription
+    var shortDescription: String = problem.getName
+    var longDescription: String = problem.getDescription
     var grammar: String = Grammar.preprocessLoadedGrammar(descriptionToGrammarProblem.getGrammar)
 
     def edit(formValues: String): JsCmd = {
@@ -98,7 +98,7 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setShortDescription(shortDescription).setLongDescription(longDescription).save()
+        problem.setName(shortDescription).setDescription(longDescription).save()
         descriptionToGrammarProblem.grammar(grammar).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {
@@ -167,7 +167,7 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
 	}) openOr ""
 
 	//build html
-    val problemDescription = generalProblem.getLongDescription
+    val problemDescription = generalProblem.getDescription
     val grammarField = SHtml.textarea(lastAttemptGrammarS, value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("document.getElementById('grammarfield').value"), grade(_))

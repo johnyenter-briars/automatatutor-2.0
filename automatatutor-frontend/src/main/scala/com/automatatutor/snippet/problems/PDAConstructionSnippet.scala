@@ -81,15 +81,15 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val pdaConstructionProblem = PDAConstructionProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getShortDescription
-    var longDescription: String = problem.getLongDescription
+    var shortDescription: String = problem.getName
+    var longDescription: String = problem.getDescription
     var automaton: String = ""
     var giveStackAlphabet: Boolean = pdaConstructionProblem.getGiveStackAlphabet
     var allowSimulation: Boolean = pdaConstructionProblem.getAllowSimulation
 
     def create() = {
       //TODO: better error handling
-      problem.setShortDescription(shortDescription).setLongDescription(longDescription).save()
+      problem.setName(shortDescription).setDescription(longDescription).save()
       pdaConstructionProblem.setGiveStackAlphabet(giveStackAlphabet)
       pdaConstructionProblem.setAllowSimulation(allowSimulation)
       if (!automaton.isEmpty) {
@@ -105,7 +105,7 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
     val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5")
     val giveStackAlphabetField = SHtml.checkbox(giveStackAlphabet, res => giveStackAlphabet = res)
     val allowSimulationField = SHtml.checkbox(allowSimulation, res => allowSimulation = res)
-    val submitButton = SHtml.submit("Edit", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
+    val submitButton = SHtml.submit("Save", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
 
     val setupScript =
       <script type="text/javascript">
@@ -196,7 +196,7 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
       </script>
     }
 
-    val problemDescriptionNodeSeq = Text(generalProblem.getLongDescription)
+    val problemDescriptionNodeSeq = Text(generalProblem.getDescription)
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("pda.exportToXml()"), grade)

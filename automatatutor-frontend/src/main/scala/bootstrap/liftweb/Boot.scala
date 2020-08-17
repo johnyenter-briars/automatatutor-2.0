@@ -83,7 +83,8 @@ class Boot {
 						Menu.i("Practice Problem") / "main" / "problempool" / "practice" >> Hidden,
 						Menu.i("Send Problem") / "main" / "problempool" / "send" >> Hidden,
 						Menu.i("Add Problems") / "main" / "problempool" / "select" >> Hidden,
-						Menu.i("Batch Send Problems") / "main" / "problempool" / "batchsend" >> Hidden
+						Menu.i("Batch Send Problems") / "main" / "problempool" / "batchsend" >> Hidden,
+						Menu.i("Create a problem") / "main" / "problempool" / "create" >> Hidden
 					),
 				Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus
 					(
@@ -99,11 +100,10 @@ class Boot {
 						Menu.i("Export Problems") / "main" / "course" / "export" >> canSuperviseCoursePredicate,
 						Menu.i("Import Problems") / "main" / "course" / "import" >> canSuperviseCoursePredicate,
 						//TODO 8/7/2020 do we need this?
-						Menu.i("Create Problem") / "main" / "course" / "problems" / "create" >> Hidden,
+//						Menu.i("Create Problem") / "main" / "course" / "problems" / "create" >> Hidden,
 						Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
 						Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
-						Menu.i("Batch Edit Problems") / "main" / "course" / "problems" / "batchedit" >> Hidden,
-						Menu.i("Edit Problem Access") / "main" / "course" / "problems" / "editproblemaccess" >> Hidden
+						Menu.i("Batch Edit Problems") / "main" / "course" / "problems" / "batchedit" >> Hidden
 					)
 	  	),
 

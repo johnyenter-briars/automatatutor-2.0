@@ -82,8 +82,8 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
      val specificProblem = WhileToTMProblem.findByGeneralProblem(problem)
 
-     var shortDescription : String = problem.getShortDescription
-     var longDescription : String = problem.getLongDescription
+     var shortDescription : String = problem.getName
+     var longDescription : String = problem.getDescription
      var program : String = specificProblem.getProgram
     var programText : String = specificProblem.getProgramText
     var numTapes : String = specificProblem.getNumTapes
@@ -100,7 +100,7 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
        uselessVars = "0"
        program = GraderConnection.whileProgramCheck((formValuesXml \ "Program").toString())
 
-       problem.setShortDescription(shortDescription).setLongDescription(longDescription)
+       problem.setName(shortDescription).setDescription(longDescription)
        specificProblem.setProgramText(programText).setProgram(program).setNumTapes(numTapes).setUselessVars(uselessVars)
        specificProblem.save
 
@@ -118,7 +118,7 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + "' + getProgram() + '" + shortdescFieldValXmlJs+ longdescFieldValXmlJs+ whileFieldValXmlJs + "</createattempt>'"), edit(_))
     val checkAlphabetAndSubmit: JsCmd = JsIf(Call("whileChecks", "whilefield"), hideSubmitButton & ajaxCall)
-    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Submit</button>
+    val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Save</button>
 
 
     val template : NodeSeq = Templates(List("templates-hidden", "while-to-tm-problem", "edit")) openOr Text("Could not find template /templates-hidden/while-to-tm-problem/edit")
@@ -187,7 +187,7 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
     </script>
 
     val problemAlphabetNodeSeq = Text("{" + problemAlphabet.mkString(",") + "}")
-    val problemDescriptionNodeSeq = Text(generalProblem.getLongDescription)
+    val problemDescriptionNodeSeq = Text(generalProblem.getDescription)
     val programTextNodeSeq = Text(specificProblem.getProgramText)
     val uselessVars = specificProblem.getUselessVars
     var uselessVarsNodeSeq = Text("");

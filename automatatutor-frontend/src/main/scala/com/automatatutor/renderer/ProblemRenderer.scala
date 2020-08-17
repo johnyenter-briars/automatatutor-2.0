@@ -1,8 +1,10 @@
 package com.automatatutor.renderer
 
+import com.automatatutor.lib.TableHelper
+
 import scala.xml.NodeSeq
 import scala.xml.Text
-import com.automatatutor.model.{Course, Problem, ProblemPointer, SolutionAttempt, User}
+import com.automatatutor.model.{Course, Problem, Exercise, SolutionAttempt, User}
 import com.automatatutor.snippet._
 import net.liftweb.common.{Box, Empty, Full}
 import net.liftweb.http.S
@@ -26,16 +28,37 @@ class ProblemRenderer(problem : Problem) {
     SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd, "style" -> "color: red")
   }
 
+  private def renderProblemInstanceLink(exercise: Exercise): NodeSeq = {
+    val course: Course = exercise.getFolder.getCourse.get
+
+    val locationString = course.getName + "/" + exercise.getFolder.getLongDescription
+
+    SHtml.link("/main/course/folders/index", () => {
+      CurrentFolderInCourse(exercise.getFolder)
+      CurrentCourse(course)
+    }, Text(locationString))
+  }
+
   def renderProblemInstances: NodeSeq = {
-    val problemPointerInstances = problem.getProblemInstances
+    val matchingExercises = problem.getProblemInstances
 
-    val problemLocations: List[String] = problemPointerInstances.map(problemPointer => {
-      val course: Course = problemPointer.getFolder.getCourse.get
+    val problemLocations: List[String] = matchingExercises.map(exercise => {
+      val course: Course = exercise.getFolder.getCourse.get
 
-      course.getName + "/" + problemPointer.getFolder.getLongDescription
+      course.getName + "/" + exercise.getFolder.getLongDescription
     })
 
-    Text(problemLocations.mkString("\n"))
+    if(matchingExercises.isEmpty) return Text(problemLocations.mkString("\n"))
+
+    matchingExercises.flatMap(exercise => renderProblemInstanceLink(exercise)).theSeq
+  }
+
+  def renderProblemInstancesTable: NodeSeq = {
+    val exercises = problem.getProblemInstances
+
+    TableHelper.renderTableWithHeader(exercises,
+      ("Course/Folder", (problem: Exercise) => this.renderProblemInstanceLink(problem))
+    )
   }
 
   def renderProblemStats: NodeSeq = {
@@ -46,7 +69,7 @@ class ProblemRenderer(problem : Problem) {
     val attemptsPerStudent: List[Int] = students.map(student => {
       SolutionAttempt
         .findAll(By(SolutionAttempt.userId, student))
-        .count(_.getProblemPointer.getProblem == problem)
+        .count(_.getExercise.getProblem == problem)
     })
 
     //compute average number of attempts
@@ -56,11 +79,11 @@ class ProblemRenderer(problem : Problem) {
       //Get all attempts for each user, and filter based on the current problem
       val attempts = SolutionAttempt.findAll(
         By(SolutionAttempt.userId, student))
-        .filter(_.getProblemPointer.getProblem == problem)
+        .filter(_.getExercise.getProblem == problem)
 
       //map each attempt at the problem to its grade (points/maxgrade), and take the max
       attempts.map(sa => {
-        sa.grade.is.toFloat / sa.getProblemPointer.getMaxGrade
+        sa.grade.is.toFloat / sa.getExercise.getMaxGrade
       }).max
     })
 
