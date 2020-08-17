@@ -178,7 +178,7 @@ class Coursesnippet {
     new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton
   }
 
-  def renderexerciseedit(xhtml: NodeSeq, problem: Exercise): NodeSeq = {
+  def renderexerciseedit(xhtml: NodeSeq, exercise: Exercise): NodeSeq = {
     if (CurrentBatchExercisesInCourse.is == null) {
       S.warning("Please first choose problems to batch edit")
       return S.redirectTo("/main/course/folders/index")
@@ -219,20 +219,31 @@ class Coursesnippet {
       if (errors.nonEmpty) {
         S.warning(errors.head)
       } else {
-        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        if(exercise == null){
+          CurrentBatchExercisesInCourse.is.foreach((exercise: Exercise) =>{
+            exercise.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+          })
+        }
+        else{
+          exercise.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        }
       }
     }
 
     val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
     val attemptsField = SHtml.text(attempts, attempts = _)
-    val editButton = SHtml.submit("Edit Problems", editProblem)
+    val editButton = SHtml.submit("Edit Selected Exercises", editProblem)
 
     val onClick: JsCmd = JsRaw(
       "return confirm('Are you sure you want to delete these problems from the folder? " +
         "If you do, all student grades on these problems will be lost!')")
 
     val deleteButton = SHtml.button("Delete", ()=>{
-      problem.delete_!
+      if(exercise == null){
+        CurrentBatchExercisesInCourse.is.foreach(_.delete_!)
+      }else{
+        exercise.delete_!
+      }
     }, "onclick" -> onClick.toJsCmd,
       "style" -> "color: red")
 
@@ -300,13 +311,26 @@ class Coursesnippet {
               new ExerciseRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
             ("", (problem: Exercise) => new ExerciseRenderer(problem).renderSolveButton),
             ("", (problem: Exercise) => new ExerciseRenderer(problem).renderDeleteLink)
-          ).theSeq ++ SHtml.button(
-            "Batch Edit",
-            () => {
-              PreviousPage("/main/course/folders/index")
-              S.redirectTo("/main/course/problems/batchedit")}
           )
         }
+        <div>
+          <button type="button" id="edit_access-modal-button_batch" class="modal-button">Batch Edit</button>
+
+          <div id="edit_access-modal_batch" class="modal">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="close" id="edit_access-span_batch">&times;</span>
+                <h3>Batch Edit Exercises</h3>
+              </div>
+              <div class="modal-body">
+                {
+                this.renderexerciseedit(xhtml, null)
+                }
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     }
     else{
