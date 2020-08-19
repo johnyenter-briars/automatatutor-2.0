@@ -269,6 +269,7 @@ class Problempoolsnippet extends{
 
     def checkBoxForProblem(potentialProblem: Problem): NodeSeq = {
       SHtml.checkbox(false, (chosen: Boolean) => {
+        println("checking checkbox")
         if(chosen) BatchProblems.is += potentialProblem
       }, "class" -> "checkbox")
     }
@@ -335,6 +336,7 @@ class Problempoolsnippet extends{
             <br></br>
             {
               SHtml.button("Delete Selected", ()=>{
+                println("are we good?")
                 BatchProblems.is.foreach(_.delete_!)
               }, "onclick" -> JsRaw("return confirm('Are you sure you want to delete the selected problems?')").toJsCmd)
             }

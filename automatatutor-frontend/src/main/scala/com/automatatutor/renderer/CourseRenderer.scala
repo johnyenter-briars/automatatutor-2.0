@@ -22,7 +22,7 @@ class CourseRenderer(course : Course) {
   def renderSelectButton : NodeSeq = renderSelect("/main/course/index", false)
   
   def renderContactLink : NodeSeq = {
-    SHtml.link("mailto:" + course.getContact, () => (), Text(course.getContact))
+    SHtml.link("mailto:" + course.getContact, () => (), Text(course.getContact), "target" -> "_blank")
   }
   
   def renderDeleteLink : NodeSeq = renderDeleteLink("/main/index")

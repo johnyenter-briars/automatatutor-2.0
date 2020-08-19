@@ -77,6 +77,8 @@ class Boot {
 		Menu.i("Main") / "main" / "index" >> loggedInPredicate submenus
 			(
 				Menu.i("Become Instructor") / "main" / "become_instructor" >> Hidden,
+				Menu.i("Export Problems from DB") / "main" / "export" >> Hidden,
+				Menu.i("Import Problems to DB") / "main" / "import" >> Hidden,
 				Menu.i("View Problem Pool") / "main" / "problempool" / "index" >> hasAccessToProblemPoolPredicate submenus
 					(
 						Menu.i("Edit Problem") / "main" / "problempool" / "edit" >> Hidden,

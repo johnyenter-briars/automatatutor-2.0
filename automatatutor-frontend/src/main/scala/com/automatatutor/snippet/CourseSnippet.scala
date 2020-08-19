@@ -114,7 +114,13 @@ class Coursesnippet {
   }
 
   def renderaddfolderform(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentCourse.is == null) {
+      S.warning("You have not selected a course")
+      return S.redirectTo("/main/index")
+    }
+
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    if(!CurrentCourse.is.canBeSupervisedBy(user)) return NodeSeq.Empty
 
     val dateFormat = new SimpleDateFormat("EEE, MMM d, K:mm ''yy")
     val now: Calendar = Calendar.getInstance()
@@ -502,8 +508,7 @@ class Coursesnippet {
 
 
     if (CurrentCourse.canBeSupervisedBy(user)) {
-      if (folders.isEmpty) return Text("There are no folders in this course") ++
-        SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
+      if (folders.isEmpty) return Text("There are no folders in this course")
 
       <div>
         {
@@ -682,6 +687,7 @@ class Coursesnippet {
     return downloadLink ++ new Unparsed("<br><br>") ++ returnLink ++ new Unparsed("<br><br>") ++ exportOutputField
   }
 
+  //TODO 8/19/2020 change this back to be an import for the course itself
   def renderimport(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
 
@@ -740,11 +746,25 @@ class Coursesnippet {
   }
 
   def addfolderbutton(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentCourse.is == null) {
+      S.warning("You have not selected a course")
+      return S.redirectTo("/main/index")
+    }
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
+
     <div>
         <div style="display: flex">
           <h3 style="margin-bottom: 0.5em; margin-right: 0.5em">Problem Folders</h3>
           <br></br>
-          <button type="button" id="add-folder_button_1" class="modal-button far fa-plus-square" />
+          {
+            if(CurrentCourse.canBeSupervisedBy(user)){
+                <button type="button" id="add-folder_button_1" class="modal-button far fa-plus-square" />
+            }
+            else{
+              NodeSeq.Empty
+            }
+          }
+
         </div>
 
       <div id="add-folder_modal_1" class="modal">
