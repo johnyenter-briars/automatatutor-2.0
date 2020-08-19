@@ -466,6 +466,24 @@ class Coursesnippet {
       "courseselecttable" -> courseTable)
   }
 
+  def foldersupervisorsection(ignored: NodeSeq): NodeSeq = {
+    if (CurrentFolderInCourse.is == null) {
+      S.warning("Please first choose a folder")
+      return S.redirectTo("/main/course/index")
+    }
+
+    val course = CurrentCourse.is
+    val folder = CurrentFolderInCourse.is
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
+
+    <h2>Manage Folder</h2> ++
+      DownloadHelper.renderCsvDownloadLink(
+        folder.renderGradesCsv,
+        s"${folder.getLongDescription}_Grades",
+        Text(s"FolderGrades_${folder.getLongDescription}.csv"))
+  }
+
   def renderbatchlist(xhtml: NodeSeq): NodeSeq = {
     <h3>Currently Editing problems:</h3> ++
       <form>
@@ -482,11 +500,12 @@ class Coursesnippet {
 
     val folders = CurrentCourse.getFoldersForUser(user)
 
-    if (folders.isEmpty) return Text("There are no folders in this course") ++
-      SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
 
     if (CurrentCourse.canBeSupervisedBy(user)) {
-      (<div>
+      if (folders.isEmpty) return Text("There are no folders in this course") ++
+        SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
+
+      <div>
         {
           TableHelper.renderTableWithHeader(
             folders,
@@ -499,12 +518,11 @@ class Coursesnippet {
           )
         }
       </div>
-        ++
-        SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
-        )
     }
     else {
       //logged in user is a student
+      if (folders.isEmpty) return Text("There are no folders in this course! Please tell your instructor to add some.")
+
       <div>
         {
           TableHelper.renderTableWithHeader(
@@ -719,6 +737,32 @@ class Coursesnippet {
       return S.redirectTo("/main/index")
     }
     <h3>{CurrentCourse.is.getName}</h3>
+  }
+
+  def addfolderbutton(xhtml: NodeSeq): NodeSeq = {
+    <div>
+        <div style="display: flex">
+          <h3 style="margin-bottom: 0.5em; margin-right 0.5em">Problem Folders</h3>
+          <br></br>
+          <button type="button" id="add-folder_button_1" class="modal-button far fa-plus-square" />
+        </div>
+
+
+      <div id="add-folder_modal_1" class="modal">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" id="add-folder_span_1">&times;</span>
+            <h3>Add a Folder</h3>
+          </div>
+          <div class="modal-body">
+            {
+              this.renderaddfolderform(xhtml)
+            }
+          </div>
+        </div>
+      </div>
+    </div>
   }
 
 }

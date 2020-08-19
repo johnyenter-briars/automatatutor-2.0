@@ -6,7 +6,26 @@
 	<h2>Course Overview</h2>
 	<lift:Coursesnippet.rendercoursename></lift:Coursesnippet.rendercoursename>
 
-	<h3>Problem Folders</h3>
+	<lift:Coursesnippet.addfolderbutton form="POST">
+		<table>
+			<tr>
+				<td> Folder Name</td>
+				<td> <createfolderform:foldernamefield> </createfolderform:foldernamefield> </td>
+			</tr>
+			<tr>
+				<td> Start date (must be parsable by java.util.DateFormat#parse): </td>
+				<td> <createfolderform:startdatefield> </createfolderform:startdatefield> </td>
+			</tr>
+			<tr>
+				<td> End date (must be parsable by java.util.DateFormat#parse): </td>
+				<td> <createfolderform:enddatefield> </createfolderform:enddatefield> </td>
+			</tr>
+			<tr>
+				<td> </td>
+				<td> <createfolderform:createbutton> </createfolderform:createbutton> </td>
+			</tr>
+		</table>
+	</lift:Coursesnippet.addfolderbutton>
 	<lift:Coursesnippet.renderfolders></lift:Coursesnippet.renderfolders>
 	<br>
 	<br>
