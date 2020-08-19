@@ -742,14 +742,12 @@ class Coursesnippet {
   def addfolderbutton(xhtml: NodeSeq): NodeSeq = {
     <div>
         <div style="display: flex">
-          <h3 style="margin-bottom: 0.5em; margin-right 0.5em">Problem Folders</h3>
+          <h3 style="margin-bottom: 0.5em; margin-right: 0.5em">Problem Folders</h3>
           <br></br>
           <button type="button" id="add-folder_button_1" class="modal-button far fa-plus-square" />
         </div>
 
-
       <div id="add-folder_modal_1" class="modal">
-
         <div class="modal-content">
           <div class="modal-header">
             <span class="close" id="add-folder_span_1">&times;</span>
@@ -764,7 +762,6 @@ class Coursesnippet {
       </div>
     </div>
   }
-
 }
 
 object Courses {

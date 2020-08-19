@@ -30,7 +30,6 @@ class Mainsnippet {
     val supervisedCourses = User.currentUser.map(_.getSupervisedCourses) openOr List()
     val supervisedCoursesNodeSeq = if (!supervisedCourses.isEmpty) 
 	  {
-	    <h2> Supervised Courses </h2> ++ { 
 		  TableHelper.renderTableWithHeader(
 	        supervisedCourses,
 		    ("Course Name", (course: Course) => Text(course.getName)),
@@ -39,7 +38,6 @@ class Mainsnippet {
             ("Contact", (course: Course) => new CourseRenderer(course).renderContactLink),
 	        ("", (course: Course) => new CourseRenderer(course).renderSelectButton),
             ("", (course: Course) => new CourseRenderer(course).renderDeleteLink))
-	    }
 	  } else {
         NodeSeq.Empty
       }
@@ -212,6 +210,30 @@ class Mainsnippet {
 	
 	if (User.loggedIn_?) return homeButton ++ logoutButton
     else return homeButton ++ registerButton ++ loginButton
+  }
+
+  def renderaddcoursebutton(xhtml: NodeSeq): NodeSeq = {
+    <div>
+      <div style="display: flex">
+        <h2 style="margin-bottom: 0.5em; margin-right: 0.5em">Supervised Courses</h2>
+        <br></br>
+        <button type="button" id="add-course_button_1" class="modal-button far fa-plus-square" />
+      </div>
+      
+      <div id="add-course_modal_1" class="modal">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" id="add-course_span_1">&times;</span>
+          </div>
+          <div class="modal-body">
+            {
+              this.createcourseform(xhtml)
+            }
+          </div>
+        </div>
+      </div>
+    </div>
   }
 }
 
