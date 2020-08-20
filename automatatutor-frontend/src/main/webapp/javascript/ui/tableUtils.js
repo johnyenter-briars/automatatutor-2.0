@@ -90,19 +90,28 @@ Array.from(document.getElementsByTagName("td")).forEach(td => {
     Array.from(td.children).slice(2).forEach((element, index) => {
         element.style.display = "none";
     })
-})
+});
 
 var tables = Array.from(document.getElementsByTagName('table'));
 
 for(var table of tables){
-    var _ = new Tablesort(table);
-}
-
-var cells = Array.from(document.getElementsByTagName("TD"));
-
-for(var cell of cells){
-    for(var child of cell.children){
-        if(child.nodeName == "A")
-            cell.style.cursor = "pointer";
+    try{
+        var _ = new Tablesort(table);
     }
+    catch(e){
+        console.log(e);
+    }
+    
 }
+
+//All links that have a special class name also need their parent (the table cell) to be clickable as well
+Array.from(document.getElementsByClassName("folder-link")).forEach(td => {
+    td.parentElement.style.cursor = "pointer";
+    td.parentElement.onclick = () => window.location.href = td.href;
+});
+
+//All links that have a special class name also need their parent (the table cell) to be clickable as well
+Array.from(document.getElementsByClassName("course-link")).forEach(td => {
+    td.parentElement.style.cursor = "pointer";
+    td.parentElement.onclick = () => window.location.href = td.href;
+});

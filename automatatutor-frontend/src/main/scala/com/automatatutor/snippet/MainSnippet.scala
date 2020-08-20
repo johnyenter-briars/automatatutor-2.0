@@ -31,11 +31,10 @@ class Mainsnippet {
     val supervisedCoursesNodeSeq = if (!supervisedCourses.isEmpty) {
       TableHelper.renderTableWithHeader(
         supervisedCourses,
-        ("Course Name", (course: Course) => Text(course.getName)),
+        ("Course Name", (course: Course) => new CourseRenderer(course).renderSelectLink),
         ("Participants", (course: Course) => Text(course.getParticipants.length.toString)),
         ("Password", (course: Course) => Text(course.getPassword)),
         ("Contact", (course: Course) => new CourseRenderer(course).renderContactLink),
-        ("", (course: Course) => new CourseRenderer(course).renderSelectButton),
         ("", (course: Course) => new CourseRenderer(course).renderDeleteLink))
     } else {
       NodeSeq.Empty
