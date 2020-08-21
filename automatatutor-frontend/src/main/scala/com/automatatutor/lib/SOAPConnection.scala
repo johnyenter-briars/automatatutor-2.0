@@ -78,7 +78,6 @@ class SOAPConnection(val url : URL) {
     def responseIsOk = connection.getResponseCode() != HttpURLConnection.HTTP_OK
     def getReturnAsString = scala.io.Source.fromInputStream(connection.getInputStream()).mkString
     def getErrorAsString = scala.io.Source.fromInputStream(connection.getErrorStream()).mkString
-
 	  try {
       if(responseIsOk) {
         return NodeSeq.Empty
@@ -88,13 +87,13 @@ class SOAPConnection(val url : URL) {
           response \ "_" \ "_" \ "_" \ "_"
         }
 
-
         val returnRaw = getReturnAsString
         val returnWithXmlWrapping = XML.loadString(returnRaw)
         stripWrappingFromResponse(returnWithXmlWrapping)
+
       }
 	  } catch {
-	    case exception : Exception => Text(getErrorAsString)
+	      case exception : Exception => Text(getErrorAsString)
 	  }
 	}
 }

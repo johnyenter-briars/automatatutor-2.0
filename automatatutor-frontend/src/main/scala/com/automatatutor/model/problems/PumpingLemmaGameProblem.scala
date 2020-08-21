@@ -25,8 +25,8 @@ class PumpingLemmaGameProblem extends LongKeyedMapper[PumpingLemmaGameProblem] w
   object unpumpableWord extends MappedText(this)
 
   def getRegular : Boolean = {
-      if (this.regular.is.equals("true")) return true
-      else if (this.regular.is.equals("false")) return false
+      if (this.regular.is.trim().equals("true")) return true
+      else if (this.regular.is.trim().equals("false")) return false
       else throw new Exception("Wrong entry in Regular of problem "+this.problemId.is)
   }
   def getAlphabet  = this.alphabet.is
