@@ -49,7 +49,8 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
         val formValuesXml = XML.loadString(formValues)
         val regEx = (formValuesXml \ "regexfield").head.text
         val alphabet = (formValuesXml \ "alphabetfield").head.text
-        val shortDescription = (formValuesXml \ "shortdescfield").head.text
+        val name = (formValuesXml \ "namefield").head.text
+        val description = (formValuesXml \ "descriptionfield").head.text
 
         //Keep only the chars
         val alphabetList = alphabet.split(" ").filter(_.length() > 0)
@@ -57,7 +58,7 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
 
         if (parsingErrors.isEmpty) {
 
-          val unspecificProblem = createUnspecificProb(shortDescription, "")
+          val unspecificProblem = createUnspecificProb(name, description)
 
           val alphabetToSave = alphabetList.mkString(" ")
           val specificProblem: RegExToNFAProblem = RegExToNFAProblem.create
@@ -75,13 +76,16 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
 
       val alphabetField = SHtml.text("", value => {}, "id" -> "alphabetfield")
       val regExField = SHtml.text("", value => {}, "id" -> "regexfield")
-      val shortDescriptionField = SHtml.textarea("", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "shortdescfield")
+      val nameField = SHtml.text("", value => {}, "id" -> "namefield")
+      val descriptionField = SHtml.text("", value => {}, "id" -> "descriptionfield")
 
-      val hideSubmitButton: JsCmd = JsHideId("submitbutton")
+
+    val hideSubmitButton: JsCmd = JsHideId("submitbutton")
       val alphabetFieldValXmlJs: String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
       val regexFieldValXmlJs: String = "<regexfield>' + document.getElementById('regexfield').value + '</regexfield>"
-      val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-      val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), create(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+      val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), create(_))
 
       val checkAlphabetAndSubmit: JsCmd = JsIf(Call("alphabetChecks", Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
@@ -91,7 +95,8 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
       Helpers.bind("createform", template,
         "alphabetfield" -> alphabetField,
         "regexfield" -> regExField,
-        "shortdescription" -> shortDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
 
@@ -103,15 +108,16 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
 
 
     var alphabet : String = regExToNFAProblem.getAlphabet
-    var shortDescription : String = problem.getName
-    var longDescription : String = problem.getDescription
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var regex : String = regExToNFAProblem.getRegex
 
     def edit(formValues : String) : JsCmd = {
       val formValuesXml = XML.loadString(formValues)
       val regEx = (formValuesXml \ "regexfield").head.text
       val alphabet = (formValuesXml \ "alphabetfield").head.text
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       //Keep only the chars
       val alphabetList = alphabet.split(" ").filter(_.length()>0);
@@ -120,7 +126,7 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
       if(parsingErrors.isEmpty) {
           val alphabetToSave = alphabetList.mkString(" ")
 
-          problem.setName(shortDescription).setDescription(longDescription).save()
+          problem.setName(name).setDescription(description).save()
           regExToNFAProblem.setAlphabet(alphabetToSave).setRegex(regEx).save()
           return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
         }
@@ -134,13 +140,16 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
     // Remember to remove all newlines from the generated XML by using filter    
     val alphabetFieldValXmlJs : String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
     val regexFieldValXmlJs : String = "<regexfield>' + document.getElementById('regexfield').value + '</regexfield>"
-    val shortdescFieldValXmlJs : String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
 
     val alphabetField = SHtml.text(alphabet, alphabet=_, "id" -> "alphabetfield")
     val regExField = SHtml.text(regex, regex=_, "id" -> "regexfield")
-    val shortDescriptionField = SHtml.textarea(shortDescription, shortDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "shortdescfield")
+    val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionField = SHtml.text(problemDescription, problemDescription = _, "id" -> "descriptionfield")
 
-    val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), edit(_))
+
+    val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), edit(_))
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")
     val checkAlphabetAndSubmit : JsCmd = JsIf(Call("alphabetChecks",Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
@@ -150,7 +159,8 @@ object RegExToNFASnippet extends SpecificProblemSnippet {
     Helpers.bind("editform", template,
       "alphabetfield" -> alphabetField,
       "regexfield" -> regExField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
