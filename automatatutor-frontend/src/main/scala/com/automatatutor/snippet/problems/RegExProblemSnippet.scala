@@ -44,8 +44,8 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
       val regEx = (formValuesXml \ "regexfield").head.text
       val equivalent = (formValuesXml \ "equivalentfield").head.text
       val alphabet = (formValuesXml \ "alphabetfield").head.text
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
-      val longDescription = (formValuesXml \ "longdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
       
       //Keep only the chars
       val alphabetList = alphabet.split(" ").filter(_.length()>0)
@@ -59,7 +59,7 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
         val equivalencyErrors = equivalent.split("\\s+").flatMap(GraderConnection.isRegexEquivalent(regEx, _, alphabetList))
         if(equivalencyErrors.isEmpty) {
 
-          val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+          val unspecificProblem = createUnspecificProb(name, description)
 
           val alphabetToSave = alphabetList.mkString(" ")
           val specificProblem: RegExConstructionProblem = RegExConstructionProblem.create
@@ -86,16 +86,16 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
     val equivField = SHtml.textarea("", value => {}, "cols" -> "80", "rows" -> "2", "id" -> "equivalentfield")
 
 
-    val shortDescriptionField = SHtml.text("", value => {}, "id" -> "shortdescfield")
-    val longDescriptionField = SHtml.textarea("", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "longdescfield")
+    val nameField = SHtml.text("", value => {}, "id" -> "namefield")
+    val descriptionField = SHtml.textarea("", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
 
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")
     val alphabetFieldValXmlJs : String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
     val regexFieldValXmlJs : String = "<regexfield>' + document.getElementById('regexfield').value + '</regexfield>"
     val equivFieldValXmlJs : String = "<equivalentfield>' + document.getElementById('equivalentfield').value + '</equivalentfield>"
-    val shortdescFieldValXmlJs : String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val longdescFieldValXmlJs : String = "<longdescfield>' + document.getElementById('longdescfield').value + '</longdescfield>"
-    val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + equivFieldValXmlJs + shortdescFieldValXmlJs + longdescFieldValXmlJs + "</createattempt>'"), create(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + equivFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), create(_))
     
     val checkAlphabetAndSubmit : JsCmd = JsIf(Call("alphabetChecks",Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)    
     
@@ -107,8 +107,8 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
         "regexfield" -> regExField,
         "equivalentfield" -> equivField,
 
-        "shortdescription" -> shortDescriptionField,
-        "longdescription" -> longDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
 
     //Für die Elemente mit dem Präfix createform wird ein Element als Parameter übergeben
@@ -122,8 +122,8 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
     
     
     var alphabet : String = regexConstructionProblem.getAlphabet
-    var shortDescription : String = problem.getName
-    var longDescription : String = problem.getDescription
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var regex : String = regexConstructionProblem.getRegex
     var equivalent = regexConstructionProblem.getEquivalent
 
@@ -132,8 +132,8 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
       val regEx = (formValuesXml \ "regexfield").head.text
       val equivalent = (formValuesXml \ "equivalentfield").head.text
       val alphabet = (formValuesXml \ "alphabetfield").head.text
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
-      val longDescription = (formValuesXml \ "longdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
       
       //Keep only the chars
       val alphabetList = alphabet.split(" ").filter(_.length()>0);
@@ -147,7 +147,7 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
           val alphabetToSave = alphabetList.mkString(" ")
           val specificProblem: RegExConstructionProblem = RegExConstructionProblem.create
 
-          problem.setName(shortDescription).setDescription(longDescription).save()
+          problem.setName(name).setDescription(description).save()
           regexConstructionProblem.setAlphabet(alphabetToSave).setRegex(regEx).setEquivalent(equivalent.split("\\s+").mkString("\n")).save()
           return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
         }
@@ -167,16 +167,16 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
     val alphabetFieldValXmlJs : String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
     val regexFieldValXmlJs : String = "<regexfield>' + document.getElementById('regexfield').value + '</regexfield>"
     val equivFieldValXmlJs : String = "<equivalentfield>' + document.getElementById('equivalentfield').value + '</equivalentfield>"
-    val shortdescFieldValXmlJs : String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val longdescFieldValXmlJs : String = "<longdescfield>' + document.getElementById('longdescfield').value + '</longdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
       
     val alphabetField = SHtml.text(alphabet, alphabet=_, "id" -> "alphabetfield")  
     val regExField = SHtml.text(regex, regex=_, "id" -> "regexfield")
     val equivalentField = SHtml.textarea(equivalent, equivalent=_ , "cols" -> "80", "rows" -> "2", "id" -> "equivalentfield")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "longdescfield")
-    
-    val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + equivFieldValXmlJs + shortdescFieldValXmlJs + longdescFieldValXmlJs + "</createattempt>'"), edit(_))
+    val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionField = SHtml.textarea(problemDescription, problemDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
+
+    val ajaxCall : JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs + regexFieldValXmlJs + equivFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), edit(_))
     val hideSubmitButton : JsCmd = JsHideId("submitbutton")
     val checkAlphabetAndSubmit : JsCmd = JsIf(Call("alphabetChecks",Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)    
     
@@ -187,8 +187,8 @@ object RegExConstructionSnippet extends SpecificProblemSnippet {
         "alphabetfield" -> alphabetField,
         "regexfield" -> regExField,
         "equivalentfield" -> equivalentField,
-        "shortdescription" -> shortDescriptionField,
-        "longdescription" -> longDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
   

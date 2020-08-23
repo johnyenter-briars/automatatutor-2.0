@@ -11,7 +11,15 @@
 	<h4> Problem Definition </h4>
 
 	<lift:Identity form="POST">	
-	<table> 
+	<table>
+		<tr>
+			<td> Name: </td>
+			<td> <editform:namefield> </editform:namefield> </td>
+		</tr>
+		<tr>
+			<td> Description: (will appear in the problem in the form of "Construct a regular expression that recognizes the following language: {description}"):</td>
+			<td> <editform:descriptionfield> </editform:descriptionfield> </td>
+		</tr>
 		<tr>
 			<td> Alphabet (separated by spaces): </td>
 			<td> <editform:alphabetfield> </editform:alphabetfield> </td>
@@ -20,23 +28,9 @@
 			<td> Regular Expression: </td>
 			<td> <editform:regexfield> </editform:regexfield> </td>
 		</tr>
-
-
-
 		<tr>
 			<td> Equivalent Expressions, separated by spaces: </td>
-			<td> <editform:equivalentfield> </editform:equivalentfield>
-			</td>
-		</tr>
-
-
-			<td> Short Description: </td>
-			<td> <editform:shortdescription> </editform:shortdescription> </td>
-		</tr>
-		<tr> 
-			<td> Long Description (will appear in the problem in the form of "Construct a regular expression that recognizes the following language: {long description}"): </td>
-			<td> <editform:longdescription> </editform:longdescription> </td>
-		</tr>
+			<td> <editform:equivalentfield> </editform:equivalentfield> </td>
 		<tr> 
 			<td> </td>
 			<td> <editform:submit> </editform:submit> </td>
