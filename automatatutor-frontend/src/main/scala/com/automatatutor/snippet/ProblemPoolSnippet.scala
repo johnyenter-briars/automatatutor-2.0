@@ -576,6 +576,7 @@ class Problempoolsnippet extends{
     )
   }
 
+  //TODO 8/23/2020 use a different session var for this purpose
   def rendercreate(ignored: NodeSeq): NodeSeq = {
     if (CurrentProblemTypeInCourse.is == null) {
       S.warning("You have not selected a problem type")

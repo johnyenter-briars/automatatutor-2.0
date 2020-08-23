@@ -133,8 +133,11 @@ class Mainsnippet {
     val exportLink = SHtml.link("/main/export", () => {}, Text("Export Problems"))
     val importLink = SHtml.link("/main/import", () => {}, Text("Import Problems"))
 
-
-    if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton ++  Unparsed("&emsp;") ++ exportLink ++  Unparsed("&emsp;") ++ importLink
+    val createProblemLink = SHtml.link("/main/problempool/create", () => {
+      val problemType = ProblemType.findByName("Grammar Words")
+      CurrentProblemTypeInCourse(problemType.head)
+    }, Text("Create a grammar words problem"))
+    if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton ++  Unparsed("&emsp;") ++ exportLink ++  Unparsed("&emsp;") ++ importLink ++ createProblemLink
     if (user.isInstructor) return autogenButton ++ problemPoolButton ++ editProfilButton ++ Unparsed("&emsp;") ++ exportLink ++  Unparsed("&emsp;") ++ importLink
     return autogenButton ++ editProfilButton ++ becomeInstructorButton
   }
