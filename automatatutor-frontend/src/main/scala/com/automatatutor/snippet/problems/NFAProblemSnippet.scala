@@ -64,7 +64,7 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
 	  // Also remove 'ε' from the alphabet, as its implied (NOT TRUE CHECK IF THERE)
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
     val nameField = SHtml.text("", name = _, "id" -> "namefield")
-    val descriptionField = SHtml.text("", description = _, "id" -> "descriptionfield")
+    val descriptionField = SHtml.textarea("", description = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
     val submitButton = SHtml.submit("Create", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
 
     val template : NodeSeq = Templates(List("templates-hidden", "description-to-nfa-problem", "create")) openOr Text("Could not find template /templates-hidden/description-to-nfa-problem/create")

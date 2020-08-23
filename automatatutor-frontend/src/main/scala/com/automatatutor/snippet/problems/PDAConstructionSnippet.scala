@@ -33,14 +33,14 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
     */
   override def renderCreate(createUnspecificProb: (String, String) => Problem,
                              returnFunc:          (Problem) => Unit) : NodeSeq = {
-    var shortDescription: String = ""
-    var longDescription: String = ""
+    var name: String = ""
+    var description: String = ""
     var automaton: String = ""
     var giveStackAlphabet: Boolean = true
     var allowSimulation : Boolean = true
 
     def create() = {
-      val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+      val unspecificProblem = createUnspecificProb(name, description)
       val specificProblem: PDAConstructionProblem = PDAConstructionProblem.create
       specificProblem.setGeneralProblem(unspecificProblem)
         .setAutomaton(automaton)
@@ -52,8 +52,8 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
     }
 
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text("", shortDescription = _)
-    val longDescriptionField = SHtml.textarea("", longDescription = _, "cols" -> "80", "rows" -> "5")
+    val nameField = SHtml.text("", name = _)
+    val descriptionField = SHtml.textarea("", description = _, "cols" -> "80", "rows" -> "5")
     val giveStackAlphabetField = SHtml.checkbox(true, res => giveStackAlphabet = res)
     val allowSimulationField = SHtml.checkbox(true, res => allowSimulation = res)
     val submitButton = SHtml.submit("Create", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
@@ -65,8 +65,8 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
       "automaton" -> automatonField,
       "word"-> runner.getWordInputField,
       "start"-> runner.getStartButton,
-      "shortdescription" -> shortDescriptionField,
-      "longdescription" -> longDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "givestackalphabet" -> giveStackAlphabetField,
       "allowsimulation" -> allowSimulationField,
       "submit" -> submitButton)
@@ -81,15 +81,15 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val pdaConstructionProblem = PDAConstructionProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getName
-    var longDescription: String = problem.getDescription
+    var name: String = problem.getName
+    var description: String = problem.getDescription
     var automaton: String = ""
     var giveStackAlphabet: Boolean = pdaConstructionProblem.getGiveStackAlphabet
     var allowSimulation: Boolean = pdaConstructionProblem.getAllowSimulation
 
     def create() = {
       //TODO: better error handling
-      problem.setName(shortDescription).setDescription(longDescription).save()
+      problem.setName(name).setDescription(description).save()
       pdaConstructionProblem.setGiveStackAlphabet(giveStackAlphabet)
       pdaConstructionProblem.setAllowSimulation(allowSimulation)
       if (!automaton.isEmpty) {
@@ -101,8 +101,8 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
     }
 
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5")
+    val nameField = SHtml.text(name, name = _)
+    val descriptionField = SHtml.textarea(description, description = _, "cols" -> "80", "rows" -> "5")
     val giveStackAlphabetField = SHtml.checkbox(giveStackAlphabet, res => giveStackAlphabet = res)
     val allowSimulationField = SHtml.checkbox(allowSimulation, res => allowSimulation = res)
     val submitButton = SHtml.submit("Save", create, "onClick" -> JsIf(JsRaw("pda.isValid()"), JsRaw("document.getElementById('automatonField').value = pda.exportToXml()"), Alert("the pda has at least one invalid link") & JsReturn(false)).toJsCmd)
@@ -120,8 +120,8 @@ object PDAConstructionSnippet extends SpecificProblemSnippet {
       "word"-> runner.getWordInputField,
       "start"-> runner.getStartButton,
       "setupscript" -> setupScript,
-      "shortdescription" -> shortDescriptionField,
-      "longdescription" -> longDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "givestackalphabet" -> giveStackAlphabetField,
       "allowsimulation" -> allowSimulationField,
       "submit" -> submitButton)

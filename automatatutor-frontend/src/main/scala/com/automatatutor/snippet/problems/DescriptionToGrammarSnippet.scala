@@ -61,7 +61,7 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
     }
     val grammarField = SHtml.textarea("S -> a S b | x", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
     val nameField = SHtml.text("", value => {}, "id" -> "namefield")
-    val descriptionField = SHtml.text("", value => {}, "id" -> "descriptionfield")
+    val descriptionField = SHtml.textarea("", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
@@ -109,7 +109,7 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
 
     val grammarField = SHtml.textarea(grammar, grammar = _, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
     val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
-    val descriptionField = SHtml.text(problemDescription, problemDescription = _, "id" -> "descriptionfield")
+    val descriptionField = SHtml.textarea(problemDescription, problemDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
