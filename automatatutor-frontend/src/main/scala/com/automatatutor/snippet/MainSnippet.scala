@@ -134,7 +134,7 @@ class Mainsnippet {
     val importLink = SHtml.link("/main/import", () => {}, Text("Import Problems"))
 
     val createProblemLink = SHtml.link("/main/problempool/create", () => {
-      val problemType = ProblemType.findByName("PDA Words")
+      val problemType = ProblemType.findByName("Equivalence Classes")
       CurrentProblemTypeInCourse(problemType.head)
     }, Text("Create the problem"))
     if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton ++  Unparsed("&emsp;") ++ exportLink ++  Unparsed("&emsp;") ++ importLink ++ createProblemLink
