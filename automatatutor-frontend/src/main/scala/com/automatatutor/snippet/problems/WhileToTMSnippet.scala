@@ -30,8 +30,8 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
   override def renderCreate(createUnspecificProb: (String, String) => Problem,
                              returnFunc:          (Problem) => Unit) : NodeSeq = {
 
-     var shortDescription : String = ""
-     var longDescription : String = ""
+     var name : String = ""
+     var description : String = ""
      var numberOfTapes : String = "1"
      var programText : String = "while x_0 != 0 do\n    x_1 = x_1 - x_0\n    x_0 = x_0 - 1\nendwhile"
 
@@ -39,14 +39,14 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
      def create(formValues: String): JsCmd = {
 
        val formValuesXml = XML.loadString(formValues)
-       shortDescription = (formValuesXml \ "shortdescfield").head.text
-       longDescription = (formValuesXml \ "longdescfield").head.text
+       name = (formValuesXml \ "namefield").head.text
+       description = (formValuesXml \ "descriptionfield").head.text
        programText = (formValuesXml \ "programtext").head.text
        numberOfTapes = (formValuesXml \\ "NumVariables").head.text
        val uselessVars = "0"
        val program = GraderConnection.whileProgramCheck((formValuesXml \ "Program").toString())
 
-       val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+       val unspecificProblem = createUnspecificProb(name, description)
        val specificProblem : WhileToTMProblem = WhileToTMProblem.create
        specificProblem.problemId(unspecificProblem).setProgramText(programText).setProgram(program).setNumTapes(numberOfTapes).setUselessVars(uselessVars)
        specificProblem.save
@@ -57,23 +57,23 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
 
      // Remember to remove all newlines from the generated XML by using filter
      val programTextField = SHtml.textarea(programText, programText = _, "cols" -> "80", "rows" -> "5", "id" -> "whilefield")
-     val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
-     val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "longdescfield")
+     val nameField = SHtml.text(name, name = _, "id" -> "namefield")
+     val descriptionField = SHtml.textarea(description, description = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
 
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val longdescFieldValXmlJs : String = "<longdescfield>' + document.getElementById('longdescfield').value + '</longdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
     val whileFieldValXmlJs : String = "<programtext>' + document.getElementById('whilefield').value + '</programtext>"
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + "' + getProgram() + '" + shortdescFieldValXmlJs+ longdescFieldValXmlJs+ whileFieldValXmlJs + "</createattempt>'"), create(_))
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + "' + getProgram() + '" + nameFieldValXmlJs + descriptionValXmlJs + whileFieldValXmlJs + "</createattempt>'"), create(_))
     val checkAlphabetAndSubmit: JsCmd = JsIf(Call("whileChecks", "whilefield"), hideSubmitButton & ajaxCall)
     val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Submit</button>
 
     val template : NodeSeq = Templates(List("templates-hidden", "while-to-tm-problem", "create")) openOr Text("Could not find template /templates-hidden/while-to-tm-problem/create")
     Helpers.bind("createform", template,
       "programtextfield" -> programTextField,
-         "shortdescription" -> shortDescriptionField,
-         "longdescription" -> longDescriptionField,
+         "namefield" -> nameField,
+         "descriptionfield" -> descriptionField,
          "submit" -> submitButton)
   }
 
@@ -82,8 +82,8 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
      val specificProblem = WhileToTMProblem.findByGeneralProblem(problem)
 
-     var shortDescription : String = problem.getName
-     var longDescription : String = problem.getDescription
+     var name : String = problem.getName
+     var description : String = problem.getDescription
      var program : String = specificProblem.getProgram
     var programText : String = specificProblem.getProgramText
     var numTapes : String = specificProblem.getNumTapes
@@ -93,14 +93,14 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
      def edit(formValues: String): JsCmd = {
 
        val formValuesXml = XML.loadString(formValues)
-       shortDescription = (formValuesXml \ "shortdescfield").head.text
-       longDescription = (formValuesXml \ "longdescfield").head.text
+       name = (formValuesXml \ "namefield").head.text
+       description = (formValuesXml \ "descriptionfield").head.text
        programText = (formValuesXml \ "programtext").head.text
        numTapes = (formValuesXml \\ "NumVariables").head.text
        uselessVars = "0"
        program = GraderConnection.whileProgramCheck((formValuesXml \ "Program").toString())
 
-       problem.setName(shortDescription).setDescription(longDescription)
+       problem.setName(name).setDescription(description).save
        specificProblem.setProgramText(programText).setProgram(program).setNumTapes(numTapes).setUselessVars(uselessVars)
        specificProblem.save
 
@@ -108,15 +108,15 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
      }
 
     val programTextField = SHtml.textarea(programText, programText = _, "cols" -> "80", "rows" -> "5", "id" -> "whilefield")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
-     val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "longdescfield")
+    val nameField = SHtml.text(name, name = _, "id" -> "namefield")
+     val descriptionField = SHtml.textarea(description, description = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
 
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val longdescFieldValXmlJs : String = "<longdescfield>' + document.getElementById('longdescfield').value + '</longdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
     val whileFieldValXmlJs : String = "<programtext>' + document.getElementById('whilefield').value + '</programtext>"
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + "' + getProgram() + '" + shortdescFieldValXmlJs+ longdescFieldValXmlJs+ whileFieldValXmlJs + "</createattempt>'"), edit(_))
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + "' + getProgram() + '" + nameFieldValXmlJs + descriptionValXmlJs + whileFieldValXmlJs + "</createattempt>'"), edit(_))
     val checkAlphabetAndSubmit: JsCmd = JsIf(Call("whileChecks", "whilefield"), hideSubmitButton & ajaxCall)
     val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={checkAlphabetAndSubmit}>Save</button>
 
@@ -124,8 +124,8 @@ object WhileToTMSnippet extends SpecificProblemSnippet {
     val template : NodeSeq = Templates(List("templates-hidden", "while-to-tm-problem", "edit")) openOr Text("Could not find template /templates-hidden/while-to-tm-problem/edit")
     Helpers.bind("editform", template,
       "programtextfield" -> programTextField,
-      "shortdescription" -> shortDescriptionField,
-      "longdescription" -> longDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
