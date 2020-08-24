@@ -19,7 +19,7 @@ object DownloadHelper {
   case object XlsxFile extends FileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx")
   case object ZipFile extends  FileType("application/zip", ".zip")
 
-  private def offerDownloadToUser(contents: String, filename: String, filetype: FileType): Unit = {
+  def offerDownloadToUser(contents: String, filename: String, filetype: FileType): Unit = {
     def buildDownloadResponse = {
       val contentAsBytes = contents.getBytes()
       val downloadSize = contentAsBytes.length
@@ -51,7 +51,7 @@ object DownloadHelper {
     throw new ResponseShortcutException(buildDownloadResponse)
   }
 
-  private def offerZipDownloadToUser(zipFileName: String, files: List[(String, String)], childFileType: FileType, filetype: FileType): Unit = {
+  def offerZipDownloadToUser(zipFileName: String, files: List[(String, String)], childFileType: FileType, filetype: FileType): Unit = {
     def buildDownloadResponse = {
 
       import java.io.ByteArrayOutputStream

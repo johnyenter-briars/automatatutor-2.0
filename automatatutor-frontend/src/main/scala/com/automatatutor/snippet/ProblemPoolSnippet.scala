@@ -323,6 +323,13 @@ class Problempoolsnippet extends{
                 BatchProblems.is.foreach(_.delete_!)
               }, "onclick" -> JsRaw("return confirm('Are you sure you want to delete the selected problems?')").toJsCmd)
             }
+            {
+              SHtml.button("Export Problems", () => {
+                DownloadHelper.offerZipDownloadToUser("AT_DB_Selected_Problems", BatchProblems.is.toList.map((problem: Problem) => {
+                  (problem.getName, <exported> {problem.toXML}</exported>.toString())
+                }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+              })
+            }
             <div id="batch_send-modal" class="modal">
 
               <div class="modal-content">
