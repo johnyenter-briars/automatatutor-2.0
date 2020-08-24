@@ -10,14 +10,14 @@ import net.liftweb.http.StreamingResponse
 
 object DownloadHelper {
 
-  private abstract class FileType(mimeType : String, fileSuffix : String) {
+  abstract class FileType(mimeType : String, fileSuffix : String) {
     def getMimeType = mimeType
     def getFileSuffix = fileSuffix
   }
-  private case object CsvFile extends FileType("text/csv", ".csv")
-  private case object XmlFile extends FileType("text/xml", ".xml")
-  private case object XlsxFile extends FileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx")
-  private case object ZipFile extends  FileType("application/zip", ".zip")
+  case object CsvFile extends FileType("text/csv", ".csv")
+  case object XmlFile extends FileType("text/xml", ".xml")
+  case object XlsxFile extends FileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx")
+  case object ZipFile extends  FileType("application/zip", ".zip")
 
   private def offerDownloadToUser(contents: String, filename: String, filetype: FileType): Unit = {
     def buildDownloadResponse = {
@@ -51,7 +51,7 @@ object DownloadHelper {
     throw new ResponseShortcutException(buildDownloadResponse)
   }
 
-  private def offerZipDownloadToUser(zipFileName: String, files: List[(String, String)], filetype: FileType): Unit = {
+  private def offerZipDownloadToUser(zipFileName: String, files: List[(String, String)], childFileType: FileType, filetype: FileType): Unit = {
     def buildDownloadResponse = {
 
       import java.io.ByteArrayOutputStream
@@ -63,7 +63,7 @@ object DownloadHelper {
         val zipOutputStream = new ZipOutputStream(byteArrOutputStream)
         try {
           files.foreach(fileTuple => {
-            val entry = new ZipEntry(fileTuple._1 + ".csv")
+            val entry = new ZipEntry(fileTuple._1 + childFileType.getFileSuffix)
             zipOutputStream.putNextEntry(entry)
 
             zipOutputStream.write(fileTuple._2.getBytes)
@@ -106,8 +106,8 @@ object DownloadHelper {
     throw new ResponseShortcutException(buildDownloadResponse)
   }
 
-  def renderZipDownloadLink(zipFileName: String, files: List[(String, String)], linkBody: NodeSeq): NodeSeq = {
-    SHtml.link("ignored", () => offerZipDownloadToUser(zipFileName, files, ZipFile), linkBody)
+  def renderZipDownloadLink(zipFileName: String, files: List[(String, String)], childFileType: FileType, linkBody: NodeSeq): NodeSeq = {
+    SHtml.link("ignored", () => offerZipDownloadToUser(zipFileName, files, childFileType, ZipFile), linkBody)
   }
 
   def renderCsvDownloadLink(contents : String, filename : String, linkBody : NodeSeq ) : NodeSeq = {

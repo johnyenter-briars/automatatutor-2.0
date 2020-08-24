@@ -3,8 +3,9 @@ package com.automatatutor.snippet
 import java.text.{DateFormat, SimpleDateFormat}
 import java.util.Calendar
 import java.util.Date
+
 import scala.xml._
-import com.automatatutor.lib._
+import com.automatatutor.lib.{DownloadHelper, FileUpload, _}
 import com.automatatutor.model._
 import com.automatatutor.renderer._
 import net.liftweb.common.Empty
@@ -18,8 +19,9 @@ import net.liftweb.util.Helpers
 import net.liftweb.util.Helpers.strToSuperArrowAssoc
 import net.liftweb.http.js.JsCmd
 import JsCmds._
+
 import scala.collection.mutable.ListBuffer
-import com.automatatutor.lib.FileUpload
+import scala.xml
 
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
@@ -485,6 +487,7 @@ class Coursesnippet {
     if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
 
     <h2>Manage Folder</h2> ++
+      Unparsed("&emsp;") ++
       DownloadHelper.renderCsvDownloadLink(
         folder.renderGradesCsv,
         s"${folder.getLongDescription}_Grades",
@@ -559,8 +562,11 @@ class Coursesnippet {
 
     <h2>Manage Course</h2> ++
       Unparsed("&emsp;") ++
-        DownloadHelper.renderZipDownloadLink(course.getName, course.renderFoldersForZip, Text("Course Grades")) ++
-      Unparsed("&emsp;") ++ userLink
+        DownloadHelper.renderZipDownloadLink(course.getName + "_Grades", course.renderFoldersForGradeZip, DownloadHelper.CsvFile, Text("Course Grades")) ++
+      Unparsed("&emsp;") ++
+      userLink ++
+      Unparsed("&emsp;") ++
+      DownloadHelper.renderZipDownloadLink(course.getName + "_Folders", course.renderFoldersProblems, DownloadHelper.XmlFile, Text("Export Folders"))
   }
 
   def renderxmldownloadlink(ignored: NodeSeq): NodeSeq = {
