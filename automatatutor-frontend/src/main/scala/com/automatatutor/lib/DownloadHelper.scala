@@ -62,11 +62,10 @@ object DownloadHelper {
       try {
         val zipOutputStream = new ZipOutputStream(byteArrOutputStream)
         try {
-          /* File is not on the disk, test.txt indicates
-               only the file name to be put into the zip */
           files.foreach(fileTuple => {
-            val entry = new ZipEntry(fileTuple._1 + ".zip")
+            val entry = new ZipEntry(fileTuple._1 + ".csv")
             zipOutputStream.putNextEntry(entry)
+
             zipOutputStream.write(fileTuple._2.getBytes)
             zipOutputStream.closeEntry()
           })

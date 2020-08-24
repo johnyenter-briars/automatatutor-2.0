@@ -19,6 +19,7 @@ import net.liftweb.util.Helpers.strToSuperArrowAssoc
 import net.liftweb.http.js.JsCmd
 import JsCmds._
 import scala.collection.mutable.ListBuffer
+import com.automatatutor.lib.FileUpload
 
 object CurrentCourse extends SessionVar[Course](null) // SessionVar makes navigation easier
 object CurrentProblemInCourse extends SessionVar[Problem](null) // SessionVar makes navigation easier
@@ -558,10 +559,8 @@ class Coursesnippet {
 
     <h2>Manage Course</h2> ++
       Unparsed("&emsp;") ++
-        DownloadHelper.renderZipDownloadLink(course.getName, course.renderFoldersForZip, Text("Grades")) ++
-      Unparsed("&emsp;") ++ userLink ++
-      Unparsed("&emsp;") ++ exportLink ++
-      Unparsed("&emsp;") ++ importLink
+        DownloadHelper.renderZipDownloadLink(course.getName, course.renderFoldersForZip, Text("Course Grades")) ++
+      Unparsed("&emsp;") ++ userLink
   }
 
   def renderxmldownloadlink(ignored: NodeSeq): NodeSeq = {
@@ -781,6 +780,10 @@ class Coursesnippet {
         </div>
       </div>
     </div>
+  }
+
+  def testfileupload(xhtml: NodeSeq): NodeSeq = {
+    new FileUpload().fileUploadForm(xhtml)
   }
 }
 
