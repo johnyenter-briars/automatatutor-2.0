@@ -77,6 +77,8 @@ class Boot {
 		Menu.i("Main") / "main" / "index" >> loggedInPredicate submenus
 			(
 				Menu.i("Become Instructor") / "main" / "become_instructor" >> Hidden,
+				Menu.i("Export Problems from DB") / "main" / "export" >> Hidden,
+				Menu.i("Import Problems to DB") / "main" / "import" >> Hidden,
 				Menu.i("View Problem Pool") / "main" / "problempool" / "index" >> hasAccessToProblemPoolPredicate submenus
 					(
 						Menu.i("Edit Problem") / "main" / "problempool" / "edit" >> Hidden,
@@ -91,19 +93,17 @@ class Boot {
 						Menu.i("View Folder") / "main" / "course" / "folders" / "index" >> courseChosenPredicate submenus
 						(
 							Menu.i("Add Problems to Folder") / "main" / "course" / "folders" / "addproblems" >> Hidden,
-							Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden,
-							Menu.i("View Users of Folder") / "main" / "course" / "folders" / "users" >> Hidden
+							Menu.i("Create Folder") / "main" / "course" / "folders" / "create" >> Hidden
 						),
 						Menu.i("User List") / "main" / "course" / "users" >> canSuperviseCoursePredicate,
 						Menu.i("Grade Download XML") / "main" / "course" / "downloadXML" >> canSuperviseCoursePredicate,
 						Menu.i("Grade Download CSV") / "main" / "course" / "downloadCSV" >> canSuperviseCoursePredicate,
 						Menu.i("Export Problems") / "main" / "course" / "export" >> canSuperviseCoursePredicate,
 						Menu.i("Import Problems") / "main" / "course" / "import" >> canSuperviseCoursePredicate,
-						//TODO 8/7/2020 do we need this?
-//						Menu.i("Create Problem") / "main" / "course" / "problems" / "create" >> Hidden,
+						Menu.i("Batch Edit Problems") / "main" / "course" / "problems" / "batchedit" >> Hidden,
+						//TODO 8/7/2020 do we need these?
 						Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
-						Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden,
-						Menu.i("Batch Edit Problems") / "main" / "course" / "problems" / "batchedit" >> Hidden
+						Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden
 					)
 	  	),
 

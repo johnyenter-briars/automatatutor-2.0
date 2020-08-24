@@ -13,16 +13,16 @@ import net.liftweb.mapper.By
 
 class CourseRenderer(course : Course) {
   def renderSelect(target : String, asLink : Boolean) : NodeSeq = {
-    if (asLink) return SHtml.link(target, () => {CurrentCourse(course)}, Text(course.getName))
+    if (asLink) return SHtml.link(target, () => {CurrentCourse(course)}, Text(course.getName), "class" -> "course-link")
 	
 	val button: NodeSeq = <button type='button'>View</button>
-    return SHtml.link(target, () => {CurrentCourse(course)}, button)
+    return SHtml.link(target, () => {CurrentCourse(course)}, button, "class" -> "course-link")
   }
   def renderSelectLink : NodeSeq = renderSelect("/main/course/index", true)
   def renderSelectButton : NodeSeq = renderSelect("/main/course/index", false)
   
   def renderContactLink : NodeSeq = {
-    SHtml.link("mailto:" + course.getContact, () => (), Text(course.getContact))
+    SHtml.link("mailto:" + course.getContact, () => (), Text(course.getContact), "target" -> "_blank")
   }
   
   def renderDeleteLink : NodeSeq = renderDeleteLink("/main/index")
@@ -30,7 +30,7 @@ class CourseRenderer(course : Course) {
     def function() = course.delete_!
     val label = Text("Delete") 
     val onclick : JsCmd = JsRaw("return confirm('Are you sure you want to delete this course?')") 
-    return SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd)
+    return SHtml.link(target, function, label, "onclick" -> onclick.toJsCmd, "style" -> "color: red;")
   }
 
   def renderAverageGrade(user: User): NodeSeq = {

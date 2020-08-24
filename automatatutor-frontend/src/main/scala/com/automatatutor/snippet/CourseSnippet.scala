@@ -114,7 +114,13 @@ class Coursesnippet {
   }
 
   def renderaddfolderform(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentCourse.is == null) {
+      S.warning("You have not selected a course")
+      return S.redirectTo("/main/index")
+    }
+
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    if(!CurrentCourse.is.canBeSupervisedBy(user)) return NodeSeq.Empty
 
     val dateFormat = new SimpleDateFormat("EEE, MMM d, K:mm ''yy")
     val now: Calendar = Calendar.getInstance()
@@ -178,7 +184,7 @@ class Coursesnippet {
     new FolderRenderer(CurrentFolderInCourse.is).renderAddProblemsButton
   }
 
-  def renderexerciseedit(xhtml: NodeSeq, problem: Exercise): NodeSeq = {
+  def renderexerciseedit(xhtml: NodeSeq, exercise: Exercise): NodeSeq = {
     if (CurrentBatchExercisesInCourse.is == null) {
       S.warning("Please first choose problems to batch edit")
       return S.redirectTo("/main/course/folders/index")
@@ -219,20 +225,31 @@ class Coursesnippet {
       if (errors.nonEmpty) {
         S.warning(errors.head)
       } else {
-        problem.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        if(exercise == null){
+          CurrentBatchExercisesInCourse.is.foreach((exercise: Exercise) =>{
+            exercise.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+          })
+        }
+        else{
+          exercise.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
+        }
       }
     }
 
     val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
     val attemptsField = SHtml.text(attempts, attempts = _)
-    val editButton = SHtml.submit("Edit Problems", editProblem)
+    val editButton = SHtml.submit("Edit Selected Exercises", editProblem)
 
     val onClick: JsCmd = JsRaw(
       "return confirm('Are you sure you want to delete these problems from the folder? " +
         "If you do, all student grades on these problems will be lost!')")
 
     val deleteButton = SHtml.button("Delete", ()=>{
-      problem.delete_!
+      if(exercise == null){
+        CurrentBatchExercisesInCourse.is.foreach(_.delete_!)
+      }else{
+        exercise.delete_!
+      }
     }, "onclick" -> onClick.toJsCmd,
       "style" -> "color: red")
 
@@ -300,13 +317,26 @@ class Coursesnippet {
               new ExerciseRenderer(problem).renderReferencedProblemButton("/main/course/folders/index")),
             ("", (problem: Exercise) => new ExerciseRenderer(problem).renderSolveButton),
             ("", (problem: Exercise) => new ExerciseRenderer(problem).renderDeleteLink)
-          ).theSeq ++ SHtml.button(
-            "Batch Edit",
-            () => {
-              PreviousPage("/main/course/folders/index")
-              S.redirectTo("/main/course/problems/batchedit")}
           )
         }
+        <div>
+          <button type="button" id="edit_access-modal-button_batch" class="modal-button">Batch Edit</button>
+
+          <div id="edit_access-modal_batch" class="modal">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="close" id="edit_access-span_batch">&times;</span>
+                <h3>Batch Edit Exercises</h3>
+              </div>
+              <div class="modal-body">
+                {
+                this.renderexerciseedit(xhtml, null)
+                }
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     }
     else{
@@ -442,6 +472,24 @@ class Coursesnippet {
       "courseselecttable" -> courseTable)
   }
 
+  def foldersupervisorsection(ignored: NodeSeq): NodeSeq = {
+    if (CurrentFolderInCourse.is == null) {
+      S.warning("Please first choose a folder")
+      return S.redirectTo("/main/course/index")
+    }
+
+    val course = CurrentCourse.is
+    val folder = CurrentFolderInCourse.is
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
+    if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
+
+    <h2>Manage Folder</h2> ++
+      DownloadHelper.renderCsvDownloadLink(
+        folder.renderGradesCsv,
+        s"${folder.getLongDescription}_Grades",
+        Text(s"FolderGrades_${folder.getLongDescription}.csv"))
+  }
+
   def renderbatchlist(xhtml: NodeSeq): NodeSeq = {
     <h3>Currently Editing problems:</h3> ++
       <form>
@@ -457,11 +505,12 @@ class Coursesnippet {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
     val folders = CurrentCourse.getFoldersForUser(user)
-    if (folders.isEmpty) return Text("There are no folders in this course") ++
-      SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
+
 
     if (CurrentCourse.canBeSupervisedBy(user)) {
-      (<div>
+      if (folders.isEmpty) return Text("There are no folders in this course")
+
+      <div>
         {
           TableHelper.renderTableWithHeader(
             folders,
@@ -474,12 +523,11 @@ class Coursesnippet {
           )
         }
       </div>
-        ++
-        SHtml.link("/main/course/folders/create", () => {}, <button type="button">Create a folder</button>)
-        )
     }
     else {
       //logged in user is a student
+      if (folders.isEmpty) return Text("There are no folders in this course! Please tell your instructor to add some.")
+
       <div>
         {
           TableHelper.renderTableWithHeader(
@@ -493,48 +541,6 @@ class Coursesnippet {
         }
       </div>
     }
-  }
-
-  def foldersupervisorsection(ignored: NodeSeq): NodeSeq = {
-    if (CurrentFolderInCourse.is == null) {
-      S.warning("Please first choose a folder")
-      return S.redirectTo("/main/course/index")
-    }
-
-    val course = CurrentCourse.is
-    val folder = CurrentFolderInCourse.is
-    val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
-    if (!course.canBeSupervisedBy(user)) return NodeSeq.Empty
-
-    val userLink = SHtml.link("/main/course/folders/users", () => {}, Text("Users"))
-
-    <h2>Manage Folder</h2> ++
-      DownloadHelper.renderCsvDownloadLink(
-        folder.renderGradesCsv,
-        s"${folder.getLongDescription}_Grades",
-        Text(s"FolderGrades_${folder.getLongDescription}.csv")) ++
-      Unparsed("&emsp;") ++ userLink
-  }
-
-  def folderuserlist(ignored: NodeSeq): NodeSeq = {
-    val course = CurrentCourse.is
-    val folder = CurrentFolderInCourse.is
-
-    val participantList = if (course.hasParticipants) {
-      TableHelper.renderTableWithHeader(course.getParticipants,
-        ("First Name", (user: User) => Text(user.firstName.is)),
-        ("Last Name", (user: User) => Text(user.lastName.is)),
-        ("Email", (user: User) => Text(user.email.is)),
-        ("Possible Points", (user: User) => Text(folder.getPossiblePoints.toString)),
-        ("Achieved Points", (user: User) => Text(folder.getAchievedPoints(user).toString)),
-        ("Average Grade/Num Attempts", (user: User) =>
-          Text(folder.getOverallGrade(user).toString + "%/" + folder.getNumAttemptsAcrossAllProblems(user)))
-      )
-    } else {
-      Text("There are no participants yet.")
-    }
-
-    <h3>Users of Folder: </h3> ++ participantList
   }
 
   def supervisorsection(ignored: NodeSeq): NodeSeq = {
@@ -599,72 +605,19 @@ class Coursesnippet {
         ("First Name", (user: User) => Text(user.firstName.is)),
         ("Last Name", (user: User) => Text(user.lastName.is)),
         ("Email", (user: User) => Text(user.email.is)),
-        //NOTE: These following two lines assume that you only want to count the grades/attempts of questions
-        //which are CURRENTLY posed
-        //If a student solves a question, but then its containing folder is unposed, that grade will not be accounted for
+        //NOTE: These following two line assumes that you only want to count the grades/attempts of questions
+        //which are CURRENTLY visible
+        //If a student solves a question, but then its containing folder is made invisible, that grade will not be accounted for
         ("Total Attempts", (user: User) => Text(course.getVisibleExercises.map(_.getNumberAttempts(user)).sum.toString)),
-        ("Total Points", (user: User) => Text(course.getVisibleExercises.map(_.getHighestAttempt(user)).sum.toString)),
-        ("Average Grade", (user: User) => new CourseRenderer(course).renderAverageGrade(user)),
+        ("Possible Points", (user: User) => Text(course.getPossiblePoints.toString)),
+        ("Total Points", (user: User) => Text(course.getTotalPoints(user).toString)),
+        ("Average Grade", (user: User) => Text(course.getAverageGrade(user).toString + "%")),
         ("", (user: User) => dismissLink(user)))
     } else {
       <h2>Participants</h2> ++ Text("There are no paticipants yet.")
     }
 
     return supervisorList ++ participantList
-  }
-
-  //TODO 8/7/2020 make a reference to problem create
-//  def rendercreate(ignored: NodeSeq): NodeSeq = {
-//    if (CurrentProblemTypeInCourse.is == null) {
-//      println("hello??")
-//      S.warning("You have not selected a problem type")
-//      return S.redirectTo("/main/course/index")
-//    }
-//
-//    println("did we get here?")
-//
-//    val problemType = CurrentProblemTypeInCourse.is
-//
-//    def createUnspecificProb(shortDesc: String, longDesc: String): Problem = {
-//      val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
-//
-//      val unspecificProblem: Problem = Problem.create.setCreator(createdBy)
-//      unspecificProblem.setName(shortDesc).setDescription(longDesc).setProblemType(problemType)
-//      unspecificProblem.setCourse(CurrentCourse)
-//      unspecificProblem.save
-//
-//      return unspecificProblem
-//    }
-//
-//    def returnFunc(problem: Problem) = {
-//      CurrentProblemInCourse(problem)
-//      S.redirectTo("/main/course/problems/preview")
-//    }
-//
-//    return problemType.getProblemSnippet().renderCreate(createUnspecificProb, returnFunc)
-//  }
-
-  //TODO 8/14/2020 do we need this?
-  def renderedit(ignored: NodeSeq): NodeSeq = {
-    if (CurrentProblemInCourse.is == null) {
-      S.warning("Please first choose a problem to edit")
-      return S.redirectTo("/main/course/index")
-    }
-
-    val problem: Problem = CurrentProblemInCourse.is
-    val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
-
-    def returnFunc(ignored: Problem) = {
-      CurrentProblemInCourse(problem)
-      S.redirectTo("/main/course/problems/preview")
-    }
-
-    return problemSnippet.renderEdit match {
-      case Full(renderFunc) => renderFunc(problem, returnFunc)
-      case Empty =>
-        S.error("Editing not implemented for this problem type"); S.redirectTo("/main/course/index")
-      case _ => S.error("Error when retrieving editing function"); S.redirectTo("/main/course/index")
-    }
   }
 
   //TODO 8/14/2020 do we need this?
@@ -734,6 +687,7 @@ class Coursesnippet {
     return downloadLink ++ new Unparsed("<br><br>") ++ returnLink ++ new Unparsed("<br><br>") ++ exportOutputField
   }
 
+  //TODO 8/19/2020 change this back to be an import for the course itself
   def renderimport(ignored: NodeSeq): NodeSeq = {
     val course = CurrentCourse.is
 
@@ -791,6 +745,43 @@ class Coursesnippet {
     <h3>{CurrentCourse.is.getName}</h3>
   }
 
+  def addfolderbutton(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentCourse.is == null) {
+      S.warning("You have not selected a course")
+      return S.redirectTo("/main/index")
+    }
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
+
+    <div>
+        <div style="display: flex">
+          <h3 style="margin-bottom: 0.5em; margin-right: 0.5em">Problem Folders</h3>
+          <br></br>
+          {
+            if(CurrentCourse.canBeSupervisedBy(user)){
+                <button type="button" id="add-folder_button_1" class="modal-button far fa-plus-square" />
+            }
+            else{
+              NodeSeq.Empty
+            }
+          }
+
+        </div>
+
+      <div id="add-folder_modal_1" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" id="add-folder_span_1">&times;</span>
+            <h3>Add a Folder</h3>
+          </div>
+          <div class="modal-body">
+            {
+              this.renderaddfolderform(xhtml)
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 }
 
 object Courses {

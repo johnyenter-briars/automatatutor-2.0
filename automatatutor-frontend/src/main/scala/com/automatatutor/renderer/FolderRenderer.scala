@@ -13,11 +13,11 @@ import net.liftweb.http.js.JsCmds.jsExpToJsCmd
 class FolderRenderer(folder : Folder) {
   def renderSelect(target : String, asLink : Boolean) : NodeSeq = {
     if (asLink) return SHtml.link(target, () => {
-      CurrentFolderInCourse(folder)}, Text(folder.getLongDescription))
+      CurrentFolderInCourse(folder)}, Text(folder.getLongDescription), "class" -> "folder-link")
 
     val button: NodeSeq = <button type='button'>View</button>
     SHtml.link(target, () => {
-      CurrentFolderInCourse(folder)}, button)
+      CurrentFolderInCourse(folder)}, button, "class" -> "folder-link")
   }
   def renderSelectLink : NodeSeq = renderSelect("/main/course/folders/index", true)
   def renderSelectButton : NodeSeq = renderSelect("/main/course/folders/index", false)

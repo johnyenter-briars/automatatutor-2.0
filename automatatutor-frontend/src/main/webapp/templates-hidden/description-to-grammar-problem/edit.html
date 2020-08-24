@@ -12,16 +12,16 @@
 	<lift:Identity form="POST">
 	<table>
 		<tr>
+			<td> Name: </td>
+			<td> <editform:namefield> </editform:namefield> </td>
+		</tr>
+		<tr>
+			<td> Description: <br />(Will be display after "Find a grammar that recognizes the following language: ..."): </td>
+			<td> <editform:descriptionfield> </editform:descriptionfield> </td>
+		</tr>
+		<tr>
 			<td> Grammar: </td>
 			<td> <editform:grammarfield> </editform:grammarfield> </td>
-		</tr> 
-		<tr>
-			<td> Short Description: </td>
-			<td> <editform:shortdescription> </editform:shortdescription> </td>
-		</tr>
-		<tr> 
-			<td> Long Description <br />(Will be display after "Find a grammar that recognizes the following language: ..."): </td>
-			<td> <editform:longdescription> </editform:longdescription> </td>
 		</tr>
 		<tr> 
 			<td> </td>

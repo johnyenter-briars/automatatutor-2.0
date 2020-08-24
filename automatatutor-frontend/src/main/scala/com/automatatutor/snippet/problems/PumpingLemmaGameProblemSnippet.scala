@@ -143,13 +143,13 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
     var symbolicString : String = "a^j b^k"
     var constraints : String = "j <= k"
     var unpumpableWord : String = "a^n b^n"
-    var shortDescription: String = "Example"
-    var longDescription: String = "Put description of language here (e.g. {a^j b^k | j <= k} or 'a s followed by at least as many b s')"
+    var name: String = "Example"
+    var description: String = "Put description of language here (e.g. {a^j b^k | j <= k} or 'a s followed by at least as many b s')"
     var automatonString: String = ""
     var regularString: String = "not pumpable"
 
     def create() = {
-      val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+      val unspecificProblem = createUnspecificProb(name, description)
 
       val specificProblem : PumpingLemmaGameProblem = PumpingLemmaGameProblem.create
       specificProblem.setGeneralProblem(unspecificProblem).setAlphabet(alphabet)
@@ -173,8 +173,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
 
 
     //create HTML
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortDescriptionField")
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "longDescriptionField")
+    val nameField = SHtml.text(name, name = _, "id" -> "nameField")
+    val descriptionField = SHtml.textarea(description, description = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionField")
     val alphabetField = SHtml.text(alphabet, alphabet = _, "id" -> "alphabetField")
     val symbolicStringField = SHtml.text(symbolicString, symbolicString = _, "id" -> "symbolicStringField")
     val constraintsField = SHtml.text(constraints, constraints = _, "id" -> "constraintsField")
@@ -196,8 +196,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
     //put HTML into template
     val template: NodeSeq = Templates(List("templates-hidden", "pumping-lemma-game-problem", "create")) openOr Text("Could not find template /templates-hidden/pumping-lemma-game-problem/create")
     Helpers.bind("pumpinggame", template,
-      "shortdescription" -> shortDescriptionField,
-      "longdescription" -> longDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "alphabetfield" -> alphabetField,
       "symbolicstringfield" -> symbolicStringField,
       "constraintsfield" -> constraintsField,
@@ -217,8 +217,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
 
     val specificProblem = PumpingLemmaGameProblem.findByGeneralProblem(problem)
-    var shortDescription: String = problem.getName
-    var longDescription: String = problem.getDescription
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
 
     var alphabet: String = specificProblem.getAlphabet
     var symbolicString : String = specificProblem.getSymbolicString
@@ -231,8 +231,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
 
     def edit() = {
 
-      problem.setName(shortDescription)
-      problem.setDescription(longDescription)
+      problem.setName(problemName)
+      problem.setDescription(problemDescription)
       specificProblem.setAlphabet(alphabet)
 
       if (regular)
@@ -252,8 +252,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
     }
 
     //create HTML
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortDescriptionField")
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "longDescriptionField")
+    val namefield = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionfield = SHtml.textarea(problemDescription, problemDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
     val alphabetField = SHtml.text(alphabet, alphabet = _, "id" -> "alphabetField")
     val symbolicStringField = SHtml.text(symbolicString, symbolicString = _, "id" -> "symbolicStringField")
     val constraintsField = SHtml.text(constraints, constraints = _, "id" -> "constraintsField")
@@ -288,8 +288,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
       {
         val template: NodeSeq = Templates(List("templates-hidden", "pumping-lemma-game-problem", "editRegular")) openOr Text("Could not find template /templates-hidden/pumping-lemma-game-problem/editRegular")
         Helpers.bind("pumpinggame", template,
-          "shortdescription" -> shortDescriptionField,
-          "longdescription" -> longDescriptionField,
+          "namefield" -> namefield,
+          "descriptionfield" -> descriptionfield,
           "alphabetfield" -> alphabetField,
           "regularfield" -> regularField,
           "automaton" ->  automatonField,
@@ -303,8 +303,8 @@ object PumpingLemmaGameSnippet extends SpecificProblemSnippet {
       {
         val template: NodeSeq = Templates(List("templates-hidden", "pumping-lemma-game-problem", "editNonPumpable")) openOr Text("Could not find template /templates-hidden/pumping-lemma-game-problem/editNonPumpable")
         Helpers.bind("pumpinggame", template,
-          "shortdescription" -> shortDescriptionField,
-          "longdescription" -> longDescriptionField,
+          "namefield" -> namefield,
+          "descriptionfield" -> descriptionfield,
           "alphabetfield" -> alphabetField,
           "symbolicstringfield" -> symbolicStringField,
           "constraintsfield" -> constraintsField,

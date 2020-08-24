@@ -82,7 +82,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\external\Automata.Z3.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Z3, Version=4.6.0.0, Culture=neutral, PublicKeyToken=9c8d792caae602a2, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\external\Microsoft.Z3.dll</HintPath>
@@ -223,20 +222,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\external\msvcp100.dll">
-      <Link>msvcp100.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\external\msvcr100.dll">
-      <Link>msvcr100.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\external\vcomp100.dll">
-      <Link>vcomp100.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="PDA\CFGUtils\CFGDiagram.cd" />

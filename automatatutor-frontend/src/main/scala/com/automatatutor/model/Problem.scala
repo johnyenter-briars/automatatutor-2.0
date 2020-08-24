@@ -202,8 +202,8 @@ class Problem extends LongKeyedMapper[Problem] with IdPK {
     val specificProblem: SpecificProblem[_] = this.problemType.obj.openOrThrowException("Every problem must have an associated type").getSpecificProblem(this)
     return <problem>
              <typeName>{ this.getTypeName }</typeName>
-             <shortDescription>{ this.getName }</shortDescription>
-             <longDescription>{ this.getDescription }</longDescription>
+             <name>{ this.getName }</name>
+             <description>{ this.getDescription }</description>
              <specificProblem>{ specificProblem.toXML }</specificProblem>
            </problem>
   }

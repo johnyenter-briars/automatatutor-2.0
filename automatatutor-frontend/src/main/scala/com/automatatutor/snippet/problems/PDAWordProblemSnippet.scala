@@ -25,14 +25,15 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
     */
   override def renderCreate(createUnspecificProb: (String, String) => Problem,
                              returnFunc:          (Problem) => Unit) : NodeSeq = {
-    var shortDescription: String = ""
+    var name: String = ""
+    var description: String = ""
     var numberOfWordsInLanguage: Int = 2
     var numberOfWordsNotInLanguage: Int = 1
     var automaton: String = ""
     var allowSimulation: Boolean = true
 
     def create() = {
-      val unspecificProblem = createUnspecificProb(shortDescription, shortDescription)
+      val unspecificProblem = createUnspecificProb(name, description)
       val specificProblem: PDAWordProblem = PDAWordProblem.create
       specificProblem.setGeneralProblem(unspecificProblem)
         .setAutomaton(automaton)
@@ -44,7 +45,8 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
     }
 
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
+    val nameField = SHtml.text(name, name = _)
+    val descriptionField = SHtml.text(description, description = _)
     val numberOfWordsInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Empty, value => numberOfWordsInLanguage = value.toInt)
     val numberOfWordsNotInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Empty, value => numberOfWordsNotInLanguage = value.toInt)
     val allowSimulationField = SHtml.checkbox(true, res => allowSimulation = res)
@@ -57,7 +59,8 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
       "word"-> runner.getWordInputField,
       "start"-> runner.getStartButton,
       "automaton" -> automatonField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "numberofwordsinlanguage" -> numberOfWordsInLanguageField,
       "numberofwordsnotinlanguage" -> numberOfWordsNotInLanguageField,
       "allowsimulation" -> allowSimulationField,
@@ -72,7 +75,8 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
 
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val pdaWordProblem = PDAWordProblem.findByGeneralProblem(problem)
-    var shortDescription = problem.getName
+    var name = problem.getName
+    var description = problem.getDescription
     var numberOfWordsInLanguage: Int = pdaWordProblem.getNumberOfWordsInLanguage
     var numberOfWordsNotInLanguage: Int = pdaWordProblem.getNumberOfWordsNotInLanguage
     var automaton: String = ""
@@ -80,7 +84,7 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
 
     def create() = {
       //TODO: better error handling
-      problem.setName(shortDescription).setDescription(shortDescription).save()
+      problem.setName(name).setDescription(description).save()
       pdaWordProblem
         .setNumberOfWordsInLanguage(numberOfWordsInLanguage)
         .setNumberOfWordsNotInLanguage(numberOfWordsNotInLanguage)
@@ -93,7 +97,8 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
     }
 
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
+    val nameField = SHtml.text(name, name = _)
+    val descriptionField = SHtml.text(description, description = _)
     val numberOfWordsInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full[String](numberOfWordsInLanguage.toString), value => numberOfWordsInLanguage = value.toInt)
     val numberOfWordsNotInLanguageField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full[String](numberOfWordsNotInLanguage.toString), value => numberOfWordsNotInLanguage = value.toInt)
     val allowSimulationField = SHtml.checkbox(allowSimulation, res => allowSimulation = res)
@@ -111,7 +116,8 @@ object PDAWordProblemSnippet extends SpecificProblemSnippet {
       "word"-> runner.getWordInputField,
       "start"-> runner.getStartButton,
       "automaton" -> automatonField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "setupscript" -> setupScript,
       "numberofwordsinlanguage" -> numberOfWordsInLanguageField,
       "numberofwordsnotinlanguage" -> numberOfWordsNotInLanguageField,

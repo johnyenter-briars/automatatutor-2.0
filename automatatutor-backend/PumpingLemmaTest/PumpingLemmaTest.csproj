@@ -139,8 +139,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\external\libz3.dll">
-      <Link>libz3.dll</Link>
+    <Content Include="..\external\Microsoft.Z3.dll">
+      <Link>Microsoft.Z3.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -20,16 +20,20 @@
     <lift:Identity form="POST">
         <table>
             <tr>
+                <td> Name: </td>
+                <td> <editform:namefield> </editform:namefield> </td>
+            </tr>
+            <tr>
+                <td> Description: </td>
+                <td> <editform:descriptionfield> </editform:descriptionfield> </td>
+            </tr>
+            <tr>
                 <td> Alphabet (separated by spaces): </td>
                 <td> <editform:alphabetfield> </editform:alphabetfield> </td>
             </tr>
             <tr>
                 <td> Regular Expression: </td>
                 <td> <editform:regexfield> </editform:regexfield> </td>
-            </tr>
-            <tr>
-                <td> Short Description: </td>
-                <td> <editform:shortdescription> </editform:shortdescription> </td>
             </tr>
             <tr>
                 <td> Type: </td>

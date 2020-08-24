@@ -45,12 +45,12 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
   override def renderCreate(createUnspecificProb: (String, String) => Problem,
                              returnFunc:          (Problem) => Unit) : NodeSeq = {
 
-    var shortDescription : String = ""
-    var longDescription : String = ""
+    var name : String = ""
+    var description : String = ""
     var automaton : String = ""
 
     def create() = {
-      val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+      val unspecificProblem = createUnspecificProb(name, description)
 
       val specificProblem : NFAConstructionProblem = NFAConstructionProblem.create
       specificProblem.setGeneralProblem(unspecificProblem).setAutomaton(automaton)
@@ -63,15 +63,15 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
     // Remember to remove all newlines from the generated XML by using filter.
 	  // Also remove 'ε' from the alphabet, as its implied (NOT TRUE CHECK IF THERE)
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text("", shortDescription = _)
-    val longDescriptionField = SHtml.textarea("", longDescription = _, "cols" -> "80", "rows" -> "5")
+    val nameField = SHtml.text("", name = _, "id" -> "namefield")
+    val descriptionField = SHtml.textarea("", description = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
     val submitButton = SHtml.submit("Create", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
 
     val template : NodeSeq = Templates(List("templates-hidden", "description-to-nfa-problem", "create")) openOr Text("Could not find template /templates-hidden/description-to-nfa-problem/create")
     Helpers.bind("createform", template,
         "automaton" -> automatonField,
-        "shortdescription" -> shortDescriptionField,
-        "longdescription" -> longDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
 
@@ -80,20 +80,21 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val nfaConstructionProblem = NFAConstructionProblem.findByGeneralProblem(problem)
 
-    var shortDescription : String = problem.getName
-    var longDescription : String = problem.getDescription
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
+
     var automaton : String = ""
 
     def create() = {
-      problem.setName(shortDescription).setDescription(longDescription).save()
+      problem.setName(problemName).setDescription(problemDescription).save()
       nfaConstructionProblem.setAutomaton(automaton).save()
       returnFunc(problem)
     }
 
     // Remember to remove all newlines from the generated XML by using filter
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5")
+    val nameField = SHtml.text(problemName, problemName = _)
+    val descriptionField = SHtml.textarea(problemDescription, problemDescription = _, "cols" -> "80", "rows" -> "5")
     val submitButton = SHtml.submit("Save", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
     val setupScript = <script type="text/javascript"> initCanvas(); Editor.canvas.setAutomaton("{ preprocessBlockAutomatonXml(nfaConstructionProblem.getAutomaton) }") </script>
 
@@ -101,8 +102,8 @@ object NFAProblemSnippet extends SpecificProblemSnippet {
     Helpers.bind("editform", template,
         "automaton" -> automatonField,
         "setupscript" -> setupScript,
-        "shortdescription" -> shortDescriptionField,
-        "longdescription" -> longDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
 

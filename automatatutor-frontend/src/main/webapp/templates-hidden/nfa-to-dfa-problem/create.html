@@ -42,14 +42,18 @@
 	</script>
 
 	<lift:Identity form="POST">
-	<table> 
+	<table>
+		<tr>
+			<td> Name: </td>
+			<td> <createform:namefield> </createform:namefield> </td>
+		</tr>
+		<tr>
+			<td> Description: </td>
+			<td> <createform:descriptionfield> </createform:descriptionfield> </td>
+		</tr>
 		<tr> 
 			<td> </td>
 			<td> <createform:automaton> </createform:automaton> </td>
-		</tr>
-		<tr> 
-			<td> Short Description: </td>
-			<td> <createform:shortdescription> </createform:shortdescription> </td>
 		</tr>
 		<tr> 
 			<td> <createform:submit> </createform:submit> </td>

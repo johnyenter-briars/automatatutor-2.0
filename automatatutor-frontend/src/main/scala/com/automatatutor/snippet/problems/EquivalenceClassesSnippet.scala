@@ -44,13 +44,14 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
       val firstWord = (formValuesXml \ "firstword").head.text
       val secondWord = (formValuesXml \ "secondword").head.text
       val representative = (formValuesXml \ "representative").head.text
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val alphabetList = alphabet.split(" ").filter(_.length()>0)
       val parsingErrors = GraderConnection.getRegexParsingErrors(regEx, alphabetList)
 
       if (parsingErrors.isEmpty) {
-        val unspecificProblem = createUnspecificProb(shortDescription, shortDescription)
+        val unspecificProblem = createUnspecificProb(name, description)
 
         val specificProblem: EquivalenceClassesProblem = EquivalenceClassesProblem.create
         specificProblem.problemId(unspecificProblem).regEx(regEx).inNeeded(inNeeded).alphabet(alphabet).problemType(problemType).representative(representative).firstWord(firstWord).secondWord(secondWord)
@@ -115,7 +116,8 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
       </div>
     }
     val inNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Empty, value => {}, "id" -> "inneededfield")
-    val shortDescriptionField = SHtml.text("", value => {}, "id" -> "shortdescfield")
+    val nameField = SHtml.text("", value => {}, "id" -> "nameField")
+    val descriptionField = SHtml.text("", value => {}, "id" -> "descriptionField")
     val firstWordField = SHtml.text("", value => {}, "id" -> "firstword")
     val secondWordField = SHtml.text("", value => {}, "id" -> "secondword")
     val representativeField = SHtml.text("", value => {}, "id" -> "representative")
@@ -150,13 +152,15 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val regexFieldValXmlJs: String = "<regexfield>' + document.getElementById('regexfield').value + '</regexfield>"
     val inNeededFieldValXmlJs: String = "<inneededfield>' + document.getElementById('inneededfield').value + '</inneededfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
     val alphabetFieldValXmlJs: String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
     val firstWordFieldValXmlJs: String = "<firstword>' + document.getElementById('firstword').value + '</firstword>"
     val secondWordFieldValXmlJs: String = "<secondword>' + document.getElementById('secondword').value + '</secondword>"
     val representativeFieldValXmlJs: String = "<representative>' + document.getElementById('representative').value + '</representative>"
     val problemTypeFieldValXmlJs: String = "<problemtypefield>' + ($('input[name=\"problemtype\"]:checked').val() === '0' ? '0' : (parseInt($('input[name=\"problemtype\"]:checked').val()) + parseInt($('input[name=\"wordtype\"]:checked').val())).toString()) + '</problemtypefield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + regexFieldValXmlJs + inNeededFieldValXmlJs + shortdescFieldValXmlJs + alphabetFieldValXmlJs + firstWordFieldValXmlJs + secondWordFieldValXmlJs + representativeFieldValXmlJs + problemTypeFieldValXmlJs + "</createattempt>'"), create(_))
+    val ajaxCall: JsCmd = SHtml.ajaxCall(
+      JsRaw("'<createattempt>" + regexFieldValXmlJs + inNeededFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + alphabetFieldValXmlJs + firstWordFieldValXmlJs + secondWordFieldValXmlJs + representativeFieldValXmlJs + problemTypeFieldValXmlJs + "</createattempt>'"), create(_))
 
     //val checkGrammarAndSubmit : JsCmd = JsIf(Call("multipleAlphabetChecks",Call("parseAlphabetByFieldName", "terminalsfield"),Call("parseAlphabetByFieldName", "nonterminalsfield")), hideSubmitButton & ajaxCall)
     //    val submit: JsCmd = hideSubmitButton & ajaxCall
@@ -170,7 +174,8 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
     Helpers.bind("createform", template,
       "regexfield" -> regexField,
       "inneededfield" -> inNeededField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "alphabetfield" -> alphabetField,
       "problemtype" -> problemTypeField,
       "problemtypescript" -> problemTypeScript,
@@ -190,7 +195,8 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
 
     val specificProblem = EquivalenceClassesProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getName
+    var name: String = problem.getName
+    var description: String = problem.getDescription
     var regEx: String = specificProblem.getRegex
     var inNeeded: Int = specificProblem.getInNeeded
     var alphabet: String = specificProblem.getAlphabet
@@ -208,13 +214,14 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
       val firstWord = (formValuesXml \ "firstword").head.text
       val secondWord = (formValuesXml \ "secondword").head.text
       val representative = (formValuesXml \ "representative").head.text
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val alphabetList = alphabet.split(" ").filter(_.length()>0)
       val parsingErrors = GraderConnection.getRegexParsingErrors(regEx, alphabetList)
 
       if (parsingErrors.isEmpty) {
-        problem.setName(shortDescription).setDescription(shortDescription).save()
+        problem.setName(name).setDescription(description).save()
         specificProblem.regEx(regEx).inNeeded(inNeeded).alphabet(alphabet).problemType(problemType).representative(representative).firstWord(firstWord).secondWord(secondWord)
         specificProblem.save
 
@@ -247,7 +254,8 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
 
     val regexField = SHtml.text(regEx, regEx = _,  "id" -> "regexfield")
     val inNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full("" + inNeeded), value => {}, "id" -> "inneededfield")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
+    val nameField = SHtml.text(name, name = _, "id" -> "namefield")
+    val descriptionField = SHtml.text(name, name = _, "id" -> "descriptionfield")
     val alphabetField = SHtml.text(alphabet, alphabet = _, "id" -> "alphabetfield")
     val radioProblemType = SHtml.radio(Array("Equivalency between two words", "Provide words from the same equivalcy class"), Full("" + Math.min(problemType, 1)), value => {}, "id" -> "problemtype")
     val problemTypeField = radioProblemType.items.zipWithIndex.map {case(d, i) =>
@@ -314,13 +322,14 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
     val regexFieldValXmlJs: String = "<regexfield>' + document.getElementById('regexfield').value + '</regexfield>"
     val alphabetFieldValXmlJs: String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
     val inNeededFieldValXmlJs: String = "<inneededfield>' + document.getElementById('inneededfield').value + '</inneededfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
     val firstWordFieldValXmlJs: String = "<firstword>' + document.getElementById('firstword').value + '</firstword>"
     val secondWordFieldValXmlJs: String = "<secondword>' + document.getElementById('secondword').value + '</secondword>"
     val representativeFieldValXmlJs: String = "<representative>' + document.getElementById('representative').value + '</representative>"
     val problemTypeFieldValXmlJs: String = "<problemtypefield>' + ($('input[name=\"problemtype\"]:checked').val() === '0' ? '0' : (parseInt($('input[name=\"problemtype\"]:checked').val()) + parseInt($('input[name=\"wordtype\"]:checked').val())).toString()) + '</problemtypefield>"
 
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>"+ regexFieldValXmlJs + inNeededFieldValXmlJs + shortdescFieldValXmlJs + alphabetFieldValXmlJs + firstWordFieldValXmlJs + secondWordFieldValXmlJs + representativeFieldValXmlJs + problemTypeFieldValXmlJs +"</createattempt>'"), edit(_))
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>"+ regexFieldValXmlJs + inNeededFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + alphabetFieldValXmlJs + firstWordFieldValXmlJs + secondWordFieldValXmlJs + representativeFieldValXmlJs + problemTypeFieldValXmlJs +"</createattempt>'"), edit(_))
 
     val checkAlphabetAndSubmit: JsCmd = JsIf(Call("alphabetChecks", Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
@@ -333,7 +342,8 @@ object EquivalenceClassesSnippet extends SpecificProblemSnippet {
     Helpers.bind("editform", template,
       "regexfield" -> regexField,
       "inneededfield" -> inNeededField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "alphabetfield" -> alphabetField,
       "problemtype" -> problemTypeField,
       "problemtypescript" -> problemTypeScript,

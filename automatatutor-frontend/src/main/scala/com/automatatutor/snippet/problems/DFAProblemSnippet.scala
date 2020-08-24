@@ -43,12 +43,12 @@ object DFAConstructionSnippet extends SpecificProblemSnippet {
   override def renderCreate(createUnspecificProb: (String, String) => Problem,
                              returnFunc:          (Problem) => Unit) : NodeSeq = {
 
-    var shortDescription : String = ""
-    var longDescription : String = ""
+    var name : String = ""
+    var description : String = ""
     var automaton : String = ""
 
     def create() = {
-      val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+      val unspecificProblem = createUnspecificProb(name, description)
       
       val specificProblem : DFAConstructionProblem = DFAConstructionProblem.create
       specificProblem.setGeneralProblem(unspecificProblem).setAutomaton(automaton)
@@ -60,16 +60,16 @@ object DFAConstructionSnippet extends SpecificProblemSnippet {
     
     // Remember to remove all newlines from the generated XML by using filter
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5")
+    val namefield = SHtml.text(name, name = _)
+    val descriptionfield = SHtml.textarea(description, description = _, "cols" -> "80", "rows" -> "5")
     //das automatonField ist nur dafür da, dass der Automat dort als XML eingefügt wird (--> deswegen auch hidden) (bei onClick des Submit-Button) und
     val submitButton = SHtml.submit("Create", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
     
     val template : NodeSeq = Templates(List("templates-hidden", "dfa-construction", "create")) openOr Text("Could not find template /templates-hidden/dfa-construction/create")
     Helpers.bind("createform", template,
         "automaton" -> automatonField,
-        "shortdescription" -> shortDescriptionField,
-        "longdescription" -> longDescriptionField,
+        "namefield" -> namefield,
+        "descriptionfield" -> descriptionfield,
         "submit" -> submitButton)
   }
   
@@ -78,20 +78,20 @@ object DFAConstructionSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val dfaConstructionProblem = DFAConstructionProblem.findByGeneralProblem(problem)
 
-    var shortDescription : String = problem.getName
-    var longDescription : String = problem.getDescription
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var automaton : String = ""
 
     def create() = {
-      problem.setName(shortDescription).setDescription(longDescription).save()
+      problem.setName(problemName).setDescription(problemDescription).save()
       dfaConstructionProblem.setAutomaton(automaton).save()
       returnFunc(problem)
     }
     
     // Remember to remove all newlines from the generated XML by using filter
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "5")
+    val nameField = SHtml.text(problemName, problemName = _)
+    val descriptionField = SHtml.textarea(problemDescription, problemDescription = _, "cols" -> "80", "rows" -> "5")
     val submitButton = SHtml.submit("Save", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
     val setupScript = <script type="text/javascript"> initCanvas(); Editor.canvas.setAutomaton("{ dfaConstructionProblem.getAutomaton }") </script>
     
@@ -99,8 +99,8 @@ object DFAConstructionSnippet extends SpecificProblemSnippet {
     Helpers.bind("editform", template,
         "automaton" -> automatonField,
         "setupscript" -> setupScript,
-        "shortdescription" -> shortDescriptionField,
-        "longdescription" -> longDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
   

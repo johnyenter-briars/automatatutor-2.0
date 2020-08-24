@@ -42,8 +42,8 @@ object WordsInGrammarSnippet extends SpecificProblemSnippet {
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
       val inNeeded = (formValuesXml \ "inneededfield").head.text.toInt
       val outNeeded = (formValuesXml \ "outneededfield").head.text.toInt
-      val name = (formValuesXml \ "namefield").head.text
-      val description = (formValuesXml \ "descriptionfield").head.text
+        val name = (formValuesXml \ "namefield").head.text
+        val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 

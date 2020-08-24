@@ -52,11 +52,10 @@ object NFAToDFAProblemSnippet extends SpecificProblemSnippet {
                              returnFunc:          (Problem) => Unit) : NodeSeq = {
 
     var automaton : String = ""
-	var shortDescription : String = ""
-
+	  var name : String = ""
+    var description = "Construct a DFA that recognizes the same language as the given NFA"
     def create() = {
-      val longDescription = "Construct a DFA that recognizes the same language as the given NFA"
-      val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+      val unspecificProblem = createUnspecificProb(name, description)
 
       val specificProblem : NFAToDFAProblem = NFAToDFAProblem.create
       specificProblem.setGeneralProblem(unspecificProblem).setAutomaton(automaton)
@@ -67,16 +66,18 @@ object NFAToDFAProblemSnippet extends SpecificProblemSnippet {
 
     // Remember to remove all newlines from the generated XML by using filter. Also remove 'ε' from the alphabet, as its implied
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
-	val shortDescriptionField = SHtml.text("", shortDescription = _)
+	  val nameField = SHtml.text("", name = _)
+    val descriptionField = SHtml.text("", description = _)
     val submitButton = SHtml.submit("Create", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
 
 
     val template : NodeSeq = Templates(List("templates-hidden", "nfa-to-dfa-problem", "create")) openOr Text("Could not find template /templates-hidden/nfa-to-dfa-problem/create")
     Helpers.bind("createform", template,
-        "automaton" -> automatonField,
-		"shortdescription" -> shortDescriptionField,
-        "submit" -> submitButton
-        )
+      "automaton" -> automatonField,
+		  "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
+      "submit" -> submitButton
+      )
   }
 
   override def renderEdit: Box[(Problem, Problem => Unit) => NodeSeq] = Full(renderEditFunc)
@@ -84,18 +85,20 @@ object NFAToDFAProblemSnippet extends SpecificProblemSnippet {
   private def renderEditFunc(problem: Problem, returnFunc: (Problem => Unit)): NodeSeq = {
     val nfaToDfaProblem = NFAToDFAProblem.findByGeneralProblem(problem)
 
-    var shortDescription : String = problem.getName
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var automaton : String = ""
 
     def create() = {
-      problem.setName(shortDescription).save()
+      problem.setName(problemName).setDescription(problemDescription).save()
       nfaToDfaProblem.setAutomaton(automaton).save()
       returnFunc(problem)
     }
 
     // Remember to remove all newlines from the generated XML by using filter
     val automatonField = SHtml.hidden(automatonXml => automaton = preprocessBlockAutomatonXml(automatonXml), "", "id" -> "automatonField")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _)
+    val nameField = SHtml.text(problemName, problemName = _)
+    val descriptionField = SHtml.text(problemDescription, problemDescription = _)
     val submitButton = SHtml.submit("Save", create, "onClick" -> "document.getElementById('automatonField').value = Editor.canvas.exportAutomaton()")
     val setupScript =
       <script type="text/javascript">
@@ -108,7 +111,8 @@ object NFAToDFAProblemSnippet extends SpecificProblemSnippet {
     Helpers.bind("editform", template,
         "automaton" -> automatonField,
         "setupscript" -> setupScript,
-        "shortdescription" -> shortDescriptionField,
+        "namefield" -> nameField,
+        "descriptionfield" -> descriptionField,
         "submit" -> submitButton)
   }
 

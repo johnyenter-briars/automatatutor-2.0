@@ -40,13 +40,13 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
     def create(formValues: String): JsCmd = {
       val formValuesXml = XML.loadString(formValues)
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
-      val longDescription = (formValuesXml \ "longdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        val unspecificProblem = createUnspecificProb(shortDescription, longDescription)
+        val unspecificProblem = createUnspecificProb(name, description)
 
         val specificProblem: DescriptionToGrammarProblem = DescriptionToGrammarProblem.create
         specificProblem.problemId(unspecificProblem).grammar(grammar)
@@ -60,22 +60,22 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
 
     }
     val grammarField = SHtml.textarea("S -> a S b | x", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
-    val shortDescriptionField = SHtml.text("", value => {}, "id" -> "shortdescfield")
-    val longDescriptionField = SHtml.textarea("The language of the regual expression 'a^n x b^n'.", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "longdescfield")
+    val nameField = SHtml.text("", value => {}, "id" -> "namefield")
+    val descriptionField = SHtml.textarea("", value => {}, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val longdescFieldValXmlJs: String = "<longdescfield>' + document.getElementById('longdescfield').value + '</longdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + shortdescFieldValXmlJs + longdescFieldValXmlJs + "</createattempt>'"), create(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), create(_))
     val submit: JsCmd = hideSubmitButton & ajaxCall
     val submitButton: NodeSeq = <button type='button' id='submitbutton' onclick={ submit }>Save</button>
 
     val template: NodeSeq = Templates(List("templates-hidden", "description-to-grammar-problem", "create")) openOr Text("Could not find template /templates-hidden/description-to-grammar-problem/create")
     Helpers.bind("createform", template,
       "grammarfield" -> grammarField,
-      "shortdescription" -> shortDescriptionField,
-      "longdescription" -> longDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
@@ -85,20 +85,20 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
 
     val descriptionToGrammarProblem = DescriptionToGrammarProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getName
-    var longDescription: String = problem.getDescription
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var grammar: String = Grammar.preprocessLoadedGrammar(descriptionToGrammarProblem.getGrammar)
 
     def edit(formValues: String): JsCmd = {
       val formValuesXml = XML.loadString(formValues)
       val grammar = Grammar.preprocessGrammar((formValuesXml \ "grammarfield").head.text)
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
-      val longDescription = (formValuesXml \ "longdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val parsingErrors = GraderConnection.getGrammarParsingErrors(grammar)
 
       if (parsingErrors.isEmpty) {
-        problem.setName(shortDescription).setDescription(longDescription).save()
+        problem.setName(name).setDescription(description).save()
         descriptionToGrammarProblem.grammar(grammar).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {
@@ -108,14 +108,14 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
     }
 
     val grammarField = SHtml.textarea(grammar, grammar = _, "cols" -> "80", "rows" -> "5", "id" -> "grammarfield")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
-    val longDescriptionField = SHtml.textarea(longDescription, longDescription = _, "cols" -> "80", "rows" -> "1", "id" -> "longdescfield")
+    val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionField = SHtml.textarea(problemDescription, problemDescription = _, "cols" -> "80", "rows" -> "5", "id" -> "descriptionfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val grammarFieldValXmlJs: String = "<grammarfield>' + document.getElementById('grammarfield').value + '</grammarfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
-    val longdescFieldValXmlJs: String = "<longdescfield>' + document.getElementById('longdescfield').value + '</longdescfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + shortdescFieldValXmlJs + longdescFieldValXmlJs + "</createattempt>'"), edit(_))
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + grammarFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), edit(_))
 
     val submit: JsCmd = hideSubmitButton & ajaxCall
 
@@ -124,8 +124,8 @@ object DescriptionToGrammarSnippet extends SpecificProblemSnippet {
     val template: NodeSeq = Templates(List("templates-hidden", "description-to-grammar-problem", "edit")) openOr Text("Could not find template /templates-hidden/description-to-grammar-problem/edit")
     Helpers.bind("editform", template,
       "grammarfield" -> grammarField,
-      "shortdescription" -> shortDescriptionField,
-      "longdescription" -> longDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 

@@ -46,13 +46,14 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
       val alphabet = (formValuesXml \ "alphabetfield").head.text
       val inNeeded = (formValuesXml \ "inneededfield").head.text.toInt
       val outNeeded = (formValuesXml \ "outneededfield").head.text.toInt
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val alphabetList = alphabet.split(" ").filter(_.length()>0)
       val parsingErrors = GraderConnection.getRegexParsingErrors(regEx, alphabetList)
 
       if (parsingErrors.isEmpty) {
-        val unspecificProblem = createUnspecificProb(shortDescription, shortDescription)
+        val unspecificProblem = createUnspecificProb(name, description)
 
         val specificProblem: WordsInRegExProblem = WordsInRegExProblem.create
         specificProblem.problemId(unspecificProblem).regEx(regEx).inNeeded(inNeeded).outNeeded(outNeeded).alphabet(alphabet)
@@ -69,16 +70,18 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
     val regexField = SHtml.text("", value => {},  "id" -> "regexfield")
     val inNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Empty, value => {}, "id" -> "inneededfield")
     val outNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Empty, value => {}, "id" -> "outneededfield")
-    val shortDescriptionField = SHtml.text("", value => {}, "id" -> "shortdescfield")
+    val nameField = SHtml.text("", value => {}, "id" -> "namefield")
+    val descriptionField = SHtml.text("", value => {}, "id" -> "descriptionfield")
     val alphabetField = SHtml.text("", value => {}, "id" -> "alphabetfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
     val regexFieldValXmlJs: String = "<regexfield>' + document.getElementById('regexfield').value + '</regexfield>"
     val inNeededFieldValXmlJs: String = "<inneededfield>' + document.getElementById('inneededfield').value + '</inneededfield>"
     val outNeededFieldValXmlJs: String = "<outneededfield>' + document.getElementById('outneededfield').value + '</outneededfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
     val alphabetFieldValXmlJs: String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + regexFieldValXmlJs + inNeededFieldValXmlJs + outNeededFieldValXmlJs + shortdescFieldValXmlJs + alphabetFieldValXmlJs + "</createattempt>'"), create(_))
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + regexFieldValXmlJs + inNeededFieldValXmlJs + outNeededFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + alphabetFieldValXmlJs + "</createattempt>'"), create(_))
 
     val checkAlphabetAndSubmit : JsCmd = JsIf(Call("alphabetChecks",Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
@@ -89,7 +92,8 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
       "regexfield" -> regexField,
       "inneededfield" -> inNeededField,
       "outneededfield" -> outNeededField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "alphabetfield" -> alphabetField,
       "submit" -> submitButton)
   }
@@ -100,7 +104,8 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
   
     val wordsInRegExProblem = WordsInRegExProblem.findByGeneralProblem(problem)
 
-    var shortDescription: String = problem.getName
+    var problemName: String = problem.getName
+    var problemDescription: String = problem.getDescription
     var regEx: String = wordsInRegExProblem.getRegex
     var inNeeded: Int = wordsInRegExProblem.getInNeeded
     var outNeeded: Int = wordsInRegExProblem.getOutNeeded
@@ -112,13 +117,14 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
       val alphabet = (formValuesXml \ "alphabetfield").head.text
       val inNeeded = (formValuesXml \ "inneededfield").head.text.toInt
       val outNeeded = (formValuesXml \ "outneededfield").head.text.toInt
-      val shortDescription = (formValuesXml \ "shortdescfield").head.text
+      val name = (formValuesXml \ "namefield").head.text
+      val description = (formValuesXml \ "descriptionfield").head.text
 
       val alphabetList = alphabet.split(" ").filter(_.length()>0)
       val parsingErrors = GraderConnection.getRegexParsingErrors(regEx, alphabetList)
 
       if (parsingErrors.isEmpty) {
-        problem.setName(shortDescription).setDescription(shortDescription).save()
+        problem.setName(name).setDescription(description).save()
         wordsInRegExProblem.regEx(regEx).inNeeded(inNeeded).outNeeded(outNeeded).alphabet(alphabet).save()
         return SHtml.ajaxCall("", (ignored : String) => returnFunc(problem))
       } else {
@@ -131,7 +137,8 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
     val regexField = SHtml.text(regEx, regEx = _,  "id" -> "regexfield")
     val inNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full("" + inNeeded), value => {}, "id" -> "inneededfield")
     val outNeededField = SHtml.select(Array(("1", "1"), ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5")), Full("" + outNeeded), value => {}, "id" -> "outneededfield")
-    val shortDescriptionField = SHtml.text(shortDescription, shortDescription = _, "id" -> "shortdescfield")
+    val nameField = SHtml.text(problemName, problemName = _, "id" -> "namefield")
+    val descriptionField = SHtml.text(problemDescription, problemDescription = _, "id" -> "descriptionfield")
     val alphabetField = SHtml.text(alphabet, alphabet = _, "id" -> "alphabetfield")
 
     val hideSubmitButton: JsCmd = JsHideId("submitbutton")
@@ -139,9 +146,10 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
     val alphabetFieldValXmlJs: String = "<alphabetfield>' + document.getElementById('alphabetfield').value + '</alphabetfield>"
     val inNeededFieldValXmlJs: String = "<inneededfield>' + document.getElementById('inneededfield').value + '</inneededfield>"
     val outNeededFieldValXmlJs: String = "<outneededfield>' + document.getElementById('outneededfield').value + '</outneededfield>"
-    val shortdescFieldValXmlJs: String = "<shortdescfield>' + document.getElementById('shortdescfield').value + '</shortdescfield>"
+    val nameFieldValXmlJs: String = "<namefield>' + document.getElementById('namefield').value + '</namefield>"
+    val descriptionValXmlJs: String = "<descriptionfield>' + document.getElementById('descriptionfield').value + '</descriptionfield>"
 
-    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs +  regexFieldValXmlJs + inNeededFieldValXmlJs + outNeededFieldValXmlJs + shortdescFieldValXmlJs + "</createattempt>'"), edit(_))
+    val ajaxCall: JsCmd = SHtml.ajaxCall(JsRaw("'<createattempt>" + alphabetFieldValXmlJs +  regexFieldValXmlJs + inNeededFieldValXmlJs + outNeededFieldValXmlJs + nameFieldValXmlJs + descriptionValXmlJs + "</createattempt>'"), edit(_))
 
     val checkAlphabetAndSubmit : JsCmd = JsIf(Call("alphabetChecks",Call("parseAlphabetByFieldName", "alphabetfield")), hideSubmitButton & ajaxCall)
 
@@ -153,7 +161,8 @@ object WordsInRegExSnippet extends SpecificProblemSnippet {
       "outneededfield" -> outNeededField,
       "alphabetfield" -> alphabetField,
       "regexfield" -> regexField,
-      "shortdescription" -> shortDescriptionField,
+      "namefield" -> nameField,
+      "descriptionfield" -> descriptionField,
       "submit" -> submitButton)
   }
 
