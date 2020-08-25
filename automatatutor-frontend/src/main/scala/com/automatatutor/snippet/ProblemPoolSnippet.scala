@@ -325,9 +325,17 @@ class Problempoolsnippet extends{
             }
             {
               SHtml.button("Export Problems", () => {
-                DownloadHelper.offerZipDownloadToUser("AT_DB_Selected_Problems", BatchProblems.is.toList.map((problem: Problem) => {
-                  (problem.getName, <exported> {problem.toXML}</exported>.toString())
-                }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+                //If batch problem is empty, export all problems
+                if(BatchProblems.is.toList.isEmpty){
+                  DownloadHelper.offerZipDownloadToUser("AT_DB_Selected_Problems", Problem.findAll().map((problem: Problem) => {
+                    (problem.getName, <exported> {problem.toXML}</exported>.toString())
+                  }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+                }
+                else{
+                  DownloadHelper.offerZipDownloadToUser("AT_DB_Selected_Problems", BatchProblems.is.toList.map((problem: Problem) => {
+                    (problem.getName, <exported> {problem.toXML}</exported>.toString())
+                  }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+                }
               })
             }
             <div id="batch_send-modal" class="modal">
@@ -608,6 +616,10 @@ class Problempoolsnippet extends{
     }
 
     return problemType.getProblemSnippet().renderCreate(createUnspecificProb, returnFunc)
+  }
+
+  def renderimportbutton(xhtml: NodeSeq): NodeSeq = {
+    new UploadHelper().fileUploadForm(xhtml)
   }
 }
 
