@@ -8,12 +8,24 @@ import net.liftweb.http.SHtml.{ajaxForm, ajaxSubmit, fileUpload}
 import net.liftweb.http.{FileParamHolder, InMemFileParamHolder, OnDiskFileParamHolder, S, SHtml}
 import net.liftweb.util._
 import Helpers._
-import com.automatatutor.model.Problem
+import com.automatatutor.model.{Problem, Folder, Exercise}
 import java.util.zip.ZipInputStream
 
 import scala.xml.{NodeSeq, XML}
 
-class UploadHelper {
+object UploadTargetEnum extends Enumeration {
+  type UploadTargetEnum = Value
+  val ProblemPool, Folder = Value
+}
+
+import UploadTargetEnum._
+
+class UploadTarget( target: UploadTargetEnum, folder: Folder) {
+  def getTarget: UploadTargetEnum = target
+  def getFolder: Folder = folder
+}
+
+class UploadHelper(target: UploadTarget) {
 
   def addProblem(problemText: String): Unit = {
     try {
@@ -21,11 +33,20 @@ class UploadHelper {
 
       val problem = Problem.fromXML((xml \ "_").head)
 
-      if(problem == Empty)
-        S.error("Could not import problem XMl not formatted properly.")
+      if(problem == Empty) {
+        S.error("Could not import problem. XMl not formatted properly.")
+      }else{
+        if(target.getTarget == UploadTargetEnum.Folder){
+          val openedProblem = problem.openOrThrowException("Problem should not be empty")
+          if(!target.getFolder.hasIdenticalProblem(openedProblem)){
+            val exercise = new Exercise
+            exercise.setFolder(target.getFolder).setProblem(openedProblem).save()
+          }
+        }
+      }
     }
     catch {
-      case _ : Exception => S.error("Could not import problem. XMl not formatted properly.")
+      case e : Exception => S.error("Could not import problem. XMl not formatted properly.")
     }
   }
 

@@ -619,7 +619,7 @@ class Problempoolsnippet extends{
   }
 
   def renderimportbutton(xhtml: NodeSeq): NodeSeq = {
-    new UploadHelper().fileUploadForm(xhtml)
+    new UploadHelper(new UploadTarget(UploadTargetEnum.ProblemPool, null)).fileUploadForm(xhtml)
   }
 }
 

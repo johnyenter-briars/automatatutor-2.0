@@ -245,7 +245,14 @@ object Problem extends Problem with LongKeyedMetaMapper[Problem] {
     //build specific problem
     val specificProblem = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)
     if (specificProblem == Empty) { generalProblem.delete_! }
-    return Full(generalProblem)
+    val matchingProblems = Problem.findAll().filter(_.getProblemType == specificType).filter(_.toXML.equals(generalProblem.toXML))
+    if(matchingProblems.length > 1){
+      val savedProblem = matchingProblems.head
+      matchingProblems.slice(1, matchingProblems.length).foreach(_.delete_!)
+      Full(savedProblem)
+    }else{
+      Full(generalProblem)
+    }
   }
 }
 

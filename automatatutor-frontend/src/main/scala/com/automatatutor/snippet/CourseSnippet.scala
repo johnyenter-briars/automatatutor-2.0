@@ -5,7 +5,7 @@ import java.util.Calendar
 import java.util.Date
 
 import scala.xml._
-import com.automatatutor.lib.{DownloadHelper, FileUpload, _}
+import com.automatatutor.lib.DownloadHelper
 import com.automatatutor.model._
 import com.automatatutor.renderer._
 import net.liftweb.common.Empty
@@ -800,6 +800,15 @@ class Coursesnippet {
         </div>
       </div>
     </div>
+  }
+
+  def renderimportbutton(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentFolderInCourse.is == null) {
+      S.warning("Please first choose a folder")
+      return S.redirectTo("/main/course/index")
+    }
+
+    new UploadHelper(new UploadTarget(UploadTargetEnum.Folder, CurrentFolderInCourse.is)).fileUploadForm(xhtml)
   }
 
 }
