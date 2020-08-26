@@ -324,7 +324,21 @@ class Coursesnippet {
         }
         <div>
           <button type="button" id="edit_access-modal-button_batch" class="modal-button">Batch Edit</button>
-
+          {
+            SHtml.button("Export Problems", () => {
+              //If batch problem is empty, export all problems
+              if(CurrentBatchExercisesInCourse.is.toList.isEmpty){
+                DownloadHelper.offerZipDownloadToUser(folder.getLongDescription + "_Problems", folder.getExercisesUnderFolder.map(_.getProblem).map((problem: Problem) => {
+                  (problem.getName, <exported> {problem.toXML}</exported>.toString())
+                }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+              }
+              else{
+                DownloadHelper.offerZipDownloadToUser(folder.getLongDescription + "_Problems", CurrentBatchExercisesInCourse.is.toList.map(_.getProblem).map((problem: Problem) => {
+                  (problem.getName, <exported> {problem.toXML}</exported>.toString())
+                }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+              }
+            })
+          }
           <div id="edit_access-modal_batch" class="modal">
 
             <div class="modal-content">
@@ -788,9 +802,6 @@ class Coursesnippet {
     </div>
   }
 
-  def testfileupload(xhtml: NodeSeq): NodeSeq = {
-    new FileUpload().fileUploadForm(xhtml)
-  }
 }
 
 object Courses {

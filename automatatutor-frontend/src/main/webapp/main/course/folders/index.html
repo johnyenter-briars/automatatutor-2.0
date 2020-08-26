@@ -48,6 +48,11 @@
         <renderbatcheditform:deletebutton></renderbatcheditform:deletebutton>
         <renderbatcheditform:editbutton></renderbatcheditform:editbutton>
     </lift:Coursesnippet.renderexercises>
+    <lift:Coursesnippet.renderimportbutton form="POST" multipart="true">
+        <p>Select either an xml file or a zip file containing xml files</p>
+        <input type="file" />
+        <input type="submit" value="Submit" />
+    </lift:Coursesnippet.renderimportbutton>
     <br>
     <br>
     <lift:Coursesnippet.foldersupervisorsection></lift:Coursesnippet.foldersupervisorsection>

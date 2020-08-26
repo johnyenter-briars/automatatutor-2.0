@@ -3,15 +3,12 @@ package com.automatatutor.lib
 import java.io.{ByteArrayOutputStream, InputStream}
 import java.util.zip.{ZipEntry, ZipFile}
 
-import com.automatatutor.lib.DownloadHelper.{ZipFile, offerZipDownloadToUser}
 import net.liftweb.common.{Box, Empty, EmptyBox, Full}
 import net.liftweb.http.SHtml.{ajaxForm, ajaxSubmit, fileUpload}
 import net.liftweb.http.{FileParamHolder, InMemFileParamHolder, OnDiskFileParamHolder, S, SHtml}
 import net.liftweb.util._
-import net.liftweb.http.js.JsCmds.Alert
 import Helpers._
 import com.automatatutor.model.Problem
-import java.io.{FileInputStream, FileOutputStream}
 import java.util.zip.ZipInputStream
 
 import scala.xml.{NodeSeq, XML}
