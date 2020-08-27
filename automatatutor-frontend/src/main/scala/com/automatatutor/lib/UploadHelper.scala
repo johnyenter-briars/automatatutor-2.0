@@ -33,7 +33,6 @@ class UploadHelper(target: UploadTarget) {
   def addProblem(fileText: String): Unit = {
     try {
       val xml = scala.xml.XML.loadString(fileText)
-      println((xml \ "_").head)
       (xml \ "_").foreach((problemXml) => {
         val problem = Problem.fromXML(problemXml)
 
