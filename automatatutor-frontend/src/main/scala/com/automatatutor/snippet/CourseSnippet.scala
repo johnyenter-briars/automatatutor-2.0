@@ -20,6 +20,8 @@ import net.liftweb.util.Helpers.strToSuperArrowAssoc
 import net.liftweb.http.js.JsCmd
 import JsCmds._
 
+import com.automatatutor.model.{Exercise, Problem, ProblemType}
+import com.automatatutor.lib.{UploadHelper, UploadTarget, UploadTargetEnum, TableHelper}
 import scala.collection.mutable.ListBuffer
 import scala.xml
 
@@ -802,13 +804,22 @@ class Coursesnippet {
     </div>
   }
 
-  def renderimportbutton(xhtml: NodeSeq): NodeSeq = {
+  def renderfolerimportbutton(xhtml: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder")
       return S.redirectTo("/main/course/index")
     }
 
     new UploadHelper(new UploadTarget(UploadTargetEnum.Folder, CurrentFolderInCourse.is)).fileUploadForm(xhtml)
+  }
+
+  def rendercourseimportbutton(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentCourse.is == null) {
+      S.warning("Please first choose a course")
+      return S.redirectTo("/main/course/index")
+    }
+
+    new UploadHelper(new UploadTarget(UploadTargetEnum.Course, CurrentCourse.is)).fileUploadToCourseForm(xhtml)
   }
 
 }
