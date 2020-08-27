@@ -49,8 +49,6 @@ class UploadHelper(target: UploadTarget) {
           }
         }
       })
-
-
     }
     catch {
       case e : Exception => S.error("Could not import problem. XMl not formatted properly.")
@@ -75,11 +73,28 @@ class UploadHelper(target: UploadTarget) {
     addProblem(problemText)
   }
 
-  def loadFolderToCourseFromXml(inputStream: InputStream, folderName: String): Unit = {
+  def addFolder(inputStream: InputStream, folderName: String): Unit = {
     val problemText = scala.io.Source.fromInputStream(inputStream).mkString
+
+    addProblem(problemText)
+  }
+
+  def loadFoldersToCourseFromZip(inputStream: InputStream): Unit = {
+    val zipInputStream = new ZipInputStream(inputStream)
+    Stream.continually(zipInputStream.getNextEntry).takeWhile(_ != null).foreach{ file: ZipEntry =>
+      //If there's an xml file that has a size over 9999999 bytes idk what to tell you,
+      //That means you have a giagantic xml file that you're asking to be imported. You should just import those problems
+      //via the single file import in the problem pool
+      val byteOutputStream = new ByteArrayOutputStream(9999999)
+      val buffer = new Array[Byte](1024)
+      Stream.continually(zipInputStream.read(buffer)).takeWhile(_ != -1).foreach(byteOutputStream.write(buffer, 0, _))
+      loadFolderToCourseFromXml(byteOutputStream.toString, file.getName)
+    }
+  }
+
+  def loadFolderToCourseFromXml(problemText: String, folderName: String): Unit = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
 
-    val dateFormat = new SimpleDateFormat("EEE, MMM d, K:mm ''yy")
     val now: Calendar = Calendar.getInstance()
     val oneWeekFromNow: Calendar = Calendar.getInstance()
     oneWeekFromNow.add(Calendar.WEEK_OF_YEAR, 1)
@@ -90,7 +105,7 @@ class UploadHelper(target: UploadTarget) {
         .setCreator(user)
         .setStartDate(now.getTime)
         .setEndDate(oneWeekFromNow.getTime)
-        .setLongDescription(folderName)
+        .setLongDescription(folderName.replace(".xml", ""))
         .setVisible(false)
         .save()
 
@@ -118,7 +133,7 @@ class UploadHelper(target: UploadTarget) {
         if (failed > 0) {
           S.error("Could not import " + failed.toString + " problems")
         }
-        S.redirectTo("/main/course/index")
+//        S.redirectTo("/main/course/index")
       }
 
       importProblems(problemText)
@@ -127,8 +142,8 @@ class UploadHelper(target: UploadTarget) {
 
   def loadProblemsToCourse(holder: InMemFileParamHolder): Unit ={
     val inputStream = holder.fileStream
-    if(holder.fileName.contains(".xml")) loadFolderToCourseFromXml(inputStream, holder.fileName.replace(".xml", ""))
-//    else if (holder.fileName.contains(".zip")) loadProblemsFromZip(inputStream)
+    if(holder.fileName.contains(".xml")) loadFolderToCourseFromXml(scala.io.Source.fromInputStream(inputStream).mkString, holder.fileName.replace(".xml", ""))
+    else if (holder.fileName.contains(".zip")) loadFoldersToCourseFromZip(inputStream)
     else S.error("Could not import problems. Incorrect file format.")
   }
 
