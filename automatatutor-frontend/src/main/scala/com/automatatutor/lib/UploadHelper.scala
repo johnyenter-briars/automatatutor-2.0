@@ -30,23 +30,27 @@ class UploadTarget( target: UploadTargetEnum, targetObj: Object) {
 
 class UploadHelper(target: UploadTarget) {
 
-  def addProblem(problemText: String): Unit = {
+  def addProblem(fileText: String): Unit = {
     try {
-      val xml = scala.xml.XML.loadString(problemText)
+      val xml = scala.xml.XML.loadString(fileText)
+      println((xml \ "_").head)
+      (xml \ "_").foreach((problemXml) => {
+        val problem = Problem.fromXML(problemXml)
 
-      val problem = Problem.fromXML((xml \ "_").head)
-
-      if(problem == Empty) {
-        S.error("Could not import problem. XMl not formatted properly.")
-      }else{
-        if(target.getTarget == UploadTargetEnum.Folder){
-          val openedProblem = problem.openOrThrowException("Problem should not be empty")
-          if(!target.getFolder.hasIdenticalProblem(openedProblem)){
-            val exercise = new Exercise
-            exercise.setFolder(target.getFolder).setProblem(openedProblem).save()
+        if(problem == Empty) {
+          S.error("Could not import problem. XMl not formatted properly.")
+        }else{
+          if(target.getTarget == UploadTargetEnum.Folder){
+            val openedProblem = problem.openOrThrowException("Problem should not be empty")
+            if(!target.getFolder.hasIdenticalProblem(openedProblem)){
+              val exercise = new Exercise
+              exercise.setFolder(target.getFolder).setProblem(openedProblem).save()
+            }
           }
         }
-      }
+      })
+
+
     }
     catch {
       case e : Exception => S.error("Could not import problem. XMl not formatted properly.")
@@ -54,12 +58,14 @@ class UploadHelper(target: UploadTarget) {
   }
 
   def loadProblemsFromZip(inputStream: InputStream): Unit = {
-    val zis = new ZipInputStream(inputStream)
-    Stream.continually(zis.getNextEntry).takeWhile(_ != null).foreach{ file: ZipEntry =>
-      //If theres a file that has a size over 90000 bytes idk what to tell you
-      val byteOutputStream = new ByteArrayOutputStream(90000)
+    val zipInputStream = new ZipInputStream(inputStream)
+    Stream.continually(zipInputStream.getNextEntry).takeWhile(_ != null).foreach{ file: ZipEntry =>
+      //If there's an xml file that has a size over 999999999 bytes idk what to tell you,
+      //That means you have a giagantic xml file that you're asking to be imported. You should just import those problems
+      //via the single file import in the problem pool
+      val byteOutputStream = new ByteArrayOutputStream(999999999)
       val buffer = new Array[Byte](1024)
-      Stream.continually(zis.read(buffer)).takeWhile(_ != -1).foreach(byteOutputStream.write(buffer, 0, _))
+      Stream.continually(zipInputStream.read(buffer)).takeWhile(_ != -1).foreach(byteOutputStream.write(buffer, 0, _))
       addProblem(byteOutputStream.toString)
     }
   }
