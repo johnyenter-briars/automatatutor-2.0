@@ -58,7 +58,7 @@ class UploadHelper(target: UploadTarget) {
     val zipInputStream = new ZipInputStream(inputStream)
     Stream.continually(zipInputStream.getNextEntry).takeWhile(_ != null).foreach{ file: ZipEntry =>
       //If there's an xml file that has a size over 999999999 bytes idk what to tell you,
-      //That means you have a giagantic xml file that you're asking to be imported. You should just import those problems
+      //That means you have a gigantic xml file that you're asking to be imported. You should just import those problems
       //via the single file import in the problem pool
       val byteOutputStream = new ByteArrayOutputStream(999999999)
       val buffer = new Array[Byte](1024)
@@ -108,7 +108,7 @@ class UploadHelper(target: UploadTarget) {
         .setVisible(false)
         .save()
 
-      def importProblems(importing: String) = {
+      def importProblems(importing: String): Unit = {
         var imported = 0
         var failed = 0
 
@@ -155,7 +155,6 @@ class UploadHelper(target: UploadTarget) {
         case box: EmptyBox => S.error("Error reading file. Did you remember to select a file before submitting?")
       }
     }
-
 
     val bindForm =
       "type=file" #> fileUpload((fph) => {

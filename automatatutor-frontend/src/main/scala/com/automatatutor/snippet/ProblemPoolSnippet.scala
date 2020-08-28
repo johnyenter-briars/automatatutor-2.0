@@ -28,6 +28,7 @@ import scala.collection.mutable.ListBuffer
 object CurrentEditableProblem extends SessionVar[Problem](null)
 object BatchProblems extends SessionVar[ListBuffer[Problem]](null)
 object PreviousPage extends SessionVar[String](null)
+object SelectedProblemType extends SessionVar[ProblemType](null)
 
 class Problempoolsnippet extends{
 
@@ -41,13 +42,7 @@ class Problempoolsnippet extends{
         BatchProblems.is.toList,
         ("", (problem: Problem) => Text(problem.getName)))
       }
-      {
-        //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
-        //and then which which ever ones are clicked are
-//        SHtml.button("Deselect Problems", ()=>{BatchProblems.is.clear()})
-      }
     </form>
-
   }
 
   def renderbatchsend(xhtml: NodeSeq): NodeSeq = {
@@ -593,12 +588,12 @@ class Problempoolsnippet extends{
 
   //TODO 8/23/2020 use a different session var for this purpose
   def rendercreate(ignored: NodeSeq): NodeSeq = {
-    if (CurrentProblemTypeInCourse.is == null) {
+    if (SelectedProblemType.is == null) {
       S.warning("You have not selected a problem type")
       return S.redirectTo("/main/course/index")
     }
 
-    val problemType = CurrentProblemTypeInCourse.is
+    val problemType = SelectedProblemType.is
 
     def createUnspecificProb(name: String, desc: String): Problem = {
       val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
@@ -620,6 +615,44 @@ class Problempoolsnippet extends{
 
   def renderimportbutton(xhtml: NodeSeq): NodeSeq = {
     new UploadHelper(new UploadTarget(UploadTargetEnum.ProblemPool, null)).fileUploadForm(xhtml)
+  }
+
+  def renderaddproblemheader(xhtml: NodeSeq): NodeSeq = {
+
+    <div>
+      <div style="display: flex">
+        <h2 style="margin-bottom: 0.5em; margin-right: 0.5em">All Exercises</h2>
+        <br></br>
+        <button type="button" id="add-problem_button_1" class="modal-button far fa-plus-square"/>
+      </div>
+
+      <div id="add-problem_modal_1" class="modal">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" id="add-problem_span_1">
+              &times;
+            </span>
+          </div>
+          <div class="modal-body">
+            <h4>Select a Problem Type To Create</h4>
+            <ul>
+              {
+                ProblemType.findAll().map(pt => {
+                  <li>
+                    {
+                      SHtml.link("/main/problempool/create",() => {
+                        SelectedProblemType(pt)
+                      }, <button>{pt.getProblemTypeName}</button>)
+                    }
+                  </li>
+                })
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 }
 
