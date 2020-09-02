@@ -3,7 +3,7 @@
 <head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /><title>Home</title></head>
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=course-surrounding;at=content">
-    <lift:Coursesnippet.rendereditfolderform form="POST">
+    <lift:Foldersnippet.rendereditfolderform form="POST">
         <table>
             <tr>
                 <td> Folder Name</td>
@@ -29,12 +29,12 @@
         <editfolderform:deletebutton></editfolderform:deletebutton>
         <br>
         <editfolderform:deleteproblemsbutton></editfolderform:deleteproblemsbutton>
-    </lift:Coursesnippet.rendereditfolderform>
+    </lift:Foldersnippet.rendereditfolderform>
     <br>
     <br>
-    <lift:Coursesnippet:renderaddproblems></lift:Coursesnippet:renderaddproblems>
+    <lift:Foldersnippet:renderaddproblems></lift:Foldersnippet:renderaddproblems>
     <h2>Exercises</h2>
-    <lift:Coursesnippet.renderexercises>
+    <lift:Foldersnippet.renderexercises>
         <table>
             <tr>
                 <td> Max Grade: </td>
@@ -47,15 +47,15 @@
         </table>
         <renderbatcheditform:deletebutton></renderbatcheditform:deletebutton>
         <renderbatcheditform:editbutton></renderbatcheditform:editbutton>
-    </lift:Coursesnippet.renderexercises>
-    <lift:Coursesnippet.renderfolerimportbutton form="POST" multipart="true">
+    </lift:Foldersnippet.renderexercises>
+    <lift:Foldersnippet.renderfolerimportbutton form="POST" multipart="true">
         <p>Select either an xml file or a zip file containing xml files</p>
         <input type="file" />
         <input type="submit" value="Upload" />
-    </lift:Coursesnippet.renderfolerimportbutton>
+    </lift:Foldersnippet.renderfolerimportbutton>
     <br>
     <br>
-    <lift:Coursesnippet.foldersupervisorsection></lift:Coursesnippet.foldersupervisorsection>
+    <lift:Foldersnippet.foldersupervisorsection></lift:Foldersnippet.foldersupervisorsection>
 </div>
 </body>
 </html>
