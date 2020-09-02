@@ -83,9 +83,7 @@ class Boot {
 					(
 						Menu.i("Edit Problem") / "main" / "problempool" / "edit" >> Hidden,
 						Menu.i("Practice Problem") / "main" / "problempool" / "practice" >> Hidden,
-						Menu.i("Send Problem") / "main" / "problempool" / "send" >> Hidden,
 						Menu.i("Add Problems") / "main" / "problempool" / "select" >> Hidden,
-						Menu.i("Batch Send Problems") / "main" / "problempool" / "batchsend" >> Hidden,
 						Menu.i("Create a problem") / "main" / "problempool" / "create" >> Hidden
 					),
 				Menu.i("Course") / "main" / "course" / "index" >> courseChosenPredicate submenus
@@ -100,8 +98,6 @@ class Boot {
 						Menu.i("Grade Download CSV") / "main" / "course" / "downloadCSV" >> canSuperviseCoursePredicate,
 						Menu.i("Export Problems") / "main" / "course" / "export" >> canSuperviseCoursePredicate,
 						Menu.i("Import Problems") / "main" / "course" / "import" >> canSuperviseCoursePredicate,
-						Menu.i("Batch Edit Problems") / "main" / "course" / "problems" / "batchedit" >> Hidden,
-						//TODO 8/7/2020 do we need these?
 						Menu.i("Preview Problem") / "main" / "course" / "problems" / "preview" >> Hidden,
 						Menu.i("Solve Problem") / "main" / "course" / "problems" / "solve" >> Hidden
 					)

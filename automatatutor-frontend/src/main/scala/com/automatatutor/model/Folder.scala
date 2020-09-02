@@ -156,6 +156,12 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";"), tuple._3).mkString(";"))
     firstLine + "\n" + csvLines.mkString("\n")
   }
+
+  def hasIdenticalProblem(problem: Problem): Boolean = {
+    this.getProblemsUnderFolder
+      .filter(_.getProblemType == problem.getProblemType)
+      .count(_.toXML.equals(problem.toXML)) == 1
+  }
 }
 
 object Folder extends Folder with LongKeyedMetaMapper[Folder] {

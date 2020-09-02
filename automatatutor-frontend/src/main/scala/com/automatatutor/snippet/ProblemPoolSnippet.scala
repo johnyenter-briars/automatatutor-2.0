@@ -28,118 +28,11 @@ import scala.collection.mutable.ListBuffer
 object CurrentEditableProblem extends SessionVar[Problem](null)
 object BatchProblems extends SessionVar[ListBuffer[Problem]](null)
 object PreviousPage extends SessionVar[String](null)
+object SelectedProblemType extends SessionVar[ProblemType](null)
 
 class Problempoolsnippet extends{
 
   if(BatchProblems.is == null) BatchProblems(new ListBuffer[Problem])
-
-  def renderbatchlist(xhtml: NodeSeq): NodeSeq = {
-    <h2>Currently Sending problems:</h2> ++
-    <form>
-      {
-        TableHelper.renderTableWithHeader(
-        BatchProblems.is.toList,
-        ("", (problem: Problem) => Text(problem.getName)))
-      }
-      {
-        //TODO 7/25/2020 temporary fix. the checkboxs should retain their "clickness" on the previous page
-        //and then which which ever ones are clicked are
-//        SHtml.button("Deselect Problems", ()=>{BatchProblems.is.clear()})
-      }
-    </form>
-
-  }
-
-  def renderbatchsend(xhtml: NodeSeq): NodeSeq = {
-    if (BatchProblems.is == null) {
-      S.warning("Please first select multiple pronblems to edit!")
-      return S.redirectTo("/main/problempool/index")
-    }
-
-    val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here";
-    val supervisedCourses = user.getSupervisedCourses
-    val currentProblems = BatchProblems.is.toList
-
-    //Keep a list of all the problem pointers we are going to send over to the multiple courses/folders
-    //This is done because two different components need to be able to change attributes of the PPs at different times
-    var exercisesToSend = new ListBuffer[Exercise]
-    var attempts = "10"
-    var maxGrade = "10"
-
-    def sendProblems() = {
-      var errors: List[String] = List()
-      val numMaxGrade = try {
-        if (maxGrade.toInt < 1) {
-          errors = errors ++ List("Best grade must be positive")
-          10
-        }
-        else maxGrade.toInt
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(maxGrade + " is not an integer")
-          10
-        }
-      }
-      val numAttempts = try {
-        if (attempts.toInt < 0) {
-          errors = errors ++ List("Nr of attempts must not be negative")
-          3
-        }
-        else attempts.toInt
-      } catch {
-        case e: Exception => {
-          errors = errors ++ List(attempts + " is not an integer")
-          3
-        }
-      }
-      if (!errors.isEmpty) {
-        S.warning(errors.head)
-      } else {
-        exercisesToSend.foreach((exercise: Exercise) => {
-          exercise.setMaxGrade(numMaxGrade).setAllowedAttempts(numAttempts).save
-        })
-
-        //Clear out BatchProblems for reuse
-        BatchProblems.is.clear()
-        S.redirectTo("/main/problempool/index", () => {})
-      }
-    }
-
-    def selectionCallback(folderIDS: List[String], course: Course): Unit = {
-      folderIDS.foreach((folderID: String) =>{
-        val folder = Folder.findByID(folderID)
-
-        currentProblems.foreach((problem: Problem) => {
-          var exercise = new Exercise
-          exercise.setCourse(course).setFolder(folder).setProblem(problem)
-          exercisesToSend += exercise
-        })
-      })
-    }
-
-    val maxGradeField = SHtml.text(maxGrade, maxGrade = _)
-    val attemptsField = SHtml.text(attempts, attempts = _)
-    val sendButton = SHtml.submit("Send Problems", sendProblems)
-
-    val courseTable = TableHelper.renderTableWithHeader(
-      supervisedCourses,
-      ("Course Name", (course: Course) => Text(course.getName)),
-      ("Folder Select", (course: Course) => {
-
-        val folderOptions = Folder.findAllByCourse(course)
-          .map(f => (f.getFolderID.toString -> f.getLongDescription.toString))
-
-        SHtml.multiSelect(folderOptions, List(), selectionCallback(_, course))
-      }))
-
-
-    Helpers.bind("renderbatchsendform", xhtml,
-      "maxgradefield" -> maxGradeField,
-      "attemptsfield" -> attemptsField,
-      "sendbutton" -> sendButton,
-      "courseselecttable" -> courseTable
-    )
-  }
 
   def renderlocationtree(xhtml: NodeSeq): NodeSeq = {
     val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here"
@@ -323,6 +216,21 @@ class Problempoolsnippet extends{
                 BatchProblems.is.foreach(_.delete_!)
               }, "onclick" -> JsRaw("return confirm('Are you sure you want to delete the selected problems?')").toJsCmd)
             }
+            {
+              SHtml.button("Export Problems", () => {
+                //If batch problem is empty, export all problems
+                if(BatchProblems.is.toList.isEmpty){
+                  DownloadHelper.offerZipDownloadToUser("AT_DB_Selected_Problems", Problem.findAll().map((problem: Problem) => {
+                    (problem.getName, <exported> {problem.toXML}</exported>.toString())
+                  }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+                }
+                else{
+                  DownloadHelper.offerZipDownloadToUser("AT_DB_Selected_Problems", BatchProblems.is.toList.map((problem: Problem) => {
+                    (problem.getName, <exported> {problem.toXML}</exported>.toString())
+                  }), DownloadHelper.XmlFile, DownloadHelper.ZipFile)
+                }
+              })
+            }
             <div id="batch_send-modal" class="modal">
 
               <div class="modal-content">
@@ -443,60 +351,6 @@ class Problempoolsnippet extends{
       (grade, date) => SolutionAttempt, returnFunc, () => 1, () => 0) ++ returnLink
   }
 
-  //TODO 7/17/2020 Have capability to delete a exercise from a folder
-  //also need to have finer control over sending a problem and taking it back
-  //also what if that folder already has that problem in it?
-  //Better error handling overall
-  def sendtocourseform(xhtml: NodeSeq): NodeSeq = {
-    if (CurrentEditableProblem.is == null) {
-      S.warning("Please first choose a problem to send")
-      return S.redirectTo("/main/problempool/index")
-    }
-
-    def selectionCallback(folderIDS: List[String], course: Course): Unit = {
-      val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here";
-      val courses = user.getSupervisedCourses
-
-      folderIDS.foreach((folderID: String) => {
-        val folder = Folder.findByID(folderID)
-        val problem = CurrentEditableProblem.is
-        val exercise = new Exercise
-        exercise.setProblem(problem)
-          .setFolder(folder)
-          //TODO 7/15/2020 add a method by which the user can set these settings on first transfer
-          .setAllowedAttempts(10)
-          .setMaxGrade(10)
-          .setCourse(folder.getCourse)
-          .save
-      })
-    }
-
-    val user: User = User.currentUser openOrThrowException "Lift only allows logged-in-users here";
-    val supervisedCourses = user.getSupervisedCourses
-
-    val cancelButton = SHtml.link("/main/problempool/index", () => {}, <button type='button'>Cancel</button>)
-
-    <form action="/main/problempool/send">
-      <p>Please select a folder within
-        <strong>ONE</strong>
-        course, to transfer the problem to</p>
-      <p>Leave the rest as "----"</p>
-      {(TableHelper.renderTableWithHeader(
-        supervisedCourses,
-        ("Name", (course: Course) => Text(course.getName)),
-        ("", (course: Course) => {
-
-          val folderOptions = Folder.findAllByCourse(course)
-            .map(f => (f.getFolderID.toString -> f.getLongDescription.toString))
-
-          SHtml.multiSelect(folderOptions, List(), selectionCallback(_, course))
-        }))
-        ++ SHtml.button("Send", () => {}, "type" -> "submit")
-        ++ cancelButton
-        )}
-    </form>
-  }
-
   def renderproblemoptions(xhtml: NodeSeq): NodeSeq = {
     if (CurrentFolderInCourse.is == null) {
       S.warning("Please first choose a folder to send problems to")
@@ -576,14 +430,13 @@ class Problempoolsnippet extends{
     )
   }
 
-  //TODO 8/23/2020 use a different session var for this purpose
   def rendercreate(ignored: NodeSeq): NodeSeq = {
-    if (CurrentProblemTypeInCourse.is == null) {
+    if (SelectedProblemType.is == null) {
       S.warning("You have not selected a problem type")
       return S.redirectTo("/main/course/index")
     }
 
-    val problemType = CurrentProblemTypeInCourse.is
+    val problemType = SelectedProblemType.is
 
     def createUnspecificProb(name: String, desc: String): Problem = {
       val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
@@ -601,6 +454,48 @@ class Problempoolsnippet extends{
     }
 
     return problemType.getProblemSnippet().renderCreate(createUnspecificProb, returnFunc)
+  }
+
+  def renderimportbutton(xhtml: NodeSeq): NodeSeq = {
+    new UploadHelper(new UploadTarget(UploadTargetEnum.ProblemPool, null)).fileUploadForm(xhtml)
+  }
+
+  def renderaddproblemheader(xhtml: NodeSeq): NodeSeq = {
+
+    <div>
+      <div style="display: flex">
+        <h2 style="margin-bottom: 0.5em; margin-right: 0.5em">All Exercises</h2>
+        <br></br>
+        <button type="button" id="add-problem_button_1" class="modal-button far fa-plus-square"/>
+      </div>
+
+      <div id="add-problem_modal_1" class="modal">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close" id="add-problem_span_1">
+              &times;
+            </span>
+          </div>
+          <div class="modal-body">
+            <h4>Select a Problem Type To Create</h4>
+            <ul>
+              {
+                ProblemType.findAll().map(pt => {
+                  <li>
+                    {
+                      SHtml.link("/main/problempool/create",() => {
+                        SelectedProblemType(pt)
+                      }, <button>{pt.getProblemTypeName}</button>)
+                    }
+                  </li>
+                })
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 }
 

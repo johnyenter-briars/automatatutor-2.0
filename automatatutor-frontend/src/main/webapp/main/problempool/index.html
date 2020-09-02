@@ -5,7 +5,7 @@
 </head>
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
-
+    <lift:Problempoolsnippet.renderaddproblemheader></lift:Problempoolsnippet.renderaddproblemheader>
     <lift:Problempoolsnippet.renderproblempool>
         <h3>Search / Filter:</h3>
         <div style="display: flex;">
@@ -24,6 +24,14 @@
         </div>
         <problempool:problemlist> </problempool:problemlist>
     </lift:Problempoolsnippet.renderproblempool>
+    <br>
+    <hr>
+    <h3>Import/Export Problems from Database</h3>
+    <lift:Problempoolsnippet.renderimportbutton form="POST" multipart="true">
+        <p>Select either an xml file or a zip file containing xml files</p>
+        <input type="file" />
+        <input type="submit" value="Submit" />
+    </lift:Problempoolsnippet.renderimportbutton>
 </div>
 </body>
 </html>

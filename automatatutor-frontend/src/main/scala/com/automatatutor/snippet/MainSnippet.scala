@@ -130,14 +130,10 @@ class Mainsnippet {
     val editProfilButton = SHtml.link("/user_mgt/change_password", () => (), <button type='button'>Change Password</button>)
     val becomeInstructorButton = SHtml.link("/main/become_instructor", () => {}, <button type='button'>Become Instructor</button>)
 
-    val exportLink = SHtml.link("/main/export", () => {}, Text("Export Problems"))
-    val importLink = SHtml.link("/main/import", () => {}, Text("Import Problems"))
+    val exportLink = SHtml.link("/main/export", () => {}, Text("Export All Problems From Database"))
+    val importLink = SHtml.link("/main/import", () => {}, Text("Import Problems Into Database"))
 
-    val createProblemLink = SHtml.link("/main/problempool/create", () => {
-      val problemType = ProblemType.findByName("While to TM")
-      CurrentProblemTypeInCourse(problemType.head)
-    }, Text("Create the problem"))
-    if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton ++  Unparsed("&emsp;") ++ exportLink ++  Unparsed("&emsp;") ++ importLink ++ createProblemLink
+    if (user.isAdmin) return autogenButton ++ problemPoolButton ++ usersButton ++  Unparsed("&emsp;") ++ exportLink ++  Unparsed("&emsp;") ++ importLink
     if (user.isInstructor) return autogenButton ++ problemPoolButton ++ editProfilButton ++ Unparsed("&emsp;") ++ exportLink ++  Unparsed("&emsp;") ++ importLink
     return autogenButton ++ editProfilButton ++ becomeInstructorButton
   }

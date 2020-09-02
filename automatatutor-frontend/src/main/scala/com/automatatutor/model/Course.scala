@@ -115,7 +115,24 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 		return super.delete_!
 	}
 
-	def renderFoldersForZip: List[(String, String)] = {
+	def renderFoldersProblems: List[(String, String)] = {
+		val folders = Folder.findAllByCourse(this)
+
+		folders.map(folder => {
+			var xml = NodeSeq.Empty
+			folder.getExercisesUnderFolder.map(_.getProblem).foreach(
+				(problem: Problem) => {
+					xml = xml ++ problem.toXML
+				})
+			xml = <exported>
+				{xml}
+			</exported>
+
+			(folder.getLongDescription, xml.toString())
+		})
+	}
+
+	def renderFoldersForGradeZip: List[(String, String)] = {
 		val folders = Folder.findAllByCourse(this)
 
 		folders.map(folder => (folder.getLongDescription, folder.renderGradesCsv))
