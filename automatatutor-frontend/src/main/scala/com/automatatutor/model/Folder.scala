@@ -152,7 +152,7 @@ class Folder extends LongKeyedMapper[Folder] with IdPK {
     val participantsWithGrades : Seq[(User, Seq[Int], Int)]
           = participants.map(
             participant => (participant, exercises.map(_.getHighestAttempt(participant)), this.getAchievedPoints(participant)))
-    val firstLine = "FirstName;LastName;Email;" + exercises.map(_.getShortDescription).mkString(";") + ";Total;"
+    val firstLine = "FirstName;LastName;Email;" + exercises.map(_.getName).mkString(";") + ";Total;"
     val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";"), tuple._3).mkString(";"))
     firstLine + "\n" + csvLines.mkString("\n")
   }
