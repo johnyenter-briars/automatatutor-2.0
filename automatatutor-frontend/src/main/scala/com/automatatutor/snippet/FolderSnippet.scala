@@ -25,6 +25,9 @@ import com.automatatutor.lib.{UploadHelper, UploadTarget, UploadTargetEnum, Tabl
 import scala.collection.mutable.ListBuffer
 import scala.xml
 
+//used when a user creates a problem from the folder page, and the problem is automatically added to the folder
+object TargetFolder extends SessionVar[Folder](null)
+
 class Foldersnippet {
 
   def rendereditfolderform(xhtml: NodeSeq): NodeSeq = {
@@ -159,7 +162,7 @@ class Foldersnippet {
         TableHelper.renderTableWithHeader(
           exercises,
           ("", (problem: Exercise) => checkBoxForProblem(problem)),
-          ("Problem Name", (problem: Exercise) => Text(problem.getShortDescription)),
+          ("Problem Name", (problem: Exercise) => Text(problem.getName)),
           ("Type", (problem: Exercise) => Text(problem.getTypeName)),
           ("Max Attempts", (problem: Exercise) => Text(problem.getAllowedAttemptsString)),
           ("Max Grade", (problem: Exercise) => Text(problem.getMaxGrade.toString)),
@@ -209,7 +212,7 @@ class Foldersnippet {
       //logged in user is a student
       TableHelper.renderTableWithHeader(
         exercises,
-        ("Problem Description", (problem: Exercise) => Text(problem.getShortDescription)),
+        ("Problem Description", (problem: Exercise) => Text(problem.getName)),
         ("Type", (problem: Exercise) => Text(problem.getTypeName)),
         ("Your Attempts", (problem: Exercise) => Text(problem.getAttempts(user).length.toString)),
         ("Max Attempts", (problem: Exercise) => Text(problem.getAllowedAttemptsString)),
@@ -390,6 +393,91 @@ class Foldersnippet {
       "editbutton" -> editButton,
       "deletebutton" -> deleteButton
     )
+  }
+
+  def renderaddexercisebutton(xhtml: NodeSeq): NodeSeq = {
+    if (CurrentFolderInCourse.is == null) {
+      S.warning("Please first choose a folder")
+      return S.redirectTo("/main/course/index")
+    }
+
+    <h2>Exercises</h2>
+    <div class="dropdown">
+      <button class="far fa-plus-square" />
+      <div class="dropdown-content">
+        <div>
+          <button type="button" id="add-exercise_button_2" class="modal-button">Use an Existing Exercise</button>
+
+          <div id="add-exercise_modal_2" class="modal">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="close" id="add-exercise_span_2">
+                  &times;
+                </span>
+              </div>
+              <div class="modal-body">
+                <h4>Select an exercise to model after</h4>
+                <ul>
+                  {
+                    CurrentFolderInCourse.is.getExercisesUnderFolder.map((exercise: Exercise) => {
+                      <li>
+                        {
+                          SHtml.link("/main/problempool/edit", ()=> {
+                            //need to create a duplicate problem
+                            val duplicateProblem = Problem.copyFromXML(exercise.getProblem.toXML)
+
+                            if(duplicateProblem.isEmpty){
+                              S.warning("There was an error in creating the problem")
+                            }
+                            CurrentEditableProblem(duplicateProblem.get)
+                            TargetFolder(CurrentFolderInCourse.is)
+                          }, <button>{exercise.getName}</button>)
+                        }
+                      </li>
+                    })
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <br></br>
+
+        <div>
+          <button type="button" id="add-exercise_button_1" class="modal-button">Create a new Exercise</button>
+
+          <div id="add-exercise_modal_1" class="modal">
+
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="close" id="add-exercise_span_1">
+                  &times;
+                </span>
+              </div>
+              <div class="modal-body">
+                <h4>Select a problem type to create</h4>
+                <ul>
+                  {
+                    ProblemType.findAll().map(pt => {
+                      <li>
+                        {
+                          SHtml.link("/main/problempool/create",() => {
+                            SelectedProblemType(pt)
+                            TargetFolder(CurrentFolderInCourse.is)
+                          }, <button>{pt.getProblemTypeName}</button>)
+                        }
+                      </li>
+                    })
+                  }
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   }
 
 }

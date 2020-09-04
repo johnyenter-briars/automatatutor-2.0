@@ -141,7 +141,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 	def renderGradesCsv: String = {
 		val visibleExercises = this.getVisibleExercises
 		val participantsWithGrades : Seq[(User, Seq[Int], Int)] = this.getParticipants.map(participant => (participant, visibleExercises.map(_.getHighestAttempt(participant)), this.getTotalPoints(participant)))
-		val firstLine = "FirstName;LastName;Email;" + visibleExercises.map(_.getShortDescription).mkString(";") + ";Total;"
+		val firstLine = "FirstName;LastName;Email;" + visibleExercises.map(_.getName).mkString(";") + ";Total;"
 		val csvLines = participantsWithGrades.map(tuple => List(tuple._1.firstName, tuple._1.lastName, tuple._1.email, tuple._2.mkString(";"), tuple._3).mkString(";"))
 
 		firstLine + "\n" + csvLines.mkString("\n")
@@ -153,7 +153,7 @@ class Course extends LongKeyedMapper[Course] with IdPK {
 			val userLastNameAttribute = new UnprefixedAttribute("lastname", participant.lastName.is, userEmailAttribute)
 			val userFirstNameAttribute = new UnprefixedAttribute("firstname", participant.firstName.is, userLastNameAttribute)
 			val children: NodeSeq = this.getVisibleExercises.map(problem => {
-				val problemDescriptionAttribute = new UnprefixedAttribute("shortDescription", problem.getShortDescription, Null)
+				val problemDescriptionAttribute = new UnprefixedAttribute("shortDescription", problem.getName, Null)
 				val maxGradeAttribute = new UnprefixedAttribute("maxGrade", problem.getMaxGrade.toString, problemDescriptionAttribute)
 				val problemTypeAttribute = new UnprefixedAttribute("problemType", problem.getTypeName, maxGradeAttribute)
 				val attemptsByUserAttribute = new UnprefixedAttribute("attemptsByUser", problem.getNumberAttempts(participant).toString, problemTypeAttribute)

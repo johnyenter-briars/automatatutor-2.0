@@ -284,7 +284,18 @@ class Problempoolsnippet extends{
     val problem : Problem = CurrentEditableProblem.is
     val problemSnippet: SpecificProblemSnippet = problem.getProblemType.getProblemSnippet
 
-    def returnFunc(ignored : Problem) = {
+    def returnFunc(unspecificProblem : Problem) = {
+      if(TargetFolder.is != null){
+        val exercise = new Exercise
+        exercise.setFolder(TargetFolder.is)
+          .setProblem(unspecificProblem)
+          .setCourse(TargetFolder.is.getCourse.get)
+          .save()
+
+        TargetFolder(null)
+        S.redirectTo("/main/course/folders/index")
+      }
+
       //TODO 7/27/2020 need a better way of conditional setting the redirect page based on previous page
       val redirectTarget = if(PreviousPage.is == null) "/main/problempool/index" else PreviousPage.is
       PreviousPage(null)
@@ -442,14 +453,26 @@ class Problempoolsnippet extends{
       val createdBy: User = User.currentUser openOrThrowException "Lift protects this page against non-logged-in users"
 
       val unspecificProblem: Problem = Problem.create.setCreator(createdBy)
-      unspecificProblem.setName(name).setDescription(desc).setProblemType(problemType)
-      unspecificProblem.save
+      unspecificProblem.setName(name).setDescription(desc).setProblemType(problemType).save
+
+      if(TargetFolder.is != null){
+        val exercise = new Exercise
+        exercise.setFolder(TargetFolder.is)
+                .setProblem(unspecificProblem)
+                .setCourse(TargetFolder.is.getCourse.get)
+                .save()
+      }
 
       return unspecificProblem
     }
 
     def returnFunc(problem: Problem) = {
       CurrentProblemInCourse(problem)
+      if(TargetFolder.is != null){
+        TargetFolder(null)
+        S.redirectTo("/main/course/folders/index")
+      }
+
       S.redirectTo("/main/problempool/index")
     }
 

@@ -260,6 +260,40 @@ object Problem extends Problem with LongKeyedMetaMapper[Problem] {
       Full(generalProblem)
     }
   }
+
+  //This method does not check for duplicates
+  def copyFromXML(xml: Node): Box[Problem] = {
+    //find matching specific type
+    val matchingTypes = ProblemType.findByName((xml \ "typeName").text)
+    if (matchingTypes.isEmpty) return Empty
+    val specificType = matchingTypes.head
+    //generate general problem
+    val generalProblem = new Problem
+    generalProblem.problemType(specificType)
+    generalProblem.createdBy(User.currentUser)
+    generalProblem.name((xml \ "name").text)
+    generalProblem.description((xml \ "description").text)
+    generalProblem.save()
+    //build specific problem
+    val specificProblem = specificType.getSpecificProblemSingleton().fromXML(generalProblem, (xml \ "specificProblem" \ "_").head)
+    if (specificProblem == Empty) { generalProblem.delete_! }
+    Full(generalProblem)
+
+
+//    //Check to see if there are matching problems in the database already.
+//    val matchingProblems = Problem.findAll()
+//      .filter(_.getProblemType == specificType)
+//      .filter(_.toXML.equals(generalProblem.toXML))
+//
+//    //If there are, delete all the other ones, and just return the youngest one
+//    if(matchingProblems.length > 1){
+//      val savedProblem = matchingProblems.head
+//      matchingProblems.slice(1, matchingProblems.length).foreach(_.delete_!)
+//      Full(savedProblem)
+//    }else{
+//      Full(generalProblem)
+//    }
+  }
 }
 
 abstract trait SpecificProblem[T] {
