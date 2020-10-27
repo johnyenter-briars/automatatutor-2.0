@@ -17,14 +17,12 @@
 - Have ProblemPointers delete their referenced SolutionAttempts/better error handling
 - Sorting in the pool.  Sorting everywhere.
 - Batch operations would be: delete, change points, change # attempts, move to folder/copy to folder.
+- Better individual problem reporting, like average grade, average number of attempts for each student.
 
 ## TODO
 - Fix All TODOS in the code
-- I'd like to see, in the pool, in which course/folder the exercise appears.
-- Better individual problem reporting, like average grade, average number of attempts for each student.
 - Better and more comprehensive UI features to control the flow of problems
 - Allow admins or teachers to edit grades directly instead of having to open the database
-- optionally moving grades to exercises
 - Formatting in questions with mathjax
 - multiple ways of checking correctness of solutions for the instructor
 - extending syntax for CFG
@@ -34,10 +32,3 @@
 https://fontawesome.com/icons/edit
 https://fontawesome.com/icons/brain
 https://fontawesome.com/icons/share
-
-
-# Current task as of 8/4/2020:
---> - I'd like to see, in the pool, in which course/folder the exercise appears.
-- Better individual problem reporting, like average grade, average number of attempts for each student.
-
-

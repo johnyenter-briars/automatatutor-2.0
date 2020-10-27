@@ -1,0 +1,931 @@
+<exported><problem>
+             <typeName>Find Derivation</typeName>
+             <name>f23</name>
+             <description>f23</description>
+             <specificProblem><FindDerivationProblem>
+             <Grammar>S -&gt; a S b | a | S S</Grammar>
+             <Word>aabaaabb</Word>
+             <DerivationType>0</DerivationType>
+           </FindDerivationProblem></specificProblem>
+           </problem><problem>
+             <typeName>Find Derivation</typeName>
+             <name>f24</name>
+             <description>f24</description>
+             <specificProblem><FindDerivationProblem>
+             <Grammar>S -&gt; S a T | T
+T -&gt; T b F | F
+F -&gt; x S x | y</Grammar>
+             <Word>xyxayby</Word>
+             <DerivationType>0</DerivationType>
+           </FindDerivationProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Words</typeName>
+             <name>f20</name>
+             <description>f20</description>
+             <specificProblem><WordsInGrammarProblem>
+      <Grammar>S -&gt; E c
+E -&gt; E a T | T
+T -&gt; T b c | c</Grammar>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Words</typeName>
+             <name>f21</name>
+             <description>f21</description>
+             <specificProblem><WordsInGrammarProblem>
+      <Grammar>S -&gt; T a
+T -&gt; T a T b | _</Grammar>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Find Derivation</typeName>
+             <name>f22</name>
+             <description>f22</description>
+             <specificProblem><FindDerivationProblem>
+             <Grammar>S -&gt; A a
+A -&gt; A a B | B b
+B -&gt; B b a | a
+</Grammar>
+             <Word>abaababaa</Word>
+             <DerivationType>1</DerivationType>
+           </FindDerivationProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Construction</typeName>
+             <name>f17</name>
+             <description>words that have an odd number of a</description>
+             <specificProblem><DescriptionToGrammarProblem>
+             <Grammar>S -&gt; A E
+B -&gt; b B | _
+A -&gt; B a B
+E -&gt; A A E | _
+</Grammar>
+           </DescriptionToGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Words</typeName>
+             <name>f19</name>
+             <description>f19</description>
+             <specificProblem><WordsInGrammarProblem>
+      <Grammar>S -&gt; a S b | b S a | _</Grammar>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Construction</typeName>
+             <name>f16</name>
+             <description>words that are the concatenation of two words of odd length with the same middle symbol (e.g., abbaabab, as this is the concatenation of abb and aabab, two words with b as middle letter).</description>
+             <specificProblem><DescriptionToGrammarProblem>
+             <Grammar>S -&gt; U U  | V V
+U -&gt; X U X | a
+V -&gt; X V X | b
+X -&gt; a | b</Grammar>
+           </DescriptionToGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Construction</typeName>
+             <name>f18</name>
+             <description>words that can be written w z w^R with w nonempty, that is, they start with a word, and end with its reverse.</description>
+             <specificProblem><DescriptionToGrammarProblem>
+             <Grammar>S -&gt; a S a | b S b | a X a | b X b
+X -&gt; a X | b X | _</Grammar>
+           </DescriptionToGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>f13</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>(ab*)*|(ba*)*</RegEx>
+      <Alphabet>a b</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>f14</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>(a|b)*b(a|b)(a|b)</RegEx>
+      <Alphabet>a b</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>f15</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>(a*aabb*)*</RegEx>
+      <Alphabet>a b</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>f10</name>
+             <description>f10</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>(0(0|1)*0)*</RegEx>
+      <Alphabet>0 1</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>f11</name>
+             <description>f11</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>((a|b)*b(a|b)*)|(aaa(a|b)*)</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>f12</name>
+             <description>f12</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>(ab*)*(aaa|b)(ba*)*</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>f9</name>
+             <description>words that start and end with the same letter.</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(a(a|b)*a)|(b(a|b)*b)|a|b</RegEx>
+
+                <Equivalent> (a(a|b)*a)|(b(a|b)*b)|a|b </Equivalent>
+
+             <Alphabet>a b</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>f7</name>
+             <description>words that have &quot;bab&quot; at some point, and then &quot;aab&quot; later on.</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(a|b)*bab(a|b)*aab(a|b)*</RegEx>
+
+                <Equivalent> (a|b)*bab(a|b)*aab(a|b)* </Equivalent>
+
+             <Alphabet>a b</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>f8</name>
+             <description>words that have a number of b that is a multiple of three.</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(a*ba*ba*ba*)*</RegEx>
+
+                <Equivalent> (a*ba*ba*ba*)* </Equivalent>
+
+             <Alphabet>a b</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>f6</name>
+             <description>words that have baabb as subword</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240.67393830086743' posX='116.51856572724657' final='false' initial='true' sid='1'/&gt;&lt;state posY='230.01356169913257' posX='224.31476760608683' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='242.6875' posX='392.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='251.6875' posX='511.5' final='false' initial='undefined' sid='4'/&gt;&lt;state posY='288.6875' posX='623.5' final='false' initial='undefined' sid='5'/&gt;&lt;state posY='385.6875' posX='408.5' final='true' initial='undefined' sid='6'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='6'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>f4</name>
+             <description>words that start and end with the same letter.</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='301' posX='139.33333333333331' final='false' initial='true' sid='1'/&gt;&lt;state posY='221.6875' posX='273.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='300.6875' posX='412.5' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='407.6875' posX='276.5' final='false' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>f5</name>
+             <description>binary representation of numbers that are multiple of two.</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='238.6875' posX='284.5' final='true' initial='undefined' sid='2'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='2'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>f2</name>
+             <description>the language of the regular expression (a(a|b)*b)|(b(a|b)*a)</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='150.6875' posX='250.5' final='false' initial='false' sid='2'/&gt;&lt;state posY='145.6875' posX='403.5' final='true' initial='false' sid='3'/&gt;&lt;state posY='327.6875' posX='268.5' final='false' initial='false' sid='4'/&gt;&lt;state posY='338.6875' posX='456.5' final='true' initial='false' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='9'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='3'/&gt;&lt;state sid='5'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>f3</name>
+             <description>words that contain the subword abc twice.</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt; &lt;symbol&gt;c&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='239' posX='73.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='124.6875' posX='230.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='320.6875' posX='370.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='233.5341877871104' posX='500.05896046887653' final='false' initial='undefined' sid='4'/&gt;&lt;state posY='435.6875' posX='220.5' final='true' initial='undefined' sid='5'/&gt;&lt;state posY='462' posX='534.5' final='false' initial='undefined' sid='6'/&gt;&lt;state posY='294.6875' posX='679.5' final='false' initial='undefined' sid='7'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b c&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;c&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a b c&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;7&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='9'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b c&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='10'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='11'&gt;&lt;from&gt;7&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='12'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;c&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='13'&gt;&lt;from&gt;7&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;c&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='14'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='15'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='16'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;c&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='5'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>f1</name>
+             <description>the language of the regular expression (a|b)*abba(a|b)* � recall that we use &quot;|&quot; instead of &quot;U&quot; for regexps in this webapp.</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='239.95248482256153' posX='117.0196239306204' final='false' initial='true' sid='1'/&gt;&lt;state posY='128.99632242345055' posX='210.21722476462534' final='false' initial='false' sid='2'/&gt;&lt;state posY='125.6875' posX='343.5' final='false' initial='false' sid='3'/&gt;&lt;state posY='237.6875' posX='433.5' final='false' initial='false' sid='4'/&gt;&lt;state posY='222.6875' posX='545.5' final='true' initial='false' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='5'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>(ab,aab,aba)*</name>
+             <description>{ab, aab, aba}^*
+That's doable with 4 states.</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='224.6875' posX='303.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='68.6875' posX='218.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='371.6875' posX='227.5' final='false' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>...00</name>
+             <description>{w | w ends with 00}</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='235.6875' posX='251.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='235.6875' posX='439.5' final='true' initial='undefined' sid='3'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>...0101...</name>
+             <description>{w | w contains the substring 0101 (i.e., w = x0101y for some x and y)}</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='231.6875' posX='249.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='233.59481457591997' posX='363.81713560200143' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='228.78018542408003' posX='484.18286439799857' final='false' initial='undefined' sid='4'/&gt;&lt;state posY='234.6875' posX='593.5' final='true' initial='undefined' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='5'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>0*1*0+</name>
+             <description>{0^i 1^j 0^k | i, j ? 0 and k &gt; 0}, three states are enough!</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='241.6875' posX='235.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='243.6875' posX='365.5' final='true' initial='undefined' sid='3'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;?&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>001101</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>(((00)*(11))|01)*</RegEx>
+      <Alphabet>0 1</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>0101</name>
+             <description>{w | w contains the substring 0101 (i.e., w = x0101y for some x and y)}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='239.8664731185475' posX='103.95819756686504' final='false' initial='true' sid='1'/&gt;&lt;state posY='236.5715993280532' posX='219.4493806567039' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='360.6875' posX='283.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='240.6875' posX='474.5' final='false' initial='undefined' sid='4'/&gt;&lt;state posY='240.6875' posX='606.5' final='true' initial='undefined' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='5'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>0o1s0000o1s</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>(0|1)*000(0|1)*</RegEx>
+      <Alphabet>0 1</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>0odd,1even</name>
+             <description>{w | w starts with 0 and has odd length, or starts with 1 and has even length}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='128.6875' posX='239.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='299.6875' posX='235.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='307.6875' posX='444.5' final='true' initial='undefined' sid='4'/&gt;&lt;state posY='106.6875' posX='410.5' final='false' initial='undefined' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='2'/&gt;&lt;state sid='4'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>0odd,1even</name>
+             <description>{w| w starts with 0 and has odd length, or starts with 1 and has even length}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|10|11)((0|1)(0|1))*</RegEx>
+
+                <Equivalent> (0|10|11)((0|1)(0|1))* </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>1*(001+)*</name>
+             <description>{1}^* ({001} {1}^*)^*, that is the language of words that start with any number of 1s, followed by any repetition of a word of the form: 001 followed by any number of 1s.
+
+Three states are enough!</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='121.6875' posX='239.5' final='false' initial='false' sid='2'/&gt;&lt;state posY='241.6875' posX='351.5' final='false' initial='false' sid='3'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>1...0</name>
+             <description>{w | w begins with a 1 and ends with a 0}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='243.6875' posX='265.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='246.6875' posX='462.5' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='368.6875' posX='275.5' final='false' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>1w0</name>
+             <description>{w | w begins with a 1 and ends with a 0}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>1(0|1)*0</RegEx>
+
+                <Equivalent> 1(0|1)*0 </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>&gt;= three 1s</name>
+             <description>{w| w contains at least three 1s}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='241.6875' posX='262.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='240.6875' posX='409.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='238.6875' posX='547.5' final='true' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='4'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>&gt;two0,&lt;=one1</name>
+             <description>{w | w contains at least two 0s and at most one 1}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='214.43591176648368' posX='104.68875079441521' final='false' initial='true' sid='1'/&gt;&lt;state posY='223.53722834838177' posX='611.7658251288055' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='215.26913099018293' posX='446.0336934844211' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='316.8174016507891' posX='94.12896732457817' final='false' initial='undefined' sid='4'/&gt;&lt;state posY='424.7460869194008' posX='94.28538743974224' final='true' initial='undefined' sid='5'/&gt;&lt;state posY='320.95047733444056' posX='450.6314647547979' final='false' initial='undefined' sid='6'/&gt;&lt;state posY='331.1413597874824' posX='597.1141319795247' final='false' initial='undefined' sid='7'/&gt;&lt;state posY='429.05829367269115' posX='439.70762992812195' final='true' initial='undefined' sid='8'/&gt;&lt;state posY='445.3839118641362' posX='590.6200428916696' final='false' initial='undefined' sid='9'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;7&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;8&lt;/from&gt;&lt;to&gt;8&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;9&lt;/from&gt;&lt;to&gt;9&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='9'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='10'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='11'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='12'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;8&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='13'&gt;&lt;from&gt;8&lt;/from&gt;&lt;to&gt;9&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='14'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;8&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='5'/&gt;&lt;state sid='8'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>Find Derivation</typeName>
+             <name>Arith plus is p, times is t</name>
+             <description>arith</description>
+             <specificProblem><FindDerivationProblem>
+             <Grammar>E -&gt; E p T | T
+T -&gt; T t F | F
+F -&gt; ( E ) | a
+</Grammar>
+             <Word>(apa)tapa</Word>
+             <DerivationType>0</DerivationType>
+           </FindDerivationProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>Len&lt;=5</name>
+             <description>{w | the length of w is at most 5}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='229.6875' posX='257.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='229.6875' posX='375.5' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='229.61556939984027' posX='487.2602038898375' final='true' initial='undefined' sid='4'/&gt;&lt;state posY='303.25865706243906' posX='570.1943106900044' final='true' initial='undefined' sid='5'/&gt;&lt;state posY='411.18827353772065' posX='546.0454854201578' final='true' initial='undefined' sid='6'/&gt;&lt;state posY='400.6875' posX='403.5' final='false' initial='undefined' sid='7'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;7&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;state sid='3'/&gt;&lt;state sid='4'/&gt;&lt;state sid='5'/&gt;&lt;state sid='6'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>a</name>
+             <description>{a}, the language that contains just the word &quot;a&quot;.  You need just two states, and one transition.</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='238.6875' posX='232.5' final='true' initial='undefined' sid='2'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='2'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>a*</name>
+             <description>{a}^* (note that the alphabet is {a, b}, but you need only one transition for that automaton!)</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>aaas</name>
+             <description>aaas</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>(aaa)*</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>aabbb</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>a(abb)*|b</RegEx>
+      <Alphabet>a b</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>ababobaboaab</name>
+             <description>ababobaboaab</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>aba|bab|aab</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>abasb</name>
+             <description>abasb</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>a(ba)*b</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Construction</typeName>
+             <name>aibjck</name>
+             <description>{a^ib^jc^k | i = j or j = k, where i, j, k &gt;= 0}</description>
+             <specificProblem><DescriptionToGrammarProblem>
+             <Grammar>S -&gt; X C | A Y
+C -&gt; c C | _
+A -&gt; a A | _
+X -&gt; a X b | _
+Y -&gt; b Y c | _
+</Grammar>
+           </DescriptionToGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Pumping Lemma Game</typeName>
+             <name>ajbjcj</name>
+             <description>{a^j b^j c^j | j &gt; 0}</description>
+             <specificProblem><PumpingLemmaGameProblem>
+      <Alphabet>
+        a b c
+      </Alphabet>
+      <Regular>
+        false
+      </Regular>
+      <SymbolicString>
+        a^j b^j c^j
+      </SymbolicString>
+      <Constraints>
+        
+      </Constraints>
+      <UnpumpableWord>
+        a^n b^n c^n
+      </UnpumpableWord>
+      <Automaton>
+        
+      </Automaton>
+    </PumpingLemmaGameProblem></specificProblem>
+           </problem><problem>
+             <typeName>Pumping Lemma Game</typeName>
+             <name>ajbk, j&lt;=k</name>
+             <description>{a^j b^k | j &lt;= k}</description>
+             <specificProblem><PumpingLemmaGameProblem>
+      <Alphabet>
+        a b
+      </Alphabet>
+      <Regular>
+        false
+      </Regular>
+      <SymbolicString>
+        a^j b^k
+      </SymbolicString>
+      <Constraints>
+        j &lt;= k
+      </Constraints>
+      <UnpumpableWord>
+        a^n b^n
+      </UnpumpableWord>
+      <Automaton>
+        
+      </Automaton>
+    </PumpingLemmaGameProblem></specificProblem>
+           </problem><problem>
+             <typeName>Pumping Lemma Game</typeName>
+             <name>ajbk, j&gt;k</name>
+             <description>{a^j b^k | j &gt; k}</description>
+             <specificProblem><PumpingLemmaGameProblem>
+      <Alphabet>
+        a b
+      </Alphabet>
+      <Regular>
+        false
+      </Regular>
+      <SymbolicString>
+        a^j b^k
+      </SymbolicString>
+      <Constraints>
+        j &gt; k
+      </Constraints>
+      <UnpumpableWord>
+        a^n b^n
+      </UnpumpableWord>
+      <Automaton>
+        
+      </Automaton>
+    </PumpingLemmaGameProblem></specificProblem>
+           </problem><problem>
+             <typeName>Pumping Lemma Game</typeName>
+             <name>ajbkcj</name>
+             <description>{a^j b^k c^j | for any j, k &gt; 0}</description>
+             <specificProblem><PumpingLemmaGameProblem>
+      <Alphabet>
+        a b c
+      </Alphabet>
+      <Regular>
+        false
+      </Regular>
+      <SymbolicString>
+        a^j b^k c^j
+      </SymbolicString>
+      <Constraints>
+        j &gt; 0 &amp;&amp; k &gt; 0
+      </Constraints>
+      <UnpumpableWord>
+        a^n b c^n
+      </UnpumpableWord>
+      <Automaton>
+        
+      </Automaton>
+    </PumpingLemmaGameProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>allbute</name>
+             <description>All strings except the empty string.</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='236.6875' posX='255.5' final='true' initial='undefined' sid='2'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='2'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>aobaobbcaobs</name>
+             <description>aobaobbcaobs</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>(a|ba|bb)(a|b)*</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>2</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>aobpapbp</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>(a|b+)a+b+</RegEx>
+      <Alphabet>a b</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>apoabp</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>a+|(ab)+</RegEx>
+      <Alphabet>a b</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Words</typeName>
+             <name>asb</name>
+             <description>asb</description>
+             <specificProblem><WordsInGrammarProblem>
+      <Grammar>S -&gt; a S b | b Y | Y a
+Y -&gt; b Y | a Y | _</Grammar>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>2</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>asbs</name>
+             <description>asbs</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>a*b*</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>asobs</name>
+             <description>asobs</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>a*|b*</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Construction</typeName>
+             <name>awa bwb</name>
+             <description>{w| w starts and ends with the same symbol} over {a, b}</description>
+             <specificProblem><DescriptionToGrammarProblem>
+             <Grammar>S -&gt; a W a | b W b | a | b
+W -&gt; b W | a W | _</Grammar>
+           </DescriptionToGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Words</typeName>
+             <name>axb</name>
+             <description>axb</description>
+             <specificProblem><WordsInGrammarProblem>
+      <Grammar>S -&gt; a S b | x | S S</Grammar>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Chomsky Normalform</typeName>
+             <name>axb</name>
+             <description>axb</description>
+             <specificProblem><GrammarToCNFProblem>
+             <Grammar>S -&gt; a S b | x | S S</Grammar>
+           </GrammarToCNFProblem></specificProblem>
+           </problem><problem>
+             <typeName>Find Derivation</typeName>
+             <name>axba</name>
+             <description>axba</description>
+             <specificProblem><FindDerivationProblem>
+             <Grammar>S -&gt; a S b | x | S S</Grammar>
+             <Word>axbaaxbb</Word>
+             <DerivationType>0</DerivationType>
+           </FindDerivationProblem></specificProblem>
+           </problem><problem>
+             <typeName>Chomsky Normalform</typeName>
+             <name>bab</name>
+             <description>bab</description>
+             <specificProblem><GrammarToCNFProblem>
+             <Grammar>A -&gt; B A B | b B | a
+B -&gt; a b | _</Grammar>
+           </GrammarToCNFProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>e</name>
+             <description>{?}, the language that just contains the empty word.  One state is enough!</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;/stateSet&gt;&lt;transitionSet/&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>e0</name>
+             <description>{?, 0}, that is, the language that contains just the empty word and the single-letter word 0.</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='241.527196641155' posX='116.96796681470347' final='true' initial='true' sid='1'/&gt;&lt;state posY='146.6875' posX='215.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='260.6875' posX='340.5' final='false' initial='undefined' sid='3'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE to NFA</typeName>
+             <name>empstar</name>
+             <description></description>
+             <specificProblem><RegExToNFAProblem>
+      <RegEx>\emp*</RegEx>
+      <Alphabet>a b</Alphabet>
+    </RegExToNFAProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>empty</name>
+             <description>The empty set.</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='217.6875' posX='257.5' final='false' initial='undefined' sid='2'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet/&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>eoab</name>
+             <description>eoab</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>(\e|a)b</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>2</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>eps0</name>
+             <description>{?, 0}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>\e|0</RegEx>
+
+                <Equivalent> \e|0 </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>even 0s or two1s</name>
+             <description>{ w| w contains an even number of 0s, or contains exactly two 1s}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='134' posX='111.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='130.6875' posX='319.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='139.6875' posX='505.5' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='138.6875' posX='671.5' final='true' initial='undefined' sid='4'/&gt;&lt;state posY='256.6875' posX='111.5' final='false' initial='undefined' sid='5'/&gt;&lt;state posY='249.6875' posX='324.5' final='false' initial='undefined' sid='6'/&gt;&lt;state posY='258.6875' posX='504.5' final='true' initial='undefined' sid='7'/&gt;&lt;state posY='256.6875' posX='693.5' final='false' initial='undefined' sid='8'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;8&lt;/from&gt;&lt;to&gt;8&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='9'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='10'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='11'&gt;&lt;from&gt;7&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='12'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;7&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='13'&gt;&lt;from&gt;7&lt;/from&gt;&lt;to&gt;8&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='14'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;8&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='15'&gt;&lt;from&gt;8&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;state sid='3'/&gt;&lt;state sid='4'/&gt;&lt;state sid='7'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>NFA Construction</typeName>
+             <name>even0two1</name>
+             <description>{w | w contains an even number of 0s, or contains exactly two 1s}  (Remember that OR, the union, is easier with NFAs, this can be done with 6 states!)</description>
+             <specificProblem><NFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;false&lt;/deterministic&gt; &lt;epsilon&gt;true&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='116.6875' posX='269.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='325.6875' posX='284.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='98.6875' posX='435.5' final='false' initial='undefined' sid='4'/&gt;&lt;state posY='309.6875' posX='410.5' final='false' initial='undefined' sid='5'/&gt;&lt;state posY='300.6875' posX='534.5' final='true' initial='undefined' sid='6'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;?&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;?&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='9'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='10'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='2'/&gt;&lt;state sid='6'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </NFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>even0two1</name>
+             <description>{w| w contains an even number of 0s, or contains exactly two 1s}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(1*(01*01*)*)|(0*10*10*)</RegEx>
+
+                <Equivalent> 1*(01*01*)*|(0*10*10*) </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>len&gt;3,_3=0</name>
+             <description>{w | w has length at least 3 and its third symbol is a 0}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='235.2858164467578' posX='230.32417459952242' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='226.2595708400781' posX='330.780286460552' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='232.6875' posX='448.5' final='true' initial='undefined' sid='4'/&gt;&lt;state posY='343.1154291599219' posX='369.219713539448' final='false' initial='undefined' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='4'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>leq5</name>
+             <description>{w| the length of w is at most 5}  Hint: \e is the empty word.</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|1|\e)(0|1|\e)(0|1|\e)(0|1|\e)(0|1|\e)</RegEx>
+
+                <Equivalent> (0|1|\e)(0|1|\e)(0|1|\e)(0|1|\e)(0|1|\e) </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>ll0u</name>
+             <description>{w| w has length at least 3 and its third symbol is a 0}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|1)(0|1)0(0|1)*</RegEx>
+
+                <Equivalent> (0|1)(0|1)0(0|1)* </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>moretwo0lessone1</name>
+             <description>{w| w contains at least two 0s and at most one 1}
+
+Think about where the 1 could be.</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>00+|100+|0+10+|00+1</RegEx>
+
+                <Equivalent> 00+|100+|0+10+|00+1 </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>no ab no ba</name>
+             <description>{w| w contains neither the substrings ab nor ba}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='182.6875' posX='242.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='319.6875' posX='248.5' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='239.6875' posX='384.5' final='false' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>no two a's</name>
+             <description>{w| w is any string that doesn't contain exactly two a's}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='237.6875' posX='277.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='237.6875' posX='448.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='240.6875' posX='596.5' final='true' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;state sid='4'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>no110</name>
+             <description>{w | w doesn�t contain the substring 110}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='245.6875' posX='232.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='237.6875' posX='382.5' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='253.6875' posX='608.5' final='false' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>noab</name>
+             <description>{w | w does not contain the substring ab}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='242.6875' posX='265' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='243.6875' posX='412' final='false' initial='undefined' sid='3'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>nobaba</name>
+             <description>{w | w does not contain the substring baba}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='156.6875' posX='257' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='244.6875' posX='371' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='160.6875' posX='470' final='true' initial='undefined' sid='4'/&gt;&lt;state posY='245.6875' posX='566' final='false' initial='undefined' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='8'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;state sid='3'/&gt;&lt;state sid='4'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>not (ab+)*</name>
+             <description>{w| w is any word which is not a repetition of strings of the form (ab)(b...b) }.  Note that &quot;repetition&quot; and &quot;...&quot; may indicate zero such things.</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='236.8941032056576' posX='118.88008174641915' final='false' initial='true' sid='1'/&gt;&lt;state posY='244.6875' posX='459.5' final='false' initial='false' sid='3'/&gt;&lt;state posY='240.94869983939964' posX='291.7622303812802' final='true' initial='false' sid='5'/&gt;&lt;state posY='118.3125' posX='214.5' final='true' initial='false' sid='6'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;6&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;6&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='5'/&gt;&lt;state sid='6'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>not 110</name>
+             <description>{w| w doesn�t contain the substring 110}
+
+Hint: It's useful to think about the DFA for that language (use the DFA for (0|1)*110(0|1)*, then swap the accept and nonaccept states).
+
+What is the regexp for words that go from the initial back to the initial?  Let's call this E.  Once you're done looping from the initial state back to itself, you can go to the second or third state, but not the fourth.  Call F the language of words that start from the initial state and go to the second or third state without going back to the initial state.  Then your answer is EF.
+
+(One possible regexp has 9 characters.)</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|10)*1*</RegEx>
+
+                <Equivalent> (0|10)*1* </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>not a nor b</name>
+             <description>{w| w is any string except a and b}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='182.6875' posX='225.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='338.6875' posX='226.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='262.6875' posX='341.5' final='true' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='4'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>not a* U b*</name>
+             <description>{w | w is not a string in {a}* U {b}*}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='171.6875' posX='271.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='324.6875' posX='269.5' final='false' initial='undefined' sid='3'/&gt;&lt;state posY='229.6875' posX='395.5' final='true' initial='undefined' sid='4'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='4'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>not a*b*</name>
+             <description>{w | w is any string not of the form  a...ab...b }; note that the number of a's and b's can be zero.  In other words, the string is not in {a}*{b}*.</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;a&lt;/symbol&gt; &lt;symbol&gt;b&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='254' posX='123.33333333333333' final='false' initial='true' sid='1'/&gt;&lt;state posY='259.6875' posX='253.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='262.6875' posX='444.5' final='true' initial='undefined' sid='3'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a b&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;a&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>not11 not 111</name>
+             <description>{w | w is any string except 11 and 111}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='262.39631383488734' posX='100.89774821757823' final='true' initial='true' sid='1'/&gt;&lt;state posY='136.6875' posX='267.5' final='true' initial='undefined' sid='2'/&gt;&lt;state posY='253.53961289745914' posX='201.39226299836523' final='true' initial='undefined' sid='3'/&gt;&lt;state posY='253.9778038296265' posX='381.3130832355863' final='false' initial='undefined' sid='4'/&gt;&lt;state posY='243.6875' posX='528.5' final='false' initial='undefined' sid='5'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;4&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;5&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='4'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='5'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='6'&gt;&lt;from&gt;4&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='7'&gt;&lt;from&gt;5&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='2'/&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>not11nor111</name>
+             <description>{w| w is any string except 11 and 111}
+
+Hints: Regexps are not great for that.  It's any string of length more than 4, plus some strings of length 3 and less.</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|1)(0|1)(0|1)(0|1)+|0(0|1)(0|1)|(0|1)0(0|1)|(0|1)(0|1)0|(0|1)0|0(0|1)|(0|1)|\eps</RegEx>
+
+                <Equivalent> (0|1)(0|1)(0|1)(0|1)+|0(0|1)(0|1)|(0|1)0(0|1)|(0|1)(0|1)0|(0|1)0|0(0|1)|(0|1)|\eps </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>noteps</name>
+             <description>All strings except the empty string</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|1)+</RegEx>
+
+                <Equivalent> (0|1)(0|1)* </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>odd1</name>
+             <description>{w| every odd position of w is a 1}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>((1(0|1))*1(0|1|\e))|\e</RegEx>
+
+                <Equivalent> ((1(0|1))*1(0|1|\e))|\e </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>DFA Construction</typeName>
+             <name>oddpos=1</name>
+             <description>{w | every odd position of w is a 1}</description>
+             <specificProblem><DFAConstructionProblem>
+             <Automaton>&lt;automaton&gt;  &lt;automatonType&gt;false&lt;/automatonType&gt; &lt;deterministic&gt;true&lt;/deterministic&gt; &lt;epsilon&gt;false&lt;/epsilon&gt; 	&lt;alphabet&gt; &lt;symbol&gt;0&lt;/symbol&gt; &lt;symbol&gt;1&lt;/symbol&gt;	&lt;/alphabet&gt; &lt;block posY='0' posX='0' final='false' regex='' sid='0'&gt;&lt;stateSet&gt;&lt;state posY='240' posX='123.33333333333333' final='true' initial='true' sid='1'/&gt;&lt;state posY='128.6875' posX='225.5' final='false' initial='undefined' sid='2'/&gt;&lt;state posY='251.6875' posX='450.5' final='true' initial='undefined' sid='3'/&gt;&lt;/stateSet&gt;&lt;transitionSet&gt;&lt;transition tid='0'&gt;&lt;from&gt;2&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='1'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;2&lt;/to&gt;&lt;label&gt;0&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='2'&gt;&lt;from&gt;1&lt;/from&gt;&lt;to&gt;3&lt;/to&gt;&lt;label&gt;1&lt;/label&gt;&lt;/transition&gt;&lt;transition tid='3'&gt;&lt;from&gt;3&lt;/from&gt;&lt;to&gt;1&lt;/to&gt;&lt;label&gt;0 1&lt;/label&gt;&lt;/transition&gt;&lt;/transitionSet&gt;&lt;acceptingSet&gt;&lt;state sid='1'/&gt;&lt;state sid='3'/&gt;&lt;/acceptingSet&gt;&lt;initialState&gt;&lt;state sid='1'/&gt;&lt;/initialState&gt;&lt;/block&gt;  &lt;/automaton&gt;</Automaton>
+           </DFAConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Construction</typeName>
+             <name>pal</name>
+             <description>{w| w = w^R , that is, w is a palindrome} over {a, b}</description>
+             <specificProblem><DescriptionToGrammarProblem>
+             <Grammar>S -&gt; a S a | b S b | a | b | _</Grammar>
+           </DescriptionToGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Words</typeName>
+             <name>sigasigbsigasig</name>
+             <description>sigasigbsigasig</description>
+             <specificProblem><WordsInGrammarProblem>
+      <RegEx>(a|b)*a(a|b)*b(a|b)*a(a|b)*</RegEx>
+      <Alphabet>a b</Alphabet>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>Find Derivation</typeName>
+             <name>srtx</name>
+             <description></description>
+             <specificProblem><FindDerivationProblem>
+             <Grammar>S -&gt; X S X | R
+R -&gt; a T b | b T a
+T -&gt; X T X | X | _
+X -&gt; a | b</Grammar>
+             <Word>baaaba</Word>
+             <DerivationType>1</DerivationType>
+           </FindDerivationProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Words</typeName>
+             <name>stuab</name>
+             <description>stuab</description>
+             <specificProblem><WordsInGrammarProblem>
+      <Grammar>S -&gt; T T | U
+T -&gt; a T | T a | b
+U -&gt; a U aa | b</Grammar>
+      <InNeeded>3</InNeeded>
+      <OutNeeded>3</OutNeeded>
+    </WordsInGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>u1v1x1y</name>
+             <description>{w| w contains at least three 1s}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|1)*1(0|1)*1(0|1)*1(0|1)*</RegEx>
+
+                <Equivalent> (0|1)*1(0|1)*1(0|1)*1(0|1)* </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem><problem>
+             <typeName>Grammar Construction</typeName>
+             <name>wodd</name>
+             <description>{w| the length of w is odd} over {a, b}</description>
+             <specificProblem><DescriptionToGrammarProblem>
+             <Grammar>S -&gt; L | L L S
+L -&gt; a | b</Grammar>
+           </DescriptionToGrammarProblem></specificProblem>
+           </problem><problem>
+             <typeName>RE Construction</typeName>
+             <name>x0101y</name>
+             <description>{w| w contains the substring 0101 (i.e., w = x0101y for some x and y)}</description>
+             <specificProblem><RegExConstructionProblem>
+             <RegEx>(0|1)*0101(0|1)*</RegEx>
+
+                <Equivalent> (0|1)*0101(0|1)* </Equivalent>
+
+             <Alphabet>0 1</Alphabet>
+           </RegExConstructionProblem></specificProblem>
+           </problem></exported>

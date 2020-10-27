@@ -50,7 +50,14 @@ class ProblemRenderer(problem : Problem) {
 
     if(matchingExercises.isEmpty) return Text(problemLocations.mkString("\n"))
 
-    matchingExercises.flatMap(exercise => renderProblemInstanceLink(exercise)).theSeq
+    <div class="dropdown">
+      <button>Appearing In</button>
+      <div class="dropdown-content">
+        {
+          matchingExercises.flatMap(exercise => renderProblemInstanceLink(exercise)).theSeq
+        }
+      </div>
+    </div>
   }
 
   def renderProblemInstancesTable: NodeSeq = {

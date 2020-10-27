@@ -30,6 +30,8 @@ object TargetFolder extends SessionVar[Folder](null)
 
 class Foldersnippet {
 
+  if(CurrentBatchExercisesInCourse.is == null) CurrentBatchExercisesInCourse(new ListBuffer[Exercise])
+
   def rendereditfolderform(xhtml: NodeSeq): NodeSeq = {
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
 
@@ -121,8 +123,6 @@ class Foldersnippet {
       S.warning("Please first choose a folder")
       return S.redirectTo("/main/course/index")
     }
-
-    CurrentBatchExercisesInCourse.is.clear()
 
     val user = User.currentUser openOrThrowException "Lift only allows logged in users here"
     val folder = CurrentFolderInCourse.is
@@ -271,6 +271,7 @@ class Foldersnippet {
 
     if (!CurrentCourse.canBeSupervisedBy(user)) return NodeSeq.Empty
 
+    //TODO - move these types of callbacks to like a "helper library" or something so they're not floating
     def createFolderCallback(): Unit = {
       var errors: List[String] = List()
       val startDate: Date = try {

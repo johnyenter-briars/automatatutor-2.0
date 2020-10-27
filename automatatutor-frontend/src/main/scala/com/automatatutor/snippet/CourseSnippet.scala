@@ -42,7 +42,6 @@ class Coursesnippet {
 
     val folders = CurrentCourse.getFoldersForUser(user)
 
-
     if (CurrentCourse.canBeSupervisedBy(user)) {
       if (folders.isEmpty) return Text("There are no folders in this course")
 
@@ -320,10 +319,13 @@ class Coursesnippet {
   }
 
   def rendercourseimportbutton(xhtml: NodeSeq): NodeSeq = {
+    val user = User.currentUser openOrThrowException "Lift only allows logged in users on here"
     if (CurrentCourse.is == null) {
       S.warning("Please first choose a course")
       return S.redirectTo("/main/course/index")
     }
+
+    if(!CurrentCourse.is.canBeSupervisedBy(user)) return NodeSeq.Empty
 
     new UploadHelper(new UploadTarget(UploadTargetEnum.Course, CurrentCourse.is)).fileUploadToCourseForm(xhtml)
   }
